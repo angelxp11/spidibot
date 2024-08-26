@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
 import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { app } from '../../firebase';
+import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage"; // Asegúrate de importar estas funciones
 import './buscarCliente.css';
+import html2canvas from 'html2canvas';
+import fondo from '../../fondo.png'; // Asegúrate de que la imagen fondo.png esté en la carpeta correcta
 
-const firestore = getFirestore(app);
+const firestore = getFirestore();
 
-// Función para normalizar texto
 const normalizarTexto = (texto) => {
-  return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // Elimina acentos
+  return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 };
 
-// Función para convertir la fecha de dd/mm/yyyy a yyyy-mm-dd
 const convertirFecha = (fecha) => {
   const [dia, mes, anio] = fecha.split('/');
   return `${anio}-${mes}-${dia}`;
 };
-// Función para convertir la fecha de yyyy-mm-dd a dd/mm/yyyy
+
 const convertirFechaInvertida = (fecha) => {
   const [anio, mes, dia] = fecha.split('-');
   return `${dia}/${mes}/${anio}`;
 };
-
 
 function BuscarCliente({ onClose }) {
   const [searchType, setSearchType] = useState('nombre');
@@ -32,20 +32,18 @@ function BuscarCliente({ onClose }) {
     nombre: '',
     apellido: '',
     telefono: '',
-    fechaInicial: '',  // Inicialmente vacío o en formato yyyy-mm-dd
-    fechaFinal: '',    // Inicialmente vacío o en formato yyyy-mm-dd
+    fechaInicial: '',
+    fechaFinal: '',
     pagado: '',
     estado: '',
     grupo: '',
     servicio: '',
     precio: ''
   });
-  
-  
 
   const handleSearchTypeChange = (event) => {
     setSearchType(event.target.value);
-    setSearchValue(''); // Limpiar valor de búsqueda al cambiar el tipo
+    setSearchValue('');
   };
 
   const handleSearchValueChange = (event) => {
@@ -56,8 +54,6 @@ function BuscarCliente({ onClose }) {
     try {
       const clientesRef = collection(firestore, 'clientes');
       const searchValueUpper = normalizarTexto(searchValue).toUpperCase();
-
-      // Obtener todos los documentos en la colección
       const querySnapshot = await getDocs(query(clientesRef));
       const results = querySnapshot.docs.map(doc => {
         const data = doc.data();
@@ -65,13 +61,12 @@ function BuscarCliente({ onClose }) {
           id: doc.id,
           nombre: data.nombre,
           apellido: data.apellido,
-          estado: data.PENDEJOALEJANDRO?.estado || '', // Acceso al campo estado en el mapa
+          estado: data.PENDEJOALEJANDRO?.estado || '',
           ID: data.ID,
           ...data
         };
       });
 
-      // Filtrar resultados para coincidencias en nombre o apellido
       const filteredResults = results.filter(result => {
         const nombreUpper = normalizarTexto(result.nombre).toUpperCase();
         const apellidoUpper = normalizarTexto(result.apellido).toUpperCase();
@@ -95,7 +90,7 @@ function BuscarCliente({ onClose }) {
           id: doc.id,
           nombre: data.nombre,
           apellido: data.apellido,
-          estado: data.PENDEJOALEJANDRO?.estado || '', // Acceso al campo estado en el mapa
+          estado: data.PENDEJOALEJANDRO?.estado || '',
           ID: data.ID,
           ...data
         };
@@ -131,98 +126,172 @@ function BuscarCliente({ onClose }) {
       nombre: client.nombre,
       apellido: client.apellido,
       telefono: client.telefono,
-      fechaInicial: convertirFecha(client.fechaInicial), // Convertir fecha a formato yyyy-mm-dd
-      fechaFinal: convertirFecha(client.fechaFinal),     // Convertir fecha a formato yyyy-mm-dd
+      fechaInicial: convertirFecha(client.fechaInicial),
+      fechaFinal: convertirFecha(client.fechaFinal),
       pagado: client.pagado,
-      estado: client.PENDEJOALEJANDRO?.estado || '', // Acceso al campo estado en el mapa
+      estado: client.PENDEJOALEJANDRO?.estado || '',
       grupo: client.grupo,
       servicio: client.servicio,
-      precio: client.precio // Nuevo campo de precio
+      precio: client.precio
     });
   };
 
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setClientData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
 
-const handleChange = (event) => {
-  const { name, value } = event.target;
-  setClientData((prevData) => ({
-    ...prevData,
-    [name]: value
-  }));
-};
+  const handleSaveChanges = async () => {
+    try {
+      const clientDocRef = doc(firestore, 'clientes', selectedClient.id);
 
+      const grupoArray = Array.isArray(clientData.grupo)
+        ? clientData.grupo.map(item => item.toUpperCase())
+        : (clientData.grupo ? clientData.grupo.split(',').map(item => item.trim().toUpperCase()) : []);
 
+      const servicioArray = Array.isArray(clientData.servicio)
+        ? clientData.servicio.map(item => item.toUpperCase())
+        : (clientData.servicio ? clientData.servicio.split(',').map(item => item.trim().toUpperCase()) : []);
 
-const handleSaveChanges = async () => {
-  try {
-    const clientDocRef = doc(firestore, 'clientes', selectedClient.id);
+      const precioArray = Array.isArray(clientData.precio)
+        ? clientData.precio.map(item => item.toUpperCase())
+        : (clientData.precio ? clientData.precio.split(',').map(item => item.trim().toUpperCase()) : []);
 
-    // Definir los arrays de grupo, servicio y precio y convertirlos a mayúsculas
-    const grupoArray = Array.isArray(clientData.grupo)
-      ? clientData.grupo.map(item => item.toUpperCase())
-      : (clientData.grupo ? clientData.grupo.split(',').map(item => item.trim().toUpperCase()) : []);
-      
-    const servicioArray = Array.isArray(clientData.servicio)
-      ? clientData.servicio.map(item => item.toUpperCase())
-      : (clientData.servicio ? clientData.servicio.split(',').map(item => item.trim().toUpperCase()) : []);
-      
-    const precioArray = Array.isArray(clientData.precio)
-      ? clientData.precio.map(item => item.toUpperCase())
-      : (clientData.precio ? clientData.precio.split(',').map(item => item.trim().toUpperCase()) : []);
+      const fechaInicial = clientData.fechaInicial ? convertirFechaInvertida(clientData.fechaInicial) : '';
+      const fechaFinal = clientData.fechaFinal ? convertirFechaInvertida(clientData.fechaFinal) : '';
 
-    // Convierte fechas a formato dd/mm/yyyy
-    const fechaInicial = clientData.fechaInicial ? convertirFechaInvertida(clientData.fechaInicial) : '';
-    const fechaFinal = clientData.fechaFinal ? convertirFechaInvertida(clientData.fechaFinal) : '';
+      const updates = {};
+      if (clientData.nombre) {
+        updates['nombre'] = clientData.nombre.toUpperCase();
+      }
+      if (clientData.apellido) {
+        updates['apellido'] = clientData.apellido.toUpperCase();
+      }
+      if (clientData.telefono) {
+        updates['telefono'] = clientData.telefono.toUpperCase();
+      }
+      if (fechaInicial) {
+        updates['fechaInicial'] = fechaInicial;
+      }
+      if (fechaFinal) {
+        updates['fechaFinal'] = fechaFinal;
+      }
+      if (clientData.pagado) {
+        updates['pagado'] = clientData.pagado.toUpperCase();
+      }
+      if (clientData.estado !== '') {
+        updates['PENDEJOALEJANDRO.estado'] = clientData.estado;
+      }
+      if (grupoArray.length > 0) {
+        updates['grupo'] = grupoArray;
+      }
+      if (servicioArray.length > 0) {
+        updates['servicio'] = servicioArray;
+      }
+      if (precioArray.length > 0) {
+        updates['precio'] = precioArray;
+      }
 
-    // Construye el objeto de actualización
-    const updates = {};
-    if (clientData.nombre) {
-      updates['nombre'] = clientData.nombre.toUpperCase();
+      await updateDoc(clientDocRef, updates);
+      alert('Cambios guardados con éxito');
+      setSelectedClient(null);
+    } catch (error) {
+      console.error('Error al guardar cambios:', error);
+      alert('Error al guardar cambios: ' + error.message);
     }
-    if (clientData.apellido) {
-      updates['apellido'] = clientData.apellido.toUpperCase();
-    }
-    if (clientData.telefono) {
-      updates['telefono'] = clientData.telefono.toUpperCase();
-    }
-    if (fechaInicial) {
-      updates['fechaInicial'] = fechaInicial;
-    }
-    if (fechaFinal) {
-      updates['fechaFinal'] = fechaFinal;
-    }
-    if (clientData.pagado) {
-      updates['pagado'] = clientData.pagado.toUpperCase();
-    }
-    if (clientData.estado !== '') {
-      updates['PENDEJOALEJANDRO.estado'] = clientData.estado;
-    }
-    if (grupoArray.length > 0) {
-      updates['grupo'] = grupoArray; // Agregar grupo en mayúsculas
-    }
-    if (servicioArray.length > 0) {
-      updates['servicio'] = servicioArray; // Agregar servicio en mayúsculas
-    }
-    if (precioArray.length > 0) {
-      updates['precio'] = precioArray; // Agregar precio en mayúsculas
-    }
+  };
 
-    console.log('Datos a actualizar:', updates);
-
-    await updateDoc(clientDocRef, updates);
-
-    // En lugar de usar Toast, puedes usar un alert o simplemente loguear un mensaje
-    alert('Cambios guardados con éxito');
-    setSelectedClient(null); // Cierra el modal de detalles del cliente
-  } catch (error) {
-    console.error('Error al guardar cambios:', error);
-    // En lugar de usar Toast, puedes usar un alert o simplemente loguear un mensaje
-    alert('Error al guardar cambios: ' + error.message);
-  }
-};
-
-
-
+  const handleGenerateComprobante = async () => {
+    if (selectedClient) {
+      // Verificar que las propiedades necesarias existan y sean arrays
+      const servicios = Array.isArray(selectedClient.servicio) ? selectedClient.servicio : [];
+      const grupo = Array.isArray(selectedClient.grupo) ? selectedClient.grupo : [];
   
+      // Asegurarse de que los precios sean números
+      const precios = Array.isArray(selectedClient.precio)
+        ? selectedClient.precio.map(Number) // Convertir todos los precios a números
+        : [];
+  
+      // Sumar los precios
+      const precioTotal = precios.reduce((acc, curr) => acc + curr, 0).toLocaleString('es-ES');
+  
+      // Crear el contenedor del comprobante
+      const comprobanteContainer = document.createElement('div');
+      comprobanteContainer.className = 'comprobante-container';
+      comprobanteContainer.style.backgroundImage = `url(${fondo})`;
+      comprobanteContainer.style.backgroundSize = 'cover';
+      comprobanteContainer.style.width = '1080px';
+      comprobanteContainer.style.height = '1080px';
+      comprobanteContainer.style.color = 'white';
+      comprobanteContainer.style.fontFamily = 'Comic Sans MS';
+      comprobanteContainer.style.fontSize = '40px';
+      comprobanteContainer.style.lineHeight = '3';
+      comprobanteContainer.style.textAlign = 'center';
+      comprobanteContainer.style.position = 'absolute';
+      comprobanteContainer.style.left = '-9999px';
+      comprobanteContainer.style.top = '-9999px';
+  
+      const date = new Date();
+      const fechaGenerada = date.toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+  
+      // Convertir servicio y grupo en cadenas de texto unidas por comas
+      const serviciosTexto = servicios.length > 0 ? servicios.join(', ') : 'Ninguno';
+      const grupoTexto = grupo.length > 0 ? grupo.join(', ') : 'Ninguno';
+  
+      comprobanteContainer.innerHTML = `
+        <p>Comprobante generado (${fechaGenerada})</p>
+        <p>⭐ID: ${selectedClient.ID}</p>
+        <p>⭐NOMBRE COMPLETO: ${selectedClient.nombre} ${selectedClient.apellido}</p>
+        <p>⭐SERVICIO: ${serviciosTexto}</p>
+        <p>⭐GRUPO: ${grupoTexto}</p>
+        <p>⭐PRECIO: $${precioTotal}</p>
+        <p>⭐FECHA FINAL: ${selectedClient.fechaFinal}</p>
+        <p>⭐ESTADO: ${selectedClient.estado}</p>
+      `;
+  
+      document.body.appendChild(comprobanteContainer);
+  
+      html2canvas(comprobanteContainer).then(async (canvas) => {
+        // Generar un nombre de archivo único de 16 caracteres
+        const generateUniqueFileName = () => {
+          return Math.random().toString(36).substring(2, 18) + Date.now().toString(36);
+        };
+  
+        const uniqueFileName = `${generateUniqueFileName()}.png`;
+  
+        // Obtener el URL del archivo como base64
+        const dataUrl = canvas.toDataURL('image/png');
+  
+        // Subir a Firebase Storage
+        const storage = getStorage(); // Inicializa Firebase Storage
+        const storageRef = ref(storage, `comprobantes/${uniqueFileName}`);
+        await uploadString(storageRef, dataUrl, 'data_url');
+  
+        // Obtener la URL de descarga
+        const downloadURL = await getDownloadURL(storageRef);
+  
+        // WhatsApp Web message
+        const mensaje = `Hola, te envío el comprobante generado. Haz click para poder visualizarlo: ${downloadURL}`;
+        const whatsappNumber = selectedClient.telefono; // Obtener el número de WhatsApp del cliente
+        const encodedMessage = encodeURIComponent(mensaje);
+        const whatsappUrl = `https://web.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
+  
+        // Abre WhatsApp Web
+        window.open(whatsappUrl, '_blank');
+  
+        alert('El comprobante ha sido generado, guardado en Firebase Storage y enviado por WhatsApp.');
+  
+        document.body.removeChild(comprobanteContainer);
+      });
+    }
+  };
   
 
   return (
@@ -254,7 +323,7 @@ const handleSaveChanges = async () => {
             )}
             <button onClick={handleSearch} className="search-button">Buscar</button>
           </div>
-
+  
           <div className="search-results">
             {searchResults.length > 0 ? (
               <ul>
@@ -272,11 +341,22 @@ const handleSaveChanges = async () => {
             )}
           </div>
         </div>
-
+  
         {selectedClient && (
           <div className="details-panel-container">
             <div className={`details-panel ${selectedClient ? 'show' : ''}`}>
               <h2>Detalles del Cliente</h2>
+              <label>
+                ID:
+                <input
+                  type="text"
+                  name="ID"
+                  value={clientData.ID}
+                  onChange={handleChange}
+                  className="detail-input"
+                  placeholder="ID"
+                />
+              </label>
               <label>
                 Nombre:
                 <input
@@ -285,6 +365,7 @@ const handleSaveChanges = async () => {
                   value={clientData.nombre}
                   onChange={handleChange}
                   className="detail-input"
+                  placeholder="Nombre"
                 />
               </label>
               <label>
@@ -295,6 +376,7 @@ const handleSaveChanges = async () => {
                   value={clientData.apellido}
                   onChange={handleChange}
                   className="detail-input"
+                  placeholder="Apellido"
                 />
               </label>
               <label>
@@ -305,6 +387,7 @@ const handleSaveChanges = async () => {
                   value={clientData.telefono}
                   onChange={handleChange}
                   className="detail-input"
+                  placeholder="Teléfono"
                 />
               </label>
               <label>
@@ -315,6 +398,7 @@ const handleSaveChanges = async () => {
                   value={clientData.fechaInicial}
                   onChange={handleChange}
                   className="detail-input"
+                  placeholder="Fecha Inicial (dd/mm/yyyy)"
                 />
               </label>
               <label>
@@ -325,6 +409,7 @@ const handleSaveChanges = async () => {
                   value={clientData.fechaFinal}
                   onChange={handleChange}
                   className="detail-input"
+                  placeholder="Fecha Final (dd/mm/yyyy)"
                 />
               </label>
               <label>
@@ -335,22 +420,22 @@ const handleSaveChanges = async () => {
                   value={clientData.pagado}
                   onChange={handleChange}
                   className="detail-input"
+                  placeholder="Pagado"
                 />
               </label>
               <label>
-  Estado:
-  <select
-    name="estado"
-    value={clientData.estado}
-    onChange={handleChange}
-    className="detail-input"
-  >
-    <option value="⚠️">⚠️</option>
-    <option value="❌">❌</option>
-    <option value="✅">✅</option>
-  </select>
-</label>
-
+                Estado:
+                <select
+                  name="estado"
+                  value={clientData.estado}
+                  onChange={handleChange}
+                  className="detail-input"
+                >
+                  <option value="⚠️">⚠️</option>
+                  <option value="❌">❌</option>
+                  <option value="✅">✅</option>
+                </select>
+              </label>
               <label>
                 Grupo:
                 <input
@@ -359,16 +444,18 @@ const handleSaveChanges = async () => {
                   value={clientData.grupo}
                   onChange={handleChange}
                   className="detail-input"
+                  placeholder="Grupo"
                 />
               </label>
               <label>
-                Servicio:Netflix(cel),Netflixtv(5users),Netflixme(miembroex)
+                Servicio:
                 <input
                   type="text"
                   name="servicio"
                   value={clientData.servicio}
                   onChange={handleChange}
                   className="detail-input"
+                  placeholder="Servicio"
                 />
               </label>
               <label>
@@ -379,9 +466,12 @@ const handleSaveChanges = async () => {
                   value={clientData.precio}
                   onChange={handleChange}
                   className="detail-input"
+                  placeholder="Precio"
                 />
               </label>
               <button onClick={handleSaveChanges} className="save-button">Guardar Cambios</button>
+              <button onClick={onClose} className="close-button">Cerrar</button>
+              <button onClick={handleGenerateComprobante} className="generate-button">Generar Comprobante</button>
             </div>
           </div>
         )}

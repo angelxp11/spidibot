@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage"; // Asegúrate de importar estas funciones
+
+
 import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { app } from '../../firebase';
 import html2canvas from 'html2canvas';
@@ -70,34 +73,50 @@ function Estados({ onClose }) {
 
   const handleRenew = async () => {
     if (selectedClient) {
+      // Obtener día, mes y año de la fecha actual del cliente
       const [day, month, year] = selectedClient.fechaFinal.split('/').map(Number);
+  
+      // Crear la fecha actual
       const fechaActual = new Date(year, month - 1, day);
-      fechaActual.setDate(fechaActual.getDate() + 30);
-
+  
+      // Sumar un mes a la fecha actual
+      fechaActual.setMonth(fechaActual.getMonth() + 1);
+  
+      // Comprobar si el mes cambió debido a un desbordamiento de días
+      if (fechaActual.getDate() !== day) {
+        fechaActual.setDate(0); // Retrocede al último día del mes anterior
+      }
+  
+      // Formatear la nueva fecha final en formato 'dd/mm/yyyy'
       const nuevaFechaFinal = fechaActual.toLocaleDateString('es-ES', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric'
       });
-
+  
+      // Calcular el nuevo estado del cliente
       const nuevoEstado = calcularEstadoCliente(nuevaFechaFinal);
-
+  
+      // Actualizar el documento en Firestore
       const clientRef = doc(firestore, 'clientes', selectedClient.id);
       await updateDoc(clientRef, {
         fechaFinal: nuevaFechaFinal,
         'PENDEJOALEJANDRO.estado': nuevoEstado,
-        pagado:"SI"
+        pagado: "SI"
       });
-
+  
+      // Actualizar el cliente seleccionado en el estado de la aplicación
       setSelectedClient({
         ...selectedClient,
         fechaFinal: nuevaFechaFinal,
         estado: nuevoEstado
       });
-
+  
+      // Mostrar un mensaje de alerta al usuario
       alert('La fecha de finalización ha sido renovada y el estado actualizado.');
     }
   };
+  
 
   const handleGenerateComprobante = async () => {
     if (selectedClient) {
@@ -106,7 +125,7 @@ function Estados({ onClose }) {
       const grupo = Array.isArray(selectedClient.grupo) ? selectedClient.grupo : [];
   
       // Asegurarse de que los precios sean números
-      const precios = Array.isArray(selectedClient.precio) 
+      const precios = Array.isArray(selectedClient.precio)
         ? selectedClient.precio.map(Number) // Convertir todos los precios a números
         : [];
   
@@ -117,17 +136,17 @@ function Estados({ onClose }) {
       const comprobanteContainer = document.createElement('div');
       comprobanteContainer.className = 'comprobante-container';
       comprobanteContainer.style.backgroundImage = `url(${fondo})`;
-      comprobanteContainer.style.backgroundSize = 'cover'; // Ajustar al tamaño del contenedor
-      comprobanteContainer.style.width = '1080px'; // Tamaño de la imagen 1:1
-      comprobanteContainer.style.height = '1080px'; // Tamaño de la imagen 1:1
-      comprobanteContainer.style.color = 'white'; // Color del texto
-      comprobanteContainer.style.fontFamily = 'Comic Sans MS'; // Fuente Comic Sans MS
-      comprobanteContainer.style.fontSize = '40px'; // Tamaño de la letra
-      comprobanteContainer.style.lineHeight = '3'; // Espaciado entre líneas
-      comprobanteContainer.style.textAlign = 'center'; // Centrar el texto
-      comprobanteContainer.style.position = 'absolute'; // Posición absoluta para sacarlo del flujo del documento
-      comprobanteContainer.style.left = '-9999px'; // Moverlo fuera de la vista
-      comprobanteContainer.style.top = '-9999px'; // Moverlo fuera de la vista
+      comprobanteContainer.style.backgroundSize = 'cover';
+      comprobanteContainer.style.width = '1080px';
+      comprobanteContainer.style.height = '1080px';
+      comprobanteContainer.style.color = 'white';
+      comprobanteContainer.style.fontFamily = 'Comic Sans MS';
+      comprobanteContainer.style.fontSize = '40px';
+      comprobanteContainer.style.lineHeight = '3';
+      comprobanteContainer.style.textAlign = 'center';
+      comprobanteContainer.style.position = 'absolute';
+      comprobanteContainer.style.left = '-9999px';
+      comprobanteContainer.style.top = '-9999px';
   
       const date = new Date();
       const fechaGenerada = date.toLocaleDateString('es-ES', {
@@ -153,20 +172,35 @@ function Estados({ onClose }) {
   
       document.body.appendChild(comprobanteContainer);
   
-      html2canvas(comprobanteContainer).then((canvas) => {
-        const link = document.createElement('a');
-        link.download = 'comprobante.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
+      html2canvas(comprobanteContainer).then(async (canvas) => {
+        // Generar un nombre de archivo único de 16 caracteres
+        const generateUniqueFileName = () => {
+          return Math.random().toString(36).substring(2, 18) + Date.now().toString(36);
+        };
+  
+        const uniqueFileName = `${generateUniqueFileName()}.png`;
+  
+        // Obtener el URL del archivo como base64
+        const dataUrl = canvas.toDataURL('image/png');
+  
+        // Subir a Firebase Storage
+        const storage = getStorage(); // Inicializa Firebase Storage
+        const storageRef = ref(storage, `comprobantes/${uniqueFileName}`);
+        await uploadString(storageRef, dataUrl, 'data_url');
+  
+        // Obtener la URL de descarga
+        const downloadURL = await getDownloadURL(storageRef);
   
         // WhatsApp Web message
-        const mensaje = `Hola, te envío el comprobante generado. Aquí está el archivo:`; // Ajustar el mensaje
+        const mensaje = `Hola, te envío el comprobante generado. Haz click para poder visualizarlo: ${downloadURL}`;
         const whatsappNumber = selectedClient.telefono; // Obtener el número de WhatsApp del cliente
         const encodedMessage = encodeURIComponent(mensaje);
         const whatsappUrl = `https://web.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
   
         // Abre WhatsApp Web
         window.open(whatsappUrl, '_blank');
+  
+        alert('El comprobante ha sido generado, guardado en Firebase Storage y enviado por WhatsApp.');
   
         document.body.removeChild(comprobanteContainer);
       });

@@ -1,48 +1,91 @@
+/* Archivo: RegistroCliente.css */
+
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .close-button {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-  }
-  
-  .form-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .form-input {
-    margin: 10px 0;
-    padding: 10px;
-    width: 100%;
-  }
-  
-  .form-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .form-button:hover {
-    background-color: #0056b3;
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.form-container {
+  background-color: #fff;
+  max-height: 100vh; /* Ajusta el alto máximo para que la barra de desplazamiento se active si es necesario */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 100%;
+  position: fixed; /* Fija el formulario para que esté siempre visible al desplazarse */
+  left: 0; /* Posiciona el formulario en el lado izquierdo */
+  top: 50%; /* Centra verticalmente el formulario */
+  transform: translateY(-50%); /* Ajuste adicional para centrarlo correctamente */
+  text-align: center;
+  overflow-y: auto; /* Habilita la barra de desplazamiento vertical */
+}
+
+
+h2 {
+  color: #333;
+  margin-bottom: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.form-input {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-input label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+  font-family: 'Arial', sans-serif;
+}
+
+.form-input input,
+.form-input select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: 'Arial', sans-serif;
+}
+
+.form-button {
+  background-color: #d31616;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Arial', sans-serif;
+  margin: 10px 5px;
+  transition: background-color 0.3s;
+}
+
+.form-button:hover {
+  background-color: #ff0000;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+  color: #333;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: #999;
+}
+
