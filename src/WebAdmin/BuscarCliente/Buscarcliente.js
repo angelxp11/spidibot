@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { app } from '../../firebase';
 import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage"; // Asegúrate de importar estas funciones
 import './buscarCliente.css';
 import html2canvas from 'html2canvas';
 import fondo from '../../fondo.png'; // Asegúrate de que la imagen fondo.png esté en la carpeta correcta
+import { toast } from 'react-toastify'; // Asegúrate de instalar react-toastify
 
 const firestore = getFirestore();
 
@@ -41,6 +42,21 @@ function BuscarCliente({ onClose }) {
     precio: ''
   });
 
+  const handleDeleteClient = async () => {
+    if (window.confirm('¿Estás seguro de que deseas eliminar a este cliente?')) {
+      try {
+        const clientDocRef = doc(firestore, 'clientes', selectedClient.id);
+        await deleteDoc(clientDocRef);
+        toast.success('Cliente eliminado con éxito');
+        setSelectedClient(null);
+        setSearchResults(prevResults => prevResults.filter(client => client.id !== selectedClient.id));
+      } catch (error) {
+        console.error('Error al eliminar cliente:', error);
+        toast.error('Error al eliminar cliente: ' + error.message);
+      }
+    }
+  };
+
   const handleSearchTypeChange = (event) => {
     setSearchType(event.target.value);
     setSearchValue('');
@@ -54,7 +70,11 @@ function BuscarCliente({ onClose }) {
     try {
       const clientesRef = collection(firestore, 'clientes');
       const searchValueUpper = normalizarTexto(searchValue).toUpperCase();
-      const querySnapshot = await getDocs(query(clientesRef));
+  
+      // Utilizamos el índice de Firestore para hacer la búsqueda por nombre
+      const q = query(clientesRef, where('nombre', '>=', searchValueUpper), where('nombre', '<=', searchValueUpper + '\uf8ff'));
+  
+      const querySnapshot = await getDocs(q);
       const results = querySnapshot.docs.map(doc => {
         const data = doc.data();
         return {
@@ -66,18 +86,13 @@ function BuscarCliente({ onClose }) {
           ...data
         };
       });
-
-      const filteredResults = results.filter(result => {
-        const nombreUpper = normalizarTexto(result.nombre).toUpperCase();
-        const apellidoUpper = normalizarTexto(result.apellido).toUpperCase();
-        return nombreUpper.includes(searchValueUpper) || apellidoUpper.includes(searchValueUpper);
-      });
-
-      setSearchResults(filteredResults);
+  
+      setSearchResults(results);
     } catch (error) {
       console.error('Error al buscar clientes por nombre:', error);
     }
   };
+  
 
   const searchByField = async (field, searchValue) => {
     try {
@@ -472,6 +487,7 @@ function BuscarCliente({ onClose }) {
               <button onClick={handleSaveChanges} className="save-button">Guardar Cambios</button>
               <button onClick={onClose} className="close-button">Cerrar</button>
               <button onClick={handleGenerateComprobante} className="generate-button">Generar Comprobante</button>
+              <button onClick={handleDeleteClient}>Eliminar</button>
             </div>
           </div>
         )}

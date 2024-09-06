@@ -23,14 +23,14 @@
 }
 
 .close-button {
-  background-color: #f44336;
+  background-color: #007BFF;
+  height: 50px;
   color: white;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 20px;
-}
+  margin-top: 20px;}
 
 .client-ids {
   margin-top: 20px;

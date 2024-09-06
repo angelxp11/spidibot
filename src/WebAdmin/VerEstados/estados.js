@@ -114,6 +114,7 @@ function Estados({ onClose }) {
   
       // Mostrar un mensaje de alerta al usuario
       alert('La fecha de finalización ha sido renovada y el estado actualizado.');
+      await handleSearch();
     }
   };
   

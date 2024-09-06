@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { collection, getDocs, query, where, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import './BuscarCupo.css';
@@ -32,6 +32,7 @@ const verFechas = (fecha) => {
 function BuscarCupo({ onClose }) {
   const [servicio, setServicio] = useState('');
   const [grupo, setGrupo] = useState('');
+  const [gruposDisponibles, setGruposDisponibles] = useState([]);
   const [clientes, setClientes] = useState([]);
   const [selectedClientes, setSelectedClientes] = useState({});
   const [clientesColores, setClientesColores] = useState({});
@@ -39,6 +40,34 @@ function BuscarCupo({ onClose }) {
   const [infoDocId, setInfoDocId] = useState('');
   const [isResultadosVisible, setIsResultadosVisible] = useState(false);
   const [isInfoVisible, setIsInfoVisible] = useState(false);
+
+  // Función para obtener los grupos disponibles del servicio seleccionado
+  const fetchGruposDisponibles = async (servicioSeleccionado) => {
+    try {
+      const serviciosRef = collection(db, 'Servicios');
+      const qServicio = query(
+        serviciosRef,
+        where('__name__', '==', servicioSeleccionado.trim().toUpperCase())
+      );
+      const querySnapshotServicio = await getDocs(qServicio);
+  
+      if (!querySnapshotServicio.empty) {
+        const servicioDoc = querySnapshotServicio.docs[0];
+        const servicioData = servicioDoc.data();
+        setGruposDisponibles(Object.keys(servicioData));
+      } else {
+        setGruposDisponibles([]);
+      }
+    } catch (error) {
+      console.error('Error al obtener grupos disponibles:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (servicio) {
+      fetchGruposDisponibles(servicio);
+    }
+  }, [servicio]);
 
   const handleSearch = async () => {
     try {
@@ -89,26 +118,18 @@ function BuscarCupo({ onClose }) {
 
   const handleInfoClick = async () => {
     try {
-      // Obtén una referencia a la colección 'Servicios'
       const serviciosRef = collection(db, 'Servicios');
-      // Crea una consulta para encontrar el documento cuyo ID coincide con el servicio seleccionado
       const qServicio = query(
         serviciosRef,
         where('__name__', '==', servicio.trim().toUpperCase())
       );
-      // Ejecuta la consulta
       const querySnapshotServicio = await getDocs(qServicio);
   
-      // Si la consulta devuelve algún resultado
       if (!querySnapshotServicio.empty) {
-        // Obtén el primer documento de los resultados
         const servicioDoc = querySnapshotServicio.docs[0];
-        // Obtén los datos del documento
         const servicioData = servicioDoc.data();
-        // Obtén la información del grupo especificado
         const grupoInfo = servicioData[grupo];
   
-        // Si la información del grupo está disponible, actualiza el estado
         if (grupoInfo) {
           setInfo({
             email: grupoInfo.email || '',
@@ -128,7 +149,6 @@ function BuscarCupo({ onClose }) {
       console.error('Error al obtener información del servicio:', error);
     }
   };
-  
 
   const handleSaveChanges = async () => {
     try {
@@ -153,13 +173,13 @@ function BuscarCupo({ onClose }) {
   const handleInputChange = (e, setter) => {
     setter(e.target.value);
   };
-  const handleInputChanges = (e, setFunction) => {
-    const { value } = e.target;
-    setFunction(value.toUpperCase());
-  };
 
   const handleSelectChange = (e) => {
     setServicio(e.target.value);
+  };
+
+  const handleGrupoChange = (e) => {
+    setGrupo(e.target.value);
   };
 
   const handleCheckboxChange = (id) => {
@@ -190,11 +210,12 @@ function BuscarCupo({ onClose }) {
         </div>
         <div className="form-group">
           <label>Grupo:</label>
-          <input
-        type="text"
-        value={grupo}
-        onChange={(e) => handleInputChanges(e, setGrupo)}
-      />
+          <select value={grupo} onChange={handleGrupoChange} disabled={!servicio}>
+            <option value="">Selecciona un grupo</option>
+            {gruposDisponibles.map((grupo) => (
+              <option key={grupo} value={grupo}>{grupo}</option>
+            ))}
+          </select>
         </div>
         <button onClick={handleSearch}>Buscar</button>
         <button onClick={handleInfoClick}>Información</button>

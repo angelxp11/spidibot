@@ -8,6 +8,7 @@ import ActualizarBd from './ActualizarBd/ActualizarBd';
 import BuscarCupo from './Grupos/BuscarCupo';
 import RegistrarCliente from './Registro/RegistroCliente';
 import Pruebas from './Pruebas/Pruebas'; // Import the Pruebas component
+import AddSeeEstatus from './Grupos/AddSeeEstatus'; // Import the new component
 import './home.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
@@ -21,6 +22,7 @@ function Home() {
   const [showBuscarCupo, setShowBuscarCupo] = useState(false);
   const [showRegistrarCliente, setShowRegistrarCliente] = useState(false);
   const [showPruebas, setShowPruebas] = useState(false); // State for showing Pruebas component
+  const [showAddSeeEstatus, setShowAddSeeEstatus] = useState(false); // State for showing AddSeeEstatus component
 
   const handleSignOut = async () => {
     try {
@@ -83,6 +85,14 @@ function Home() {
     setShowPruebas(false);
   };
 
+  const handleOpenAddSeeEstatus = () => {
+    setShowAddSeeEstatus(true);
+  };
+
+  const handleCloseAddSeeEstatus = () => {
+    setShowAddSeeEstatus(false);
+  };
+
   return (
     <div className="home-container">
       <h1>Bienvenido {user ? user.email : 'Admin'} a la página principal</h1>
@@ -93,6 +103,7 @@ function Home() {
         <button onClick={handleOpenBuscarCupo} className="home-button">Cupos</button>
         <button onClick={handleDownloadNoticias} className="home-button">Actualizar</button>
         <button onClick={handleOpenPruebas} className="home-button">Pruebas</button> {/* New Test Button */}
+        <button onClick={handleOpenAddSeeEstatus} className="home-button">GruposEstados</button> {/* New GruposEstados Button */}
       </div>
       <button onClick={handleSignOut} className="logout-button">Cerrar Sesión</button>
 
@@ -102,6 +113,7 @@ function Home() {
       {showBuscarCupo && <BuscarCupo onClose={handleCloseBuscarCupo} />}
       {showRegistrarCliente && <RegistrarCliente onClose={handleCloseRegistrarCliente} />}
       {showPruebas && <Pruebas onClose={handleClosePruebas} />} {/* Render Pruebas component */}
+      {showAddSeeEstatus && <AddSeeEstatus onClose={handleCloseAddSeeEstatus} />} {/* Render AddSeeEstatus component */}
 
       <ToastContainer />
     </div>
