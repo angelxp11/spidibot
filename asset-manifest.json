@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/spidibot/static/css/main.3f1debe0.css",
-    "main.js": "/spidibot/static/js/main.958f644f.js",
+    "main.js": "/spidibot/static/js/main.06b9d6a6.js",
     "static/media/spidi512.png": "/spidibot/static/media/spidi512.5e2520cdc2f6f3955473.png",
     "static/media/fondo.png": "/spidibot/static/media/fondo.51558b44d0823d282204.png",
     "index.html": "/spidibot/index.html",
     "main.3f1debe0.css.map": "/spidibot/static/css/main.3f1debe0.css.map",
-    "main.958f644f.js.map": "/spidibot/static/js/main.958f644f.js.map"
+    "main.06b9d6a6.js.map": "/spidibot/static/js/main.06b9d6a6.js.map"
   },
   "entrypoints": [
     "static/css/main.3f1debe0.css",
-    "static/js/main.958f644f.js"
+    "static/js/main.06b9d6a6.js"
   ]
 }
