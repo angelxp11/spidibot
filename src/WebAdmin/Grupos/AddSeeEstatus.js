@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getFirestore, collection, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, doc,getDoc, updateDoc } from 'firebase/firestore';
 import { app } from '../../firebase';
 import './AddSeeEstatus.css'; // Asegúrate de crear este archivo para los estilos
 import { toast } from 'react-toastify';
@@ -71,38 +71,47 @@ function AddSeeEstatus({ onClose }) {
   const handleRenew = async (groupId) => {
     try {
       const docRef = doc(firestore, 'Servicios', groupId);
-      const docSnap = await getDocs(docRef);
+      const docSnap = await getDoc(docRef); // Obtener el documento
       const data = docSnap.data();
       const groupData = data[selectedGroup.groupName];
-
+  
       if (addMonth) {
         const nuevaFechaComienzo = agregarMes(groupData.fechaComienzo);
         const nuevaFechaPago = agregarMes(groupData.fechaPago);
-
+  
         await updateDoc(docRef, {
           [`${selectedGroup.groupName}.fechaComienzo`]: nuevaFechaComienzo,
           [`${selectedGroup.groupName}.fechaPago`]: nuevaFechaPago
         });
       }
-
+  
       const nuevoEstado = calcularEstadoGrupo(groupData.fechaPago);
       await updateDoc(docRef, {
         [`${selectedGroup.groupName}.estado`]: nuevoEstado
       });
-
-      // Actualizar los resultados de búsqueda y los detalles del grupo
-      await searchByStatus(selectedStatus);
+  
+      // Refrescar los detalles del grupo renovado
+      const updatedDocSnap = await getDoc(docRef); // Obtener los datos actualizados
+      const updatedData = updatedDocSnap.data();
+      const updatedGroupData = updatedData[selectedGroup.groupName];
+  
+      // Actualizar el estado del grupo seleccionado con los datos renovados
       setSelectedGroup({
-        ...selectedGroup,
-        estado: nuevoEstado
+        id: groupId,
+        groupName: selectedGroup.groupName,
+        ...updatedGroupData
       });
-
+  
+      // Actualizar los resultados de búsqueda
+      await searchByStatus(selectedStatus);
+  
       toast.success('Grupo renovado');
     } catch (error) {
       console.error('Error al renovar el grupo:', error);
       toast.error(`Error al renovar el grupo: ${error.message}`);
     }
   };
+  
 
   const agregarMes = (fecha) => {
     const [day, month, year] = fecha.split('/');

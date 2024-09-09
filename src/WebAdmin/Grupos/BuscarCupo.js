@@ -54,7 +54,15 @@ function BuscarCupo({ onClose }) {
       if (!querySnapshotServicio.empty) {
         const servicioDoc = querySnapshotServicio.docs[0];
         const servicioData = servicioDoc.data();
-        setGruposDisponibles(Object.keys(servicioData));
+  
+        // Obtener los grupos y ordenarlos numéricamente
+        const gruposOrdenados = Object.keys(servicioData).sort((a, b) => {
+          const numeroA = parseInt(a.replace(/\D/g, '')); // Extraer el número de "g1", "g2", etc.
+          const numeroB = parseInt(b.replace(/\D/g, ''));
+          return numeroA - numeroB; // Ordenar en orden ascendente
+        });
+  
+        setGruposDisponibles(gruposOrdenados);
       } else {
         setGruposDisponibles([]);
       }
