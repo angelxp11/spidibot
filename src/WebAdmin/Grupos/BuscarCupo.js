@@ -157,6 +157,29 @@ function BuscarCupo({ onClose }) {
       console.error('Error al obtener información del servicio:', error);
     }
   };
+  const handleCopyPaste = () => {
+    const { email, password } = info; // Asume que `info` tiene el email y la contraseña
+    const serviceName = servicio; // Asume que `servicio` tiene el nombre del servicio seleccionado
+    const textToCopy = `*🔑 Aquí tienes tu información de acceso:*
+📧 Correo: ${email}
+🔒 Contraseña: ${password}
+👤 Perfil: _*Actualizacion de claves*_
+    
+Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna pregunta, no dudes en preguntar. ❓🙌
+    
+¡Gracias por confiar en nosotros! 💖
+  
+¡Saludos cordiales! 👋🌟`;
+    
+    // Copiar al portapapeles
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      alert('Información copiada al portapapeles.');
+    }).catch(err => {
+      console.error('Error al copiar al portapapeles: ', err);
+    });
+  };
+  
+  
 
   const handleSaveChanges = async () => {
     try {
@@ -297,6 +320,7 @@ function BuscarCupo({ onClose }) {
           onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, fechaPago: value })))}
         />
       </div>
+      <button onClick={handleCopyPaste}>Copiar</button>
       <button onClick={handleSaveChanges}>Guardar Cambios</button>
     </div>
   </div>
