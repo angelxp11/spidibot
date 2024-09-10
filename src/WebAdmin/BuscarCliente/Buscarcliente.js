@@ -71,25 +71,39 @@ function BuscarCliente({ onClose }) {
       const clientesRef = collection(firestore, 'clientes');
       const searchValueUpper = normalizarTexto(searchValue).toUpperCase();
   
-      // Utilizamos el índice de Firestore para hacer la búsqueda por nombre
-      const q = query(clientesRef, where('nombre', '>=', searchValueUpper), where('nombre', '<=', searchValueUpper + '\uf8ff'));
+      // Realizar búsqueda tanto por nombre como por apellido
+      const nombreQuery = query(clientesRef, where('nombre', '>=', searchValueUpper), where('nombre', '<=', searchValueUpper + '\uf8ff'));
+      const apellidoQuery = query(clientesRef, where('apellido', '>=', searchValueUpper), where('apellido', '<=', searchValueUpper + '\uf8ff'));
   
-      const querySnapshot = await getDocs(q);
-      const results = querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          nombre: data.nombre,
-          apellido: data.apellido,
-          estado: data.PENDEJOALEJANDRO?.estado || '',
-          ID: data.ID,
-          ...data
-        };
-      });
+      // Ejecutar ambas consultas de forma paralela
+      const [nombreSnapshot, apellidoSnapshot] = await Promise.all([
+        getDocs(nombreQuery),
+        getDocs(apellidoQuery)
+      ]);
   
-      setSearchResults(results);
+      // Combinar los resultados de ambas consultas y eliminar duplicados
+      const results = [
+        ...nombreSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })),
+        ...apellidoSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+      ];
+  
+      // Filtrar duplicados en caso de que el mismo documento tenga coincidencias en nombre y apellido
+      const uniqueResults = Array.from(new Map(results.map(item => [item.id, item])).values());
+  
+      // Procesar los datos finales para mostrar
+      const formattedResults = uniqueResults.map(data => ({
+        id: data.id,
+        nombre: data.nombre,
+        apellido: data.apellido,
+        estado: data.PENDEJOALEJANDRO?.estado || '',
+        ID: data.ID,
+        ...data
+      }));
+  
+      // Actualizar los resultados en el estado
+      setSearchResults(formattedResults);
     } catch (error) {
-      console.error('Error al buscar clientes por nombre:', error);
+      console.error('Error al buscar clientes por nombre o apellido:', error);
     }
   };
   
