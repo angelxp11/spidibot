@@ -293,7 +293,15 @@ function BuscarCliente({ onClose }) {
         const downloadURL = await getDownloadURL(storageRef);
   
         // WhatsApp Web message
-        const mensaje = `Hola, te envío el comprobante generado. Haz click para poder visualizarlo: ${downloadURL}`;
+        const mensaje = `_*🎉 ¡Gracias por tu Comprobante de Pago y Renovación Exitosa! 🎉*_
+
+Hemos recibido con éxito tu comprobante de pago y renovación. 🎊 Apreciamos tu confianza en *JadePlatform* y estamos encantados de seguir siendo tu elección.
+
+Si tienes alguna pregunta o necesitas asistencia, estamos aquí para ayudarte. ¡Disfruta al máximo de tu servicio renovado! 😊🙌
+
+Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
+        await navigator.clipboard.writeText(mensaje);
+        alert('Mensaje copiado al portapapeles');
         const whatsappNumber = selectedClient.telefono; // Obtener el número de WhatsApp del cliente
         const encodedMessage = encodeURIComponent(mensaje);
         const whatsappUrl = `https://web.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;

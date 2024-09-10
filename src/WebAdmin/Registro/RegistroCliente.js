@@ -218,7 +218,7 @@ Hemos recibido con éxito tu comprobante de pago y renovación. 🎊 Apreciamos 
 Si tienes alguna pregunta o necesitas asistencia, estamos aquí para ayudarte. ¡Disfruta al máximo de tu servicio renovado! 😊🙌
 
 Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
-await navigator.clipboard.writeText(mensaje);
+        await navigator.clipboard.writeText(mensaje);
         alert('Mensaje copiado al portapapeles');
         const whatsappNumber = selectedClient.telefono; // Obtener el número de WhatsApp del cliente
         const encodedMessage = encodeURIComponent(mensaje);
