@@ -95,7 +95,7 @@ function Home() {
 
   return (
     <div className="home-container">
-      <h1>Bienvenido  CoMPADRE{user ? user.email : 'Admin'} a la página principal</h1>
+      <h1>Bienvenido {user ? user.email : 'Admin'} a la página principal</h1>
       <div className="button-group">
         <button onClick={handleOpenRegistrarCliente} className="home-button">Registrar Cliente</button>
         <button onClick={handleOpenBuscarCliente} className="home-button">Buscar Cliente</button>
