@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { getFirestore, collection, getDocs, doc,getDoc, updateDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { app } from '../../firebase';
 import './AddSeeEstatus.css'; // Asegúrate de crear este archivo para los estilos
 import { toast } from 'react-toastify';
-
 
 const firestore = getFirestore(app);
 
@@ -11,21 +10,20 @@ function AddSeeEstatus({ onClose }) {
   const [selectedStatus, setSelectedStatus] = useState('⚠️');
   const [searchResults, setSearchResults] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
-  const [addMonth, setAddMonth] = useState(false); // Estado para el checkbox
+  const [selectedCheckbox, setSelectedCheckbox] = useState(null); // Estado para seleccionar un checkbox
 
   const handleStatusChange = (event) => {
     setSelectedStatus(event.target.value);
   };
 
-  const handleCheckboxChange = () => {
-    setAddMonth(!addMonth);
+  const handleCheckboxChange = (checkbox) => {
+    setSelectedCheckbox(checkbox); // Actualizar el estado con el checkbox seleccionado
   };
 
   const searchByStatus = async (status) => {
     try {
-      // Limpiar los resultados anteriores
       setSearchResults([]);
-      
+
       const serviciosRef = collection(firestore, 'Servicios');
       const querySnapshot = await getDocs(serviciosRef);
       
@@ -71,39 +69,49 @@ function AddSeeEstatus({ onClose }) {
   const handleRenew = async (groupId) => {
     try {
       const docRef = doc(firestore, 'Servicios', groupId);
-      const docSnap = await getDoc(docRef); // Obtener el documento
+      const docSnap = await getDoc(docRef);
       const data = docSnap.data();
       const groupData = data[selectedGroup.groupName];
   
-      if (addMonth) {
-        const nuevaFechaComienzo = agregarMes(groupData.fechaComienzo);
-        const nuevaFechaPago = agregarMes(groupData.fechaPago);
+      let nuevaFechaComienzo = groupData.fechaComienzo;
+      let nuevaFechaPago = groupData.fechaPago;
   
-        await updateDoc(docRef, {
-          [`${selectedGroup.groupName}.fechaComienzo`]: nuevaFechaComienzo,
-          [`${selectedGroup.groupName}.fechaPago`]: nuevaFechaPago
-        });
+      // Lógica de renovación
+      if (selectedCheckbox === 'addMonth') {
+        nuevaFechaComienzo = agregarMes(nuevaFechaComienzo);
+        nuevaFechaPago = agregarMes(nuevaFechaPago);
+      } else if (selectedCheckbox === 'netflixFamiliar') {
+        nuevaFechaPago = agregarDias(nuevaFechaPago, 10); // Sumar 10 días
+      } else if (selectedCheckbox === 'netflixDuoExtra') {
+        nuevaFechaPago = agregarDias(nuevaFechaPago, 16); // Sumar 16 días
+      } else if (selectedCheckbox === 'netflixDuo') {
+        nuevaFechaPago = agregarDias(nuevaFechaPago, 23); // Sumar 23 días
       }
   
-      const nuevoEstado = calcularEstadoGrupo(groupData.fechaPago);
+      // Actualizar las fechas en Firestore
+      await updateDoc(docRef, {
+        [`${selectedGroup.groupName}.fechaComienzo`]: nuevaFechaComienzo,
+        [`${selectedGroup.groupName}.fechaPago`]: nuevaFechaPago
+      });
+  
+      const nuevoEstado = calcularEstadoGrupo(nuevaFechaPago);
       await updateDoc(docRef, {
         [`${selectedGroup.groupName}.estado`]: nuevoEstado
       });
   
       // Refrescar los detalles del grupo renovado
-      const updatedDocSnap = await getDoc(docRef); // Obtener los datos actualizados
+      const updatedDocSnap = await getDoc(docRef);
       const updatedData = updatedDocSnap.data();
       const updatedGroupData = updatedData[selectedGroup.groupName];
   
-      // Actualizar el estado del grupo seleccionado con los datos renovados
       setSelectedGroup({
         id: groupId,
         groupName: selectedGroup.groupName,
         ...updatedGroupData
       });
   
-      // Actualizar los resultados de búsqueda
       await searchByStatus(selectedStatus);
+      setSelectedGroup(null);
   
       toast.success('Grupo renovado');
     } catch (error) {
@@ -111,7 +119,6 @@ function AddSeeEstatus({ onClose }) {
       toast.error(`Error al renovar el grupo: ${error.message}`);
     }
   };
-  
 
   const agregarMes = (fecha) => {
     const [day, month, year] = fecha.split('/');
@@ -119,6 +126,13 @@ function AddSeeEstatus({ onClose }) {
     sdf.setMonth(sdf.getMonth() + 1); // Añadir un mes
     return `${sdf.getDate().toString().padStart(2, '0')}/${(sdf.getMonth() + 1).toString().padStart(2, '0')}/${sdf.getFullYear()}`;
   };
+  // Función para sumar días a una fecha
+const agregarDias = (fecha, dias) => {
+  const [day, month, year] = fecha.split('/');
+  const sdf = new Date(year, month - 1, day);
+  sdf.setDate(sdf.getDate() + dias); // Sumar los días
+  return `${sdf.getDate().toString().padStart(2, '0')}/${(sdf.getMonth() + 1).toString().padStart(2, '0')}/${sdf.getFullYear()}`;
+};
 
   const calcularEstadoGrupo = (fechaPago) => {
     const [day, month, year] = fechaPago.split('/');
@@ -195,10 +209,34 @@ function AddSeeEstatus({ onClose }) {
               <label>
                 <input 
                   type="checkbox" 
-                  checked={addMonth}
-                  onChange={handleCheckboxChange}
+                  checked={selectedCheckbox === 'addMonth'}
+                  onChange={() => handleCheckboxChange('addMonth')}
                 />
-                Agregar un mes
+                Renovación 1 mes todos los servicios (30 días)
+              </label>
+              <label>
+                <input 
+                  type="checkbox" 
+                  checked={selectedCheckbox === 'netflixFamiliar'}
+                  onChange={() => handleCheckboxChange('netflixFamiliar')}
+                />
+                Renovación Netflix Familiar 20k con dos miembros extras (10 días)
+              </label>
+              <label>
+                <input 
+                  type="checkbox" 
+                  checked={selectedCheckbox === 'netflixDuoExtra'}
+                  onChange={() => handleCheckboxChange('netflixDuoExtra')}
+                />
+                Renovación Netflix Duo 20k con un miembro extra (16 días)
+              </label>
+              <label>
+                <input 
+                  type="checkbox" 
+                  checked={selectedCheckbox === 'netflixDuo'}
+                  onChange={() => handleCheckboxChange('netflixDuo')}
+                />
+                Renovación Netflix Duo 20k sin miembros extras (23 días)
               </label>
               <button onClick={() => handleRenew(selectedGroup.id)} className="renew-button">Renovar</button>
             </div>

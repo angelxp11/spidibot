@@ -85,3 +85,39 @@
     border-radius: 4px;
     cursor: pointer;
 }
+
+/* Estilos de los checkboxes */
+.details-content label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 1rem;
+  }
+  
+  .details-content input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    position: relative;
+    margin-right: 10px;
+  }
+  
+  .details-content input[type="checkbox"]:checked {
+    background-color: #4CAF50;
+    border: 2px solid #4CAF50;
+  }
+  
+  .details-content input[type="checkbox"]:checked::before {
+    content: '✓';
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    left: 4px;
+    font-size: 14px;
+  }
