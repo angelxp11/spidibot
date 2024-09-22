@@ -226,6 +226,7 @@ function BuscarCliente({ onClose }) {
 
       await updateDoc(clientDocRef, updates);
       alert('Cambios guardados con éxito');
+      handleSearch(null);
       setSelectedClient(null);
     } catch (error) {
       console.error('Error al guardar cambios:', error);
