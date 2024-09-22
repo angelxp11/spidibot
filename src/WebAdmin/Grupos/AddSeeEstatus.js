@@ -54,8 +54,13 @@ function AddSeeEstatus({ onClose }) {
   };
 
   const handleSearch = async () => {
-    await searchByStatus(selectedStatus);
+    try {
+      await searchByStatus(selectedStatus);
+    } catch (error) {
+      toast.error(`Error al realizar la búsqueda: ${error.message}`);
+    }
   };
+  
 
   const handleViewDetails = (result) => {
     const groupDetails = result[result.groupName];
