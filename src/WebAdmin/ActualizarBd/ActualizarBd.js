@@ -88,6 +88,10 @@ const ActualizarBd = ({ onClose }) => {
   };
 
   const calcularEstadoCliente = (fechaFinal) => {
+    // Verificar si la fecha final es "07/07/2003"
+    if (fechaFinal === '07/07/2003') {
+      return '😶‍🌫️';
+    }
     const [day, month, year] = fechaFinal.split('/');
     const sdf = new Date(year, month - 1, day); // Crear fecha en formato correcto
     const fechaActual = new Date();
@@ -106,6 +110,10 @@ const ActualizarBd = ({ onClose }) => {
   };
 
   const calcularEstadoGrupo = (fechaPago) => {
+    // Verificar si la fecha de pago es "07/07/2003"
+    if (fechaPago === '07/07/2003') {
+      return '😶‍🌫️';
+    }
     const [day, month, year] = fechaPago.split('/');
     const sdf = new Date(year, month - 1, day); // Crear fecha en formato correcto
     const fechaActual = new Date();

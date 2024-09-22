@@ -8,6 +8,7 @@ import html2canvas from 'html2canvas';
 import fondo from '../../fondo.png'; // Asegúrate de que la imagen fondo.png esté en la carpeta correcta
 import './estados.css';
 
+
 const firestore = getFirestore(app);
 
 function Estados({ onClose }) {
@@ -17,6 +18,34 @@ function Estados({ onClose }) {
 
   const handleSearchValueChange = (event) => {
     setSearchValue(event.target.value);
+  };
+  ///funion para no ccontinuar
+  const handleNoContinuar = async () => {
+    if (selectedClient) {
+      const nuevaFechaInicio = '07/07/2003';
+      const nuevaFechaFinal = '07/07/2003';
+      
+      // Actualizar el documento en Firestore
+      const clientRef = doc(firestore, 'clientes', selectedClient.id);
+      await updateDoc(clientRef, {
+        fechaInicial: nuevaFechaInicio,  // Si tienes este campo en tu base de datos
+        fechaFinal: nuevaFechaFinal,
+        'PENDEJOALEJANDRO.estado': '😶‍🌫️', // O cualquier otro estado que definas
+        pagado: "NO"
+      });
+  
+      // Actualizar el cliente seleccionado en el estado de la aplicación
+      setSelectedClient({
+        ...selectedClient,
+        fechaInicio: nuevaFechaInicio,  // Si tienes este campo en tu base de datos
+        fechaFinal: nuevaFechaFinal,
+        estado: '❌'
+      });
+  
+      alert('Las fechas de inicio y final se han actualizado a 07/07/2003.');
+      await handleSearch();  // Vuelve a realizar la búsqueda para refrescar la lista
+      setSelectedClient(null);
+    }
   };
 
   const searchByState = async (searchValue) => {
@@ -155,6 +184,9 @@ function Estados({ onClose }) {
         month: '2-digit',
         year: 'numeric'
       });
+
+      
+      
   
       // Convertir servicio y grupo en cadenas de texto unidas por comas
       const serviciosTexto = servicios.length > 0 ? servicios.join(', ') : 'Ninguno';
@@ -215,6 +247,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
         alert('El comprobante ha sido generado, guardado en Firebase Storage y enviado por WhatsApp.');
   
         document.body.removeChild(comprobanteContainer);
+        setSelectedClient(null);
       });
     }
   };
@@ -230,6 +263,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
               <option value="⚠️">⚠️</option>
               <option value="❌">❌</option>
               <option value="✅">✅</option>
+              <option value="😶‍🌫️">😶‍🌫️</option>
             </select>
             <button onClick={handleSearch}>Buscar</button>
           </div>
@@ -260,9 +294,11 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             <div>Estado: {selectedClient.estado}</div>
             <div>Fecha Final: {selectedClient.fechaFinal}</div>
             <button onClick={handleRenew}>Renovar</button>
+            <button onClick={handleNoContinuar}>No deseo continuar</button>
             <button onClick={handleGenerateComprobante}>Generar Comprobante</button>
           </div>
         )}
+
       </div>
     </div>
   );

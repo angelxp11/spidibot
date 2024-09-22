@@ -348,6 +348,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                 <option value="⚠️">⚠️</option>
                 <option value="❌">❌</option>
                 <option value="✅">✅</option>
+                <option value="😶‍🌫️">😶‍🌫️</option>
               </select>
             ) : (
               <input
