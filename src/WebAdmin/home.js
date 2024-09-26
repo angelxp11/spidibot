@@ -27,7 +27,7 @@ function Home() {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      navigate('/'); // Redirect to login after signing out
+      navigate('/spidibot/'); // Redirect to login after signing out
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }
