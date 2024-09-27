@@ -1,10 +1,10 @@
-// src/WebAdmin/Home.js
+// src/Webusuario/Home.js
 import React, { useEffect, useState } from 'react';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { getDocs, collection, query, where } from 'firebase/firestore';
-import '../WebAdmin/home.css';
+import '../Webusuario/home.css';
 import ContainerPlatform from './ContainerPlatform';
 import { db } from '../firebase';
 
@@ -32,10 +32,7 @@ function Home() {
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         if (data.servicio) {
-          Object.values(data.servicio).forEach(servicio => {
-            const estado = servicio.PENDEJOALEJANDRO ? servicio.PENDEJOALEJANDRO.estado : 'Estado no disponible';
-            serviciosData.push({ nombre: servicio.nombre, estado }); // Almacena nombre y estado
-          });
+          serviciosData.push(...Object.values(data.servicio)); // Extrae todos los servicios
         }
       });
 
@@ -75,11 +72,7 @@ function Home() {
 
       <div className="platforms-container">
         {servicios.map((servicio, index) => (
-          <ContainerPlatform 
-            key={index} 
-            title={servicio.nombre} 
-            estado={servicio.estado} // Envía el estado del servicio
-          /> 
+          <ContainerPlatform key={index} title={servicio} servicio={servicio} /> // Muestra el nombre del servicio
         ))}
       </div>
     </div>
