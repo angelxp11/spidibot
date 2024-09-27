@@ -32,6 +32,10 @@ function Home() {
       console.error('Error al cerrar sesión:', error);
     }
   };
+  useEffect(() => {
+    // Redirigir a /spidibot si se recarga la página en esta ruta
+    navigate('/spidibot');
+  }, [navigate]);
 
   const handleButtonClick = (route) => {
     navigate(route);
