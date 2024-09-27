@@ -1,32 +1,58 @@
-import React, { useEffect } from 'react';
-import { auth } from '../firebase'; // Asegúrate de que el path de firebase es correcto
-import { signOut } from 'firebase/auth'; // Importa la función de cerrar sesión
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
-import './home.css'; // Importa los estilos si los tienes
+// src/WebAdmin/Home.js
+import React, { useEffect, useState } from 'react';
+import { auth } from '../firebase';
+import { signOut } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
+import { getDocs, collection, query, where } from 'firebase/firestore';
+import '../WebAdmin/home.css';
+import ContainerPlatform from './ContainerPlatform';
+import { db } from '../firebase';
 
 function Home() {
-  // Obtén el email del usuario autenticado
   const user = auth.currentUser;
-  const navigate = useNavigate(); // Crea la instancia de navigate
-  useEffect(() => {
-    // Redirigir a /spidibot si se recarga la página en esta ruta
-    navigate('/spidibot');
-  }, [navigate]);
+  const navigate = useNavigate();
+  const [servicios, setServicios] = useState([]); // Estado para almacenar servicios
 
-  // Extrae el nombre de usuario del email (antes del "@")
-  const getUserName = () => {
-    if (user && user.email) {
-      const name = user.email.split('@')[0]; // Obtén la parte antes del '@'
-      return name.charAt(0).toUpperCase() + name.slice(1); // Capitaliza la primera letra
+  useEffect(() => {
+    if (!user) {
+      navigate('/spidibot');
+    } else {
+      fetchUserGroups();
     }
-    return 'Usuario'; // Si no hay email, muestra 'Usuario' por defecto
+  }, [user, navigate]);
+
+  const fetchUserGroups = async () => {
+    try {
+      const email = user.email;
+      const q = query(collection(db, 'clientes'), where('email', '==', email));
+      const querySnapshot = await getDocs(q);
+      const serviciosData = [];
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.servicio) {
+          serviciosData.push(...Object.values(data.servicio)); // Extrae todos los servicios
+        }
+      });
+
+      setServicios(serviciosData);
+    } catch (error) {
+      console.error('Error al obtener los servicios:', error);
+    }
   };
 
-  // Función para cerrar sesión
+  const getUserName = () => {
+    if (user && user.email) {
+      const name = user.email.split('@')[0];
+      return name.charAt(0).toUpperCase() + name.slice(1);
+    }
+    return 'Usuario';
+  };
+
   const handleLogout = async () => {
     try {
-      await signOut(auth); // Cerrar sesión
-      navigate('/spidibot'); // Redirigir al usuario a la página de inicio de sesión
+      await signOut(auth);
+      navigate('/spidibot');
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }
@@ -34,13 +60,20 @@ function Home() {
 
   return (
     <div className="home-container">
-      <h1>Hola, {getUserName()}!</h1>
-      <p>Bienvenido a tu panel de usuario.</p>
+      <h1 className="greeting">Hola, {getUserName()}!</h1>
+      <p className="welcome-message">Bienvenido a tu panel de usuario.</p>
 
-      {/* Botón de cerrar sesión */}
-      <button onClick={handleLogout} className="logout-button">
-        Cerrar Sesión
-      </button>
+      <div className="button-group">
+        <button onClick={handleLogout} className="logout-button">
+          Cerrar Sesión
+        </button>
+      </div>
+
+      <div className="platforms-container">
+        {servicios.map((servicio, index) => (
+          <ContainerPlatform key={index} title={servicio} servicio={servicio} /> // Muestra el nombre del servicio
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,0 +1,32 @@
+/* src/WebAdmin/containerPlatform.css */
+
+/* Estilo para cada contenedor de plataforma */
+.container-platform {
+    background-color: #aeacac; /* Color de fondo blanco */
+    border: 1px solid #ddd; /* Borde gris claro */
+    border-radius: 8px; /* Bordes redondeados */
+    padding: 20px; /* Espaciado interno */
+    margin: 10px 0; /* Margen superior e inferior */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  }
+  
+  /* Título de la plataforma */
+  .container-platform h2 {
+    font-size: 1.5rem; /* Tamaño de fuente */
+    color: #333; /* Color del texto */
+    margin: 0; /* Sin margen */
+  }
+  
+
+  /* src/WebAdmin/containerPlatform.css */
+
+/* Estilo para cada item del grupo */
+.grupo-content {
+    margin-top: 10px;
+  }
+  
+  .grupo-item {
+    margin: 5px 0;
+    color: #555; /* Color del texto */
+  }
+  

@@ -46,3 +46,32 @@
 .logout-button:hover {
   background-color: #555;
 }
+/*/* Agrega esto en src/WebAdmin/home.css */
+
+/* Estilo para el contenedor de plataformas */
+.platforms-container {
+  display: flex; /* Usar flexbox para alinear los elementos */
+  flex-direction: column; /* Coloca los elementos en columna */
+  align-items: center; /* Centra los elementos horizontalmente */
+  margin-top: 20px; /* Margen superior */
+}
+
+.platforms-container {
+  display: flex;               /* Utiliza flexbox para la disposición */
+  flex-wrap: wrap;            /* Permite que los contenedores se envuelvan si es necesario */
+  gap: 20px;                  /* Espacio entre los contenedores */
+}
+
+.container-platform {
+  flex: 1 1 calc(25% - 20px); /* Ocupa el 25% del ancho del contenedor padre, menos el margen */
+  min-width: 200px;           /* Establece un ancho mínimo para los contenedores */
+  background-color: #f0f0f0;  /* Color de fondo para visualizar los contenedores */
+  padding: 15px;              /* Espaciado interno */
+  border-radius: 8px;         /* Bordes redondeados */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
+}
+
+.servicio-title {
+  font-weight: bold;          /* Título en negrita */
+  font-size: 1.2em;           /* Tamaño del texto */
+}
