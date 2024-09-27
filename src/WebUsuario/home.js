@@ -4,7 +4,7 @@ import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { getDocs, collection, query, where } from 'firebase/firestore';
-import '../Webusuario/home.css';
+import '../WebAdmin/home.css';
 import ContainerPlatform from './ContainerPlatform';
 import { db } from '../firebase';
 
