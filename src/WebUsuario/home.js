@@ -20,7 +20,7 @@ function Home() {
   const handleLogout = async () => {
     try {
       await signOut(auth); // Cerrar sesión
-      console.log('Sesión cerrada');
+      navigate('/spidibot');
       // Redirigir al usuario a la página de inicio de sesión o hacer alguna otra acción
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
