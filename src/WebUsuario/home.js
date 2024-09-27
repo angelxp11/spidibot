@@ -1,4 +1,4 @@
-// src/Webusuario/Home.js
+// src/WebAdmin/Home.js
 import React, { useEffect, useState } from 'react';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
@@ -14,7 +14,6 @@ function Home() {
   const [servicios, setServicios] = useState([]); // Estado para almacenar servicios
 
   useEffect(() => {
-    // Redirigir a /spidibot si el usuario no está autenticado
     if (!user) {
       navigate('/spidibot');
     } else {
