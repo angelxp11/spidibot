@@ -14,6 +14,7 @@ function Home() {
   const [servicios, setServicios] = useState([]); // Estado para almacenar servicios
 
   useEffect(() => {
+    // Redirigir a /spidibot si el usuario no está autenticado
     if (!user) {
       navigate('/spidibot');
     } else {
@@ -31,7 +32,10 @@ function Home() {
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         if (data.servicio) {
-          serviciosData.push(...Object.values(data.servicio)); // Extrae todos los servicios
+          Object.values(data.servicio).forEach(servicio => {
+            const estado = servicio.PENDEJOALEJANDRO ? servicio.PENDEJOALEJANDRO.estado : 'Estado no disponible';
+            serviciosData.push({ nombre: servicio.nombre, estado }); // Almacena nombre y estado
+          });
         }
       });
 
@@ -71,7 +75,11 @@ function Home() {
 
       <div className="platforms-container">
         {servicios.map((servicio, index) => (
-          <ContainerPlatform key={index} title={servicio} servicio={servicio} /> // Muestra el nombre del servicio
+          <ContainerPlatform 
+            key={index} 
+            title={servicio.nombre} 
+            estado={servicio.estado} // Envía el estado del servicio
+          /> 
         ))}
       </div>
     </div>
