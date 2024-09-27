@@ -1,11 +1,13 @@
 import React from 'react';
 import { auth } from '../firebase'; // Asegúrate de que el path de firebase es correcto
 import { signOut } from 'firebase/auth'; // Importa la función de cerrar sesión
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 import './home.css'; // Importa los estilos si los tienes
 
 function Home() {
   // Obtén el email del usuario autenticado
   const user = auth.currentUser;
+  const navigate = useNavigate(); // Crea la instancia de navigate
 
   // Extrae el nombre de usuario del email (antes del "@")
   const getUserName = () => {
@@ -20,8 +22,7 @@ function Home() {
   const handleLogout = async () => {
     try {
       await signOut(auth); // Cerrar sesión
-      navigate('/spidibot');
-      // Redirigir al usuario a la página de inicio de sesión o hacer alguna otra acción
+      navigate('/spidibot'); // Redirigir al usuario a la página de inicio de sesión
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }
