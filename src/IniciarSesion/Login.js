@@ -33,7 +33,7 @@ function Login() {
         navigate('/WebAdmin/home');
       } else {
         // Si no existe, redirige a WebUsuario
-        navigate('/spidibot/WebUsuario/home');
+        navigate('/spidibot');
       }
     } catch (error) {
       setError('Error en el correo electrónico o la contraseña');
