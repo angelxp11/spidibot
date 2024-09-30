@@ -33,6 +33,7 @@ function BuscarCliente({ onClose }) {
     nombre: '',
     apellido: '',
     telefono: '',
+    email: '',
     fechaInicial: '',
     fechaFinal: '',
     pagado: '',
@@ -155,6 +156,7 @@ function BuscarCliente({ onClose }) {
       nombre: client.nombre,
       apellido: client.apellido,
       telefono: client.telefono,
+      email: client.email,
       fechaInicial: convertirFecha(client.fechaInicial),
       fechaFinal: convertirFecha(client.fechaFinal),
       pagado: client.pagado,
@@ -201,6 +203,9 @@ function BuscarCliente({ onClose }) {
       }
       if (clientData.telefono) {
         updates['telefono'] = clientData.telefono.toUpperCase();
+      }
+      if (clientData.email) {
+        updates['email'] = clientData.email.toLowerCase();
       }
       if (fechaInicial) {
         updates['fechaInicial'] = fechaInicial;
@@ -427,6 +432,17 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                   onChange={handleChange}
                   className="detail-input"
                   placeholder="Teléfono"
+                />
+              </label>
+              <label>
+                Email:
+                <input
+                  type="text"
+                  name="email"
+                  value={clientData.email} // Muestra el valor del email
+                  onChange={handleChange} // Maneja los cambios en el campo
+                  className="detail-input"
+                  placeholder="Email"
                 />
               </label>
               <label>

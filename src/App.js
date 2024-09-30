@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from './firebase'; // Asegúrate de importar la configuración correcta de Firebase
 import Login from './IniciarSesion/Login';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import AdminHome from './WebAdmin/home'; // Componente del admin
 import UserHome from './WebUsuario/home'; // Componente del usuario
 import Carga from './Loada/Carga'; // Asegúrate de que la ruta del componente Carga sea correcta
@@ -48,6 +50,7 @@ function App() {
       ) : (
         <Login />
       )}
+      <ToastContainer />
     </div>
   );
 }

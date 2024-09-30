@@ -8,6 +8,9 @@
 /* Establecer fuente para todo el documento */
 body {
   font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #ed1b24, #000000);
+  background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
+  animation: gradientAnimation 15s ease infinite;
 }
 
 /* Estilo para el cuerpo de la página */
@@ -16,8 +19,15 @@ body, html {
   height: 100%;
   margin: 0;
   padding: 0;
-  background: linear-gradient(135deg, #ed1b24, #000000);
-  animation: gradientAnimation 15s ease infinite;
+}
+
+/* Contenedor principal que se adapta a la altura del contenido */
+.home-container {
+  min-height: 100vh; /* Asegúrate de que siempre cubra el 100% de la altura de la ventana */
+  display: flex;
+  flex-direction: column; /* Permite que los elementos se apilen verticalmente */
+  justify-content: flex-start; /* Alinea los elementos al inicio */
+  padding: 20px; /* Agrega un poco de espacio alrededor */
 }
 
 .login-container {

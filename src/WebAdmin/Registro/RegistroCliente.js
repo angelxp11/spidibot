@@ -94,6 +94,7 @@ function RegistroCliente({ onClose }) {
         ID: clientData.ID,
         nombre: clientData.nombre.toUpperCase(),
         apellido: clientData.apellido.toUpperCase(),
+        email: clientData.email.toLowerCase(), // Guardar email en minúsculas
         telefono: clientData.telefono.toUpperCase(),
         grupo: grupoArray,
         servicio: servicioArray,
@@ -115,6 +116,7 @@ function RegistroCliente({ onClose }) {
         nombre: '',
         apellido: '',
         telefono: '',
+        email: '', // Restablecer email
         fechaInicial: '',
         fechaFinal: '',
         pagado: 'NO', // Valor por defecto
@@ -274,6 +276,15 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
           />
         </div>
         <div className="form-input">
+          <label>Email</label> {/* Nuevo campo Email */}
+          <input
+            type="email"
+            name="email"
+            value={clientData.email}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="form-input">
           <label>Fecha Inicial</label>
           <input
             type="date"
@@ -288,26 +299,6 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             type="date"
             name="fechaFinal"
             value={clientData.fechaFinal}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-input">
-          <label>Pagado</label>
-          <select
-            name="pagado"
-            value={clientData.pagado}
-            onChange={handleChange}
-          >
-            <option value="NO">NO</option>
-            <option value="SI">SI</option>
-          </select>
-        </div>
-        <div className="form-input">
-          <label>Estado</label>
-          <input
-            type="text"
-            name="estado"
-            value={clientData.estado}
             onChange={handleChange}
           />
         </div>
@@ -338,11 +329,13 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             onChange={handleChange}
           />
         </div>
-        <button className="form-button" onClick={handleSaveClient}>Registrar Cliente</button>
-        <button className="form-button" onClick={onClose}>Cerrar</button>
+        <button className="submit-button" onClick={handleSaveClient}>
+          Guardar Cliente
+        </button>
       </div>
     </div>
   );
+  
 }
 
 export default RegistroCliente;

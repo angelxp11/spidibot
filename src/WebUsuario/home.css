@@ -1,0 +1,80 @@
+/* src/WebAdmin/home.css */
+
+/* Modal styles */
+.modal-overlays {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Make sure it appears on top */
+}
+
+.modal-contents {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+/* Button styles */
+.copy-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px; /* Space above buttons */
+    cursor: pointer;
+}
+
+/* Individual button colors */
+.copy-email {
+    background-color: #ed1b24; /* Background color for Copy Email */
+    color: white; /* Text color (if any) */
+}
+
+.copy-password {
+    background-color: #ed1b24; /* Background color for Copy Password */
+    color: white; /* Text color (if any) */
+}
+
+.copy-all {
+    background-color: red; /* Background color for Copy All */
+    color: white; /* Text color (if any) */
+}
+
+/* Style for labels */
+label {
+    font-weight: lighter;
+}
+
+
+/* New styles for modal items */
+.modal-item {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    margin-bottom: 15px; /* Space between each item */
+}
+
+/* Style for modal text */
+.modal-item p {
+    margin: 5px 0; /* Space above and below text */
+    font-size: 20px;
+    font-weight: bold;
+}
+.advice-message {
+    color: #d9534f; /* Color rojo para destacar el mensaje */
+    font-weight: bold; /* Negrita para mayor énfasis */
+    margin-top: 5px; /* Espacio entre el servicio y el mensaje */
+  }
+  
+  .greeting {
+    color: rgb(255, 255, 255); /* Color negro para el texto */
+}
+
