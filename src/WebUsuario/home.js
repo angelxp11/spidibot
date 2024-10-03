@@ -196,14 +196,34 @@ function Home() {
         </button>
       </div>
 
-      {/* Modal de información */}
-      {modalOpen && modalData && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h2>Información de la Cuenta</h2>
-            <p><strong>Email:</strong> {modalData.email} <img src={copyIcon} alt="copy" onClick={() => copyToClipboard(modalData.email, 'Email')} style={{ cursor: 'pointer' }} /></p>
-            <p><strong>Contraseña:</strong> {modalData.password} <img src={copyIcon} alt="copy" onClick={() => copyToClipboard(modalData.password, 'Contraseña')} style={{ cursor: 'pointer' }} /></p>
-            <button onClick={handleCloseModal} className="close-modal-button">Cerrar</button>
+     {/* Modal para mostrar detalles de la cuenta */}
+     {modalOpen && modalData && (
+        <div className="modal-overlays">
+          <div className="modal-contents">
+            <h2>Detalles de la cuenta</h2>
+            <div className="modal-item">
+              <label>Email:</label>
+            </div>
+            <div className="modal-item">
+              <p>{modalData.email}</p>
+              <div className="copy-button copy-email" onClick={() => copyToClipboard(modalData.email, 'Email')}>
+                <img src={copyIcon} alt="Copiar Email" style={{ width: '20px', height: '20px', marginRight: '5px' }} />
+                Copiar Email
+              </div>
+            </div>
+  
+            <div className="modal-item">
+              <label>Contraseña:</label>
+            </div>
+            <div className="modal-item">
+              <p>{modalData.password}</p>
+              <div className="copy-button copy-password" onClick={() => copyToClipboard(modalData.password, 'Contraseña')}>
+                <img src={copyIcon} alt="Copiar Contraseña" style={{ width: '20px', height: '20px', marginRight: '5px' }} />
+                Copiar Contraseña
+              </div>
+            </div>
+  
+            <button onClick={handleCloseModal} className="home-button">Cerrar</button>
           </div>
         </div>
       )}
