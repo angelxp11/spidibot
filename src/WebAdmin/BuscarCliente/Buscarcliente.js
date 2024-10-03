@@ -57,6 +57,13 @@ function BuscarCliente({ onClose }) {
       }
     }
   };
+  // Función para ejecutar la búsqueda al presionar Enter
+const handleKeyPress = (event) => {
+  if (event.key === 'Enter') {
+    handleSearch();  // Ejecuta la función handleSearch cuando se presiona Enter
+  }
+};
+
 
   const handleSearchTypeChange = (event) => {
     setSearchType(event.target.value);
@@ -362,8 +369,10 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                 value={searchValue}
                 onChange={handleSearchValueChange}
                 className="search-input"
+                onKeyPress={handleKeyPress}  /* Captura la tecla presionada */
                 placeholder={`Buscar por ${searchType}`}
               />
+
             )}
             <button onClick={handleSearch} className="search-button">Buscar</button>
           </div>

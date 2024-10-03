@@ -83,29 +83,38 @@ function BuscarCupo({ onClose }) {
       const serviciosArray = servicio.split(',').map(s => s.trim().toUpperCase());
       const clientesFiltrados = [];
       const coloresClientes = {};
-
+  
       for (let i = 0; i < serviciosArray.length; i++) {
-        const servicioActual = serviciosArray[i];
-
+        const servActual = serviciosArray[i];
+        
         const qServicio = query(
           clientesRef,
-          where('servicio', 'array-contains', servicioActual)
+          where('servicio', 'array-contains', servActual)
         );
-        const querySnapshotServicio = await getDocs(qServicio);
-        const clientesServicio = querySnapshotServicio.docs.map(doc => ({
-          id: doc.data().ID,  // Usa el valor del campo 'ID' en lugar del ID del documento
+        const querySnapshot = await getDocs(qServicio);
+        
+        const clientesServicio = querySnapshot.docs.map(doc => ({
+          id: doc.data().ID,
           nombre: doc.data().nombre,
           apellido: doc.data().apellido,
+          PENDEJOALEJANDRO: doc.data().PENDEJOALEJANDRO,
           ...doc.data()
         }));
-
+  
         clientesServicio.forEach(cliente => {
           const servicios = cliente.servicio || [];
           const grupos = cliente.grupo || [];
-
-          if (servicios.some((serv, index) => 
-            serv === servicioActual && grupos[index] === grupo
-          )) {
+          
+          // Verificar si el grupo y servicio coinciden
+          const coincide = servicios.some((serv, index) => 
+            serv === servActual && grupos[index] === grupo
+          );
+          
+          // Verificar el estado en el campo PENDEJOALEJANDRO
+          const estadoCliente = cliente.PENDEJOALEJANDRO?.estado;
+          
+          // Mostrar cliente si su estado es diferente de 😶‍🌫️
+          if (coincide && estadoCliente !== '😶‍🌫️') {
             if (!clientesFiltrados.some(c => c.id === cliente.id)) {
               clientesFiltrados.push(cliente);
               if (serviciosArray.length > 1) {
@@ -115,7 +124,7 @@ function BuscarCupo({ onClose }) {
           }
         });
       }
-
+  
       setClientes(clientesFiltrados);
       setClientesColores(serviciosArray.length > 1 ? coloresClientes : {});
       setIsResultadosVisible(true);
@@ -123,6 +132,7 @@ function BuscarCupo({ onClose }) {
       console.error('Error en la búsqueda:', error);
     }
   };
+  
 
   const handleInfoClick = async () => {
     try {

@@ -102,7 +102,7 @@ const ActualizarBd = ({ onClose }) => {
 
     if (diasRestantes > 2) {
       return '✅';
-    } else if (diasRestantes >= 0) {
+    } else if (diasRestantes > -1) {
       return '⚠️';
     } else {
       return '❌';
