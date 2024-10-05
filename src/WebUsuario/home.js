@@ -102,42 +102,57 @@ function Home() {
   };
 
   // Función para manejar el clic en "Más Información"
-  const handleMoreInfo = async (servicioId, grupo, servicioNombre, estado) => {
-    // Si el servicio es YOUTUBE o SPOTIFY, no abrir el modal
-    if (servicioNombre === "YOUTUBE" || servicioNombre === "SPOTIFY") {
-      setAdviceMessage('Comunicarse con su asesor'); // Establecer el mensaje de asesor
-      return; // No abrir el modal
+const handleMoreInfo = async (servicioId, grupo, servicioNombre, estado) => {
+  // Si el servicio es YOUTUBE o SPOTIFY, no abrir el modal
+  if (servicioNombre === "YOUTUBE" || servicioNombre === "SPOTIFY") {
+    setAdviceMessage('Comunicarse con su asesor'); // Establecer el mensaje de asesor
+    return; // No abrir el modal
+  }
+
+  // Si el servicio es NetflixMe, muestra un toast y no abre el modal
+  if (servicioNombre.toUpperCase() === "NETFLIXME") {
+    toast.info('El servicio es directamente con tu correo');
+    return;
+  }
+
+  setLoading(true); // Mostrar la pantalla de carga
+  setModalOpen(true); // Abrir el modal
+  setAdviceMessage(''); // Resetear el mensaje de asesor
+
+  try {
+    let docRef;
+
+    // Verifica si el servicio es Netflix o NetflixTV
+    if (servicioNombre.toUpperCase() === "NETFLIX" || servicioNombre.toUpperCase() === "NETFLIXTV") {
+      docRef = doc(db, 'Servicios', 'NETFLIX,NETFLIXTV,NETFLIXME'); // Documento para Netflix, NetflixTV, y NetflixMe
+    } else {
+      docRef = doc(db, 'Servicios', servicioId); // Documento estándar para otros servicios
     }
 
-    setLoading(true); // Mostrar la pantalla de carga
-    setModalOpen(true); // Abrir el modal
-    setAdviceMessage(''); // Resetear el mensaje de asesor
+    const docSnap = await getDoc(docRef);
 
-    try {
-      const docRef = doc(db, 'Servicios', servicioId);
-      const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      const cuentaInfo = data[grupo]; // Acceder al campo del grupo
+      const validStates = ["✅", "⚠️"]; // Arreglo de estados válidos
 
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        const cuentaInfo = data[grupo]; // Acceder al campo del grupo
-        const validStates = ["✅", "⚠️"]; // Arreglo de estados válidos
-
-        if (cuentaInfo && validStates.includes(estado)) { // Verifica el estado antes de establecer modalData
-          setModalData({
-            email: cuentaInfo.email,
-            password: cuentaInfo.password,
-          });
-        } else {
-          setModalData(null); // Limpiar los datos si el estado no es válido
-          toast.error('No se puede mostrar la información de la cuenta debido al estado.'); // Mostrar mensaje en toast
-        }
+      if (cuentaInfo && validStates.includes(estado)) { // Verifica el estado antes de establecer modalData
+        setModalData({
+          email: cuentaInfo.email,
+          password: cuentaInfo.password,
+        });
+      } else {
+        setModalData(null); // Limpiar los datos si el estado no es válido
+        toast.error('No se puede mostrar la información de la cuenta debido al estado.'); // Mostrar mensaje en toast
       }
-    } catch (error) {
-      console.error('Error al obtener la información del servicio:', error);
-    } finally {
-      setLoading(false); // Ocultar la pantalla de carga
     }
-  };
+  } catch (error) {
+    console.error('Error al obtener la información del servicio:', error);
+  } finally {
+    setLoading(false); // Ocultar la pantalla de carga
+  }
+};
+
 
   // Función para cerrar el modal
   const handleCloseModal = () => {

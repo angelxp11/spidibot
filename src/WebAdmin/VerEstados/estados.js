@@ -42,7 +42,7 @@ function Estados({ onClose }) {
         estado: '❌'
       });
   
-      alert('Las fechas de inicio y final se han actualizado a 07/07/2003.');
+      alert('El cliente no continuara con los servicios.');
       await handleSearch();  // Vuelve a realizar la búsqueda para refrescar la lista
       setSelectedClient(null);
     }
