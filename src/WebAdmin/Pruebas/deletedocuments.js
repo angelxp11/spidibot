@@ -3,7 +3,7 @@ import { collection, getDocs, query, where, deleteDoc } from 'firebase/firestore
 import { db } from '../../firebase'; // Asegúrate de que la ruta a firebase.js sea correcta
 import './Pruebas.css';
 
-const Pruebas = ({ onClose }) => {
+const deletedocuments = ({ onClose }) => {
   const [clientIds, setClientIds] = useState([]);
 
   // Función para obtener los IDs de clientes
@@ -56,4 +56,4 @@ const Pruebas = ({ onClose }) => {
   );
 }
 
-export default Pruebas;
+export default deletedocuments;

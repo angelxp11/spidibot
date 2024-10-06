@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage"; // Asegúrate de importar estas funciones
-
-
+import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
 import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { app } from '../../firebase';
 import html2canvas from 'html2canvas';
-import fondo from '../../fondo.png'; // Asegúrate de que la imagen fondo.png esté en la carpeta correcta
+import fondo from '../../fondo.png';
 import './estados.css';
-
 
 const firestore = getFirestore(app);
 
@@ -19,31 +16,29 @@ function Estados({ onClose }) {
   const handleSearchValueChange = (event) => {
     setSearchValue(event.target.value);
   };
-  ///funion para no ccontinuar
+
   const handleNoContinuar = async () => {
     if (selectedClient) {
       const nuevaFechaInicio = '07/07/2003';
       const nuevaFechaFinal = '07/07/2003';
-      
-      // Actualizar el documento en Firestore
+
       const clientRef = doc(firestore, 'clientes', selectedClient.id);
       await updateDoc(clientRef, {
-        fechaInicial: nuevaFechaInicio,  // Si tienes este campo en tu base de datos
+        fechaInicial: nuevaFechaInicio,
         fechaFinal: nuevaFechaFinal,
-        'PENDEJOALEJANDRO.estado': '😶‍🌫️', // O cualquier otro estado que definas
+        'PENDEJOALEJANDRO.estado': '😶‍🌫️',
         pagado: "NO"
       });
-  
-      // Actualizar el cliente seleccionado en el estado de la aplicación
+
       setSelectedClient({
         ...selectedClient,
-        fechaInicio: nuevaFechaInicio,  // Si tienes este campo en tu base de datos
+        fechaInicio: nuevaFechaInicio,
         fechaFinal: nuevaFechaFinal,
         estado: '❌'
       });
-  
+
       alert('El cliente no continuara con los servicios.');
-      await handleSearch();  // Vuelve a realizar la búsqueda para refrescar la lista
+      await handleSearch();
       setSelectedClient(null);
     }
   };
@@ -62,10 +57,10 @@ function Estados({ onClose }) {
           estado: data.PENDEJOALEJANDRO?.estado || '',
           fechaFinal: data.fechaFinal,
           ID: data.ID,
-          telefono: data.telefono || '', // Agregar el campo teléfono
-          servicio: data.servicio || [], // Asegúrate de que sea un array
-          grupo: data.grupo || [], // Asegúrate de que sea un array
-          precio: data.precio || [], // Asegúrate de que sea un array
+          telefono: data.telefono || '',
+          servicio: data.servicio || [],
+          grupo: data.grupo || [],
+          precio: data.precio || [],
           ...data
         };
       });
@@ -102,67 +97,46 @@ function Estados({ onClose }) {
 
   const handleRenew = async () => {
     if (selectedClient) {
-      // Obtener día, mes y año de la fecha actual del cliente
       const [day, month, year] = selectedClient.fechaFinal.split('/').map(Number);
-  
-      // Crear la fecha actual
       const fechaActual = new Date(year, month - 1, day);
-  
-      // Sumar un mes a la fecha actual
       fechaActual.setMonth(fechaActual.getMonth() + 1);
-  
-      // Comprobar si el mes cambió debido a un desbordamiento de días
       if (fechaActual.getDate() !== day) {
-        fechaActual.setDate(0); // Retrocede al último día del mes anterior
+        fechaActual.setDate(0);
       }
-  
-      // Formatear la nueva fecha final en formato 'dd/mm/yyyy'
+
       const nuevaFechaFinal = fechaActual.toLocaleDateString('es-ES', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric'
       });
-  
-      // Calcular el nuevo estado del cliente
+
       const nuevoEstado = calcularEstadoCliente(nuevaFechaFinal);
-  
-      // Actualizar el documento en Firestore
+
       const clientRef = doc(firestore, 'clientes', selectedClient.id);
       await updateDoc(clientRef, {
         fechaFinal: nuevaFechaFinal,
         'PENDEJOALEJANDRO.estado': nuevoEstado,
         pagado: "SI"
       });
-  
-      // Actualizar el cliente seleccionado en el estado de la aplicación
+
       setSelectedClient({
         ...selectedClient,
         fechaFinal: nuevaFechaFinal,
         estado: nuevoEstado
       });
-  
-      // Mostrar un mensaje de alerta al usuario
+
       alert('La fecha de finalización ha sido renovada y el estado actualizado.');
       await handleSearch();
     }
   };
-  
 
   const handleGenerateComprobante = async () => {
     if (selectedClient) {
-      // Verificar que las propiedades necesarias existan y sean arrays
       const servicios = Array.isArray(selectedClient.servicio) ? selectedClient.servicio : [];
       const grupo = Array.isArray(selectedClient.grupo) ? selectedClient.grupo : [];
-  
-      // Asegurarse de que los precios sean números
-      const precios = Array.isArray(selectedClient.precio)
-        ? selectedClient.precio.map(Number) // Convertir todos los precios a números
-        : [];
-  
-      // Sumar los precios
+      const precios = Array.isArray(selectedClient.precio) ? selectedClient.precio.map(Number) : [];
       const precioTotal = precios.reduce((acc, curr) => acc + curr, 0).toLocaleString('es-ES');
-  
-      // Crear el contenedor del comprobante
+
       const comprobanteContainer = document.createElement('div');
       comprobanteContainer.className = 'comprobante-container';
       comprobanteContainer.style.backgroundImage = `url(${fondo})`;
@@ -177,7 +151,7 @@ function Estados({ onClose }) {
       comprobanteContainer.style.position = 'absolute';
       comprobanteContainer.style.left = '-9999px';
       comprobanteContainer.style.top = '-9999px';
-  
+
       const date = new Date();
       const fechaGenerada = date.toLocaleDateString('es-ES', {
         day: '2-digit',
@@ -185,13 +159,9 @@ function Estados({ onClose }) {
         year: 'numeric'
       });
 
-      
-      
-  
-      // Convertir servicio y grupo en cadenas de texto unidas por comas
       const serviciosTexto = servicios.length > 0 ? servicios.join(', ') : 'Ninguno';
       const grupoTexto = grupo.length > 0 ? grupo.join(', ') : 'Ninguno';
-  
+
       comprobanteContainer.innerHTML = `
         <p>Comprobante generado (${fechaGenerada})</p>
         <p>⭐ID: ${selectedClient.ID}</p>
@@ -202,29 +172,20 @@ function Estados({ onClose }) {
         <p>⭐FECHA FINAL: ${selectedClient.fechaFinal}</p>
         <p>⭐ESTADO: ${selectedClient.estado}</p>
       `;
-  
+
       document.body.appendChild(comprobanteContainer);
-  
+
       html2canvas(comprobanteContainer).then(async (canvas) => {
-        // Generar un nombre de archivo único de 16 caracteres
-        const generateUniqueFileName = () => {
-          return Math.random().toString(36).substring(2, 18) + Date.now().toString(36);
-        };
-  
-        const uniqueFileName = `${generateUniqueFileName()}.png`;
-  
-        // Obtener el URL del archivo como base64
+        const uniqueFileName = `comprobante_${selectedClient.ID}_${Date.now()}.png`;
+        const clientFolder = selectedClient.ID; // Usamos el ID del cliente como nombre de la carpeta
+
         const dataUrl = canvas.toDataURL('image/png');
-  
-        // Subir a Firebase Storage
-        const storage = getStorage(); // Inicializa Firebase Storage
-        const storageRef = ref(storage, `comprobantes/${uniqueFileName}`);
+        const storage = getStorage();
+        const storageRef = ref(storage, `comprobantes/${clientFolder}/${uniqueFileName}`);
+        
         await uploadString(storageRef, dataUrl, 'data_url');
-  
-        // Obtener la URL de descarga
+
         const downloadURL = await getDownloadURL(storageRef);
-  
-        // WhatsApp Web message
         const mensaje = `_*🎉 ¡Gracias por tu Comprobante de Pago y Renovación Exitosa! 🎉*_
 
 Hemos recibido con éxito tu comprobante de pago y renovación. 🎊 Apreciamos tu confianza en *JadePlatform* y estamos encantados de seguir siendo tu elección.
@@ -232,20 +193,16 @@ Hemos recibido con éxito tu comprobante de pago y renovación. 🎊 Apreciamos 
 Si tienes alguna pregunta o necesitas asistencia, estamos aquí para ayudarte. ¡Disfruta al máximo de tu servicio renovado! 😊🙌
 
 Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
+        
         await navigator.clipboard.writeText(mensaje);
         alert('Mensaje copiado al portapapeles');
-        const whatsappNumber = selectedClient.telefono; // Obtener el número de WhatsApp del cliente
+        const whatsappNumber = selectedClient.telefono; 
         const encodedMessage = encodeURIComponent(mensaje);
         const whatsappUrl = `https://web.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
 
-        
-
-  
-        // Abre WhatsApp Web
         window.open(whatsappUrl, '_blank');
-  
         alert('El comprobante ha sido generado, guardado en Firebase Storage y enviado por WhatsApp.');
-  
+
         document.body.removeChild(comprobanteContainer);
         setSelectedClient(null);
       });

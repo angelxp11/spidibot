@@ -302,18 +302,15 @@ const handleKeyPress = (event) => {
   
       html2canvas(comprobanteContainer).then(async (canvas) => {
         // Generar un nombre de archivo único de 16 caracteres
-        const generateUniqueFileName = () => {
-          return Math.random().toString(36).substring(2, 18) + Date.now().toString(36);
-        };
-  
-        const uniqueFileName = `${generateUniqueFileName()}.png`;
+        const uniqueFileName = `comprobante_${selectedClient.ID}_${Date.now()}.png`;
+        const clientFolder = selectedClient.ID; // Usamos el ID del cliente como nombre de la carpeta
   
         // Obtener el URL del archivo como base64
         const dataUrl = canvas.toDataURL('image/png');
   
         // Subir a Firebase Storage
         const storage = getStorage(); // Inicializa Firebase Storage
-        const storageRef = ref(storage, `comprobantes/${uniqueFileName}`);
+        const storageRef = ref(storage, `comprobantes/${clientFolder}/${uniqueFileName}`);
         await uploadString(storageRef, dataUrl, 'data_url');
   
         // Obtener la URL de descarga
