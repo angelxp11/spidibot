@@ -37,51 +37,44 @@ function Home() {
       const email = user.email;
       const q = query(collection(db, 'clientes'), where('email', '==', email));
       const querySnapshot = await getDocs(q);
-      const serviciosData = []; // Inicializa el array aquí
-      const emailCounts = {}; // Contador para rastrear cuántas veces se repite el email
+      const serviciosData = [];
+      const emailCounts = {}; 
   
       querySnapshot.forEach((doc) => {
-        const data = doc.data(); // Datos del documento
-
-        // Extrae el nombre del cliente
-        const nombreCliente = data.nombre || 'Nombre no disponible'; // Maneja el caso de que no exista
-        setNombreCliente(nombreCliente); // Actualiza el nombre del cliente
-
-        // Extrae la fechaFinal
-        const fechaFinal = data.fechaFinal || 'Fecha no disponible'; // Maneja el caso de que no exista
-
-        // Asegúrate de que los campos servicio, grupo y estado existan
-        if (data.servicio && data.grupo && data.PENDEJOALEJANDRO) {
-          // Iteramos sobre los servicios y grupos
+        const data = doc.data();
+        const nombreCliente = data.nombre || 'Nombre no disponible'; 
+        setNombreCliente(nombreCliente);
+  
+        const fechaFinal = data.fechaFinal || 'Fecha no disponible'; 
+  
+        if (data.servicio && data.grupo && data.notas) {
           data.servicio.forEach((servicio, index) => {
-            const grupo = data.grupo[index]; // Grupo en la misma posición que el servicio
-            const estado = data.PENDEJOALEJANDRO.estado; // Valor del estado dentro del campo mapa
-
-            // Añadimos los datos del servicio, grupo, estado y fechaFinal
+            const grupo = data.grupo[index]; 
+            const estado = data.PENDEJOALEJANDRO.estado;
+  
             serviciosData.push({
               servicio,
               grupo,
               estado,
-              fechaFinal, // Agregar fechaFinal aquí
-              nombreCliente // Agregar nombreCliente aquí
+              fechaFinal, 
+              nombreCliente,
+              nota: data.notas[index] || ''  // Agregamos la nota correspondiente
             });
           });
-
-          // Contar cuántas veces se repite el email
+  
           emailCounts[email] = (emailCounts[email] || 0) + 1; 
         }
       });
-
-      // Determina si hay proveedor o si el email se repite
+  
       const isProvider = serviciosData.length > 0 && serviciosData[0].estado === 'Proveedor';
-      const isEmailRepeated = emailCounts[email] > 1; // Verifica si el email se repite
-
-      setHasProvider(isProvider || isEmailRepeated); // Si hay proveedor o el email se repite
-      setServicios(serviciosData); // Actualizamos el estado con los servicios obtenidos
+      const isEmailRepeated = emailCounts[email] > 1;
+  
+      setHasProvider(isProvider || isEmailRepeated); 
+      setServicios(serviciosData);
     } catch (error) {
       console.error('Error al obtener los servicios:', error);
     } finally {
-      setLoading(false); // Cambia el estado de carga a false cuando termine
+      setLoading(false); 
     }
   };
 
@@ -102,57 +95,60 @@ function Home() {
   };
 
   // Función para manejar el clic en "Más Información"
-const handleMoreInfo = async (servicioId, grupo, servicioNombre, estado) => {
-  // Si el servicio es YOUTUBE o SPOTIFY, no abrir el modal
-  if (servicioNombre === "YOUTUBE" || servicioNombre === "SPOTIFY") {
-    setAdviceMessage('Comunicarse con su asesor'); // Establecer el mensaje de asesor
-    return; // No abrir el modal
-  }
-
-  // Si el servicio es NetflixMe, muestra un toast y no abre el modal
-  if (servicioNombre.toUpperCase() === "NETFLIXME") {
-    toast.info('El servicio es directamente con tu correo');
-    return;
-  }
-
-  setLoading(true); // Mostrar la pantalla de carga
-  setModalOpen(true); // Abrir el modal
-  setAdviceMessage(''); // Resetear el mensaje de asesor
-
-  try {
-    let docRef;
-
-    // Verifica si el servicio es Netflix o NetflixTV
-    if (servicioNombre.toUpperCase() === "NETFLIX" || servicioNombre.toUpperCase() === "NETFLIXTV") {
-      docRef = doc(db, 'Servicios', 'NETFLIX,NETFLIXTV,NETFLIXME'); // Documento para Netflix, NetflixTV, y NetflixMe
-    } else {
-      docRef = doc(db, 'Servicios', servicioId); // Documento estándar para otros servicios
+  const handleMoreInfo = async (servicioId, grupo, servicioNombre, estado) => {
+    if (servicioNombre === "YOUTUBE" || servicioNombre === "SPOTIFY") {
+      setAdviceMessage('Comunicarse con su asesor');
+      return;
     }
 
-    const docSnap = await getDoc(docRef);
+    if (servicioNombre.toUpperCase() === "NETFLIXME") {
+      toast.info('El servicio es directamente con tu correo');
+      return;
+    }
 
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      const cuentaInfo = data[grupo]; // Acceder al campo del grupo
-      const validStates = ["✅", "⚠️"]; // Arreglo de estados válidos
+    setLoading(true);
+    setModalOpen(true);
+    setAdviceMessage('');
 
-      if (cuentaInfo && validStates.includes(estado)) { // Verifica el estado antes de establecer modalData
-        setModalData({
-          email: cuentaInfo.email,
-          password: cuentaInfo.password,
-        });
+    try {
+      let docRef;
+
+      if (servicioNombre.toUpperCase() === "NETFLIX" || servicioNombre.toUpperCase() === "NETFLIXTV") {
+        docRef = doc(db, 'Servicios', 'NETFLIX,NETFLIXTV,NETFLIXME');
       } else {
-        setModalData(null); // Limpiar los datos si el estado no es válido
-        toast.error('No se puede mostrar la información de la cuenta debido al estado.'); // Mostrar mensaje en toast
+        docRef = doc(db, 'Servicios', servicioId);
       }
-    }
-  } catch (error) {
-    console.error('Error al obtener la información del servicio:', error);
-  } finally {
-    setLoading(false); // Ocultar la pantalla de carga
-  }
-};
 
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        const cuentaInfo = data[grupo];
+        const validStates = ["✅", "⚠️"];
+
+        if (cuentaInfo && validStates.includes(estado)) {
+          // Obtener el índice del servicio
+          const servicioIndex = servicios.findIndex(
+            (serv) => serv.servicio === servicioNombre && serv.grupo === grupo
+          );
+          const nota = servicioIndex !== -1 ? servicios[servicioIndex].nota : 'Nota no disponible'; // Obtener la nota
+
+          setModalData({
+            email: cuentaInfo.email,
+            password: cuentaInfo.password,
+            nota, // Agregar la nota al modalData
+          });
+        } else {
+          setModalData(null);
+          toast.error('No se puede mostrar la información de la cuenta debido al estado.');
+        }
+      }
+    } catch (error) {
+      console.error('Error al obtener la información del servicio:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Función para cerrar el modal
   const handleCloseModal = () => {
@@ -171,7 +167,7 @@ const handleMoreInfo = async (servicioId, grupo, servicioNombre, estado) => {
     <div className="home-container">
       <h1 className="greeting">{getUserName()}</h1>
       <p className="welcome-message">Bienvenido a tu panel de usuario.</p>
-  
+
       <div className="platforms-container">
         {servicios.length > 0 ? (
           servicios.map((servicioData, index) => (
@@ -201,7 +197,7 @@ const handleMoreInfo = async (servicioId, grupo, servicioNombre, estado) => {
           <p>No hay servicios disponibles.</p>
         )}
       </div>
-  
+
       {/* Pantalla de carga como overlay */}
       {loading && <div className="loading-overlay"><Carga /></div>}
 
@@ -226,7 +222,6 @@ const handleMoreInfo = async (servicioId, grupo, servicioNombre, estado) => {
                 Copiar Email
               </div>
             </div>
-  
             <div className="modal-item">
               <label>Contraseña:</label>
             </div>
@@ -237,20 +232,21 @@ const handleMoreInfo = async (servicioId, grupo, servicioNombre, estado) => {
                 Copiar Contraseña
               </div>
             </div>
-  
+            <div className="modal-item">
+              <label>Nota:</label>
+            </div>
+            <div className="modal-item">
+              <p>{modalData.nota || 'No hay nota disponible'}</p>
+            </div>
             <button onClick={handleCloseModal} className="home-button">Cerrar</button>
           </div>
         </div>
       )}
 
-      {/* Mostrar mensaje de asesor si está disponible */}
-      {adviceMessage && (
-        <div className="advice-message">
-          <p>{adviceMessage}</p>
-        </div>
-      )}
+      {/* Muestra el mensaje de asesor si está disponible */}
+      {adviceMessage && <p className="advice-message">{adviceMessage}</p>}
 
-      <ToastContainer /> {/* Componente de Toast */}
+      <ToastContainer />
     </div>
   );
 }

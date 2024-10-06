@@ -40,6 +40,7 @@ function BuscarCliente({ onClose }) {
     estado: '',
     grupo: '',
     servicio: '',
+    notas: '',
     precio: ''
   });
 
@@ -170,6 +171,7 @@ const handleKeyPress = (event) => {
       estado: client.PENDEJOALEJANDRO?.estado || '',
       grupo: client.grupo,
       servicio: client.servicio,
+      notas: client.notas,
       precio: client.precio
     });
   };
@@ -193,6 +195,10 @@ const handleKeyPress = (event) => {
       const servicioArray = Array.isArray(clientData.servicio)
         ? clientData.servicio.map(item => item.toUpperCase())
         : (clientData.servicio ? clientData.servicio.split(',').map(item => item.trim().toUpperCase()) : []);
+
+        const notasArray = Array.isArray(clientData.notas)
+        ? clientData.notas.map(item => item.toUpperCase())
+        : (clientData.notas ? clientData.notas.split(',').map(item => item.trim().toUpperCase()) : []);  
 
       const precioArray = Array.isArray(clientData.precio)
         ? clientData.precio.map(item => item.toUpperCase())
@@ -231,6 +237,9 @@ const handleKeyPress = (event) => {
       }
       if (servicioArray.length > 0) {
         updates['servicio'] = servicioArray;
+      }
+      if (notasArray.length > 0) {
+        updates['notas'] = notasArray;
       }
       if (precioArray.length > 0) {
         updates['precio'] = precioArray;
@@ -517,6 +526,17 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                   onChange={handleChange}
                   className="detail-input"
                   placeholder="Servicio"
+                />
+              </label>
+              <label>
+                Notas:
+                <input
+                  type="text"
+                  name="notas"
+                  value={clientData.notas}
+                  onChange={handleChange}
+                  className="detail-input"
+                  placeholder="notas"
                 />
               </label>
               <label>
