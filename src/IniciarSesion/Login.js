@@ -6,13 +6,16 @@ import { useNavigate } from 'react-router-dom'; // Para la redirección
 import './Login.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Carga from '../Loada/Carga';
+import Registro from '../Registrar/Registrar.js'; // Asegúrate de importar el componente de registro
+import { toast, ToastContainer } from 'react-toastify'; // Importa Toast para mostrar mensajes
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false); // Estado para manejar la carga
+  const [isLoginVisible, setIsLoginVisible] = useState(true); // Estado para manejar la visibilidad
+
   const navigate = useNavigate(); // Hook para la redirección
 
   const handleSubmit = async (event) => {
@@ -36,7 +39,8 @@ function Login() {
         navigate('/spidibot/');
       }
     } catch (error) {
-      setError('Error en el correo electrónico o la contraseña');
+      // Muestra el error en un toast
+      toast.error('Error en el correo electrónico o la contraseña');
       console.error(error.message);
     } finally {
       setLoading(false); // Ocultar la pantalla de carga cuando termine el proceso
@@ -47,14 +51,17 @@ function Login() {
     setShowPassword(!showPassword);
   };
 
+  const toggleVisibility = () => {
+    setIsLoginVisible(false); // Cambia la visibilidad a false para ocultar el Login
+  };
+
   return (
-    <div className="login-container">
+    <div className={`login-container ${!isLoginVisible ? 'hidden' : ''}`}>
       {/* Mostrar la pantalla de carga si loading es true */}
       {loading && <Carga />}
-      {!loading && (
+      {!loading && isLoginVisible && (
         <div className="login-box">
           <h1>Iniciar Sesión</h1>
-          {error && <p className="error-message">{error}</p>}
           <form className="login-form" onSubmit={handleSubmit}>
             <div className="input-group">
               <label htmlFor="email">Correo Electrónico:</label>
@@ -81,8 +88,14 @@ function Login() {
             </div>
             <button type="submit" className="login-button">Iniciar Sesión</button>
           </form>
+          {/* Botón para mostrar el componente de registro */}
+          <button onClick={toggleVisibility} className="login-button">
+            Registrarse
+          </button>
         </div>
       )}
+      {!isLoginVisible && <Registro toggleVisibility={toggleVisibility} />} {/* Muestra el componente Registro */}
+      <ToastContainer autoClose={3000} hideProgressBar /> {/* Componente de Toast para mensajes */}
     </div>
   );
 }

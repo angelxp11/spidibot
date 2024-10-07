@@ -1,4 +1,4 @@
-import React, { useEffect ,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +9,7 @@ import BuscarCupo from './Grupos/BuscarCupo';
 import RegistrarCliente from './Registro/RegistroCliente';
 import Pruebas from './Pruebas/Pruebas'; // Import the Pruebas component
 import AddSeeEstatus from './Grupos/AddSeeEstatus'; // Import the new component
+import PasswordReset from './PasswordReset/PasswordReset'; // Import PasswordReset component
 import './home.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
@@ -23,6 +24,7 @@ function Home() {
   const [showRegistrarCliente, setShowRegistrarCliente] = useState(false);
   const [showPruebas, setShowPruebas] = useState(false); // State for showing Pruebas component
   const [showAddSeeEstatus, setShowAddSeeEstatus] = useState(false); // State for showing AddSeeEstatus component
+  const [showPasswordReset, setShowPasswordReset] = useState(false); // State for showing PasswordReset component
 
   const handleSignOut = async () => {
     try {
@@ -32,6 +34,7 @@ function Home() {
       console.error('Error al cerrar sesión:', error);
     }
   };
+  
   useEffect(() => {
     // Redirigir a /spidibot si se recarga la página en esta ruta
     navigate('/spidibot');
@@ -97,6 +100,14 @@ function Home() {
     setShowAddSeeEstatus(false);
   };
 
+  const handleOpenPasswordReset = () => {
+    setShowPasswordReset(true);
+  };
+
+  const handleClosePasswordReset = () => {
+    setShowPasswordReset(false);
+  };
+
   return (
     <div className="home-container">
       <h1>Bienvenido {user ? user.email : 'Admin'} a la página principal</h1>
@@ -108,6 +119,7 @@ function Home() {
         <button onClick={handleDownloadNoticias} className="home-button">Actualizar</button>
         <button onClick={handleOpenPruebas} className="home-button">Pruebas</button> {/* New Test Button */}
         <button onClick={handleOpenAddSeeEstatus} className="home-button">GruposEstados</button> {/* New GruposEstados Button */}
+        <button onClick={handleOpenPasswordReset} className="home-button">Email Clientes</button> {/* New Email Clientes Button */}
       </div>
       <button onClick={handleSignOut} className="logout-button">Cerrar Sesión</button>
 
@@ -118,6 +130,7 @@ function Home() {
       {showRegistrarCliente && <RegistrarCliente onClose={handleCloseRegistrarCliente} />}
       {showPruebas && <Pruebas onClose={handleClosePruebas} />} {/* Render Pruebas component */}
       {showAddSeeEstatus && <AddSeeEstatus onClose={handleCloseAddSeeEstatus} />} {/* Render AddSeeEstatus component */}
+      {showPasswordReset && <PasswordReset onClose={handleClosePasswordReset} />} {/* Render PasswordReset component */}
 
       <ToastContainer />
     </div>
