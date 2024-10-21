@@ -81,3 +81,164 @@
   border-radius: 5px;
   cursor: pointer;
 }
+/* estilo de clientes detalles */
+ 
+.client-details {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 20px;
+  width: 590px;
+  max-width: 600px;
+  text-align: left;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.client-details h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.client-details div {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.client-details div span {
+  font-weight: bold;
+  color: #555;
+}
+
+.client-details button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 10px 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #e53935;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.client-details button:hover {
+  background-color: #eb7a78;
+}
+
+.client-details button:nth-child(2) {
+  background-color: #f44336;
+}
+
+.client-details button:nth-child(2):hover {
+  background-color: #eb7a78;
+}
+
+.client-details button:nth-child(3) {
+  background-color: #008CBA;
+}
+
+.client-details button:nth-child(3):hover {
+  background-color: #eb7a78;
+}
+/*detalles buscador*/
+
+.search-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column; /* Alineación vertical */
+  align-items: flex-start; /* Alinea los elementos al inicio (izquierda) */
+  max-width: 600px;
+  width: 100%;
+  font-family: Arial, sans-serif;
+}
+
+.search-container h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: left;
+  color: #333;
+}
+
+.search-container input[type="text"] {
+  width: 100%; /* Hacer que el input ocupe todo el ancho disponible */
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  margin-bottom: 20px; /* Añadir margen entre el input y los resultados */
+}
+
+.search-container input[type="text"]:focus {
+  border-color: #e53935;
+}
+
+.search-container button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  background-color: #e53935;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 20px; /* Añadir margen debajo del botón */
+}
+
+.search-container button:hover {
+  background-color: #eb7a78;
+}
+
+.search-container button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.search-results {
+  width: 100%; /* Para que los resultados ocupen todo el ancho disponible */
+  margin-top: 20px;
+}
+
+.search-result-item {
+  padding: 10px;
+  border: 1px solid #784e4e;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+.boton-cerrar {
+  position: fixed; /* Fijado en la pantalla para estar siempre visible */
+  top: 20px; /* Espacio desde el borde superior */
+  right: 20px; /* Espacio desde el borde derecho */
+  background-color: #f44336; /* Color rojo para llamar la atención */
+  color: white; /* Texto en blanco */
+  border: none; /* Sin borde */
+  width: 40px; /* Tamaño del botón */
+  height: 40px;
+  font-size: 20px; /* Tamaño de la "X" */
+  font-weight: bold; /* Negrita */
+  cursor: pointer; /* Cambiar cursor cuando se pase sobre él */
+  z-index: 9999; /* Sobre expuesto, por encima de todo */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Añadir una sombra para destacar */
+  transition: background-color 0.3s ease; /* Transición suave al pasar sobre el botón */
+  display: flex; /* Activar flexbox */
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+}
+
+.boton-cerrar:hover {
+  background-color: #eb7a78; /* Color ligeramente más oscuro al hacer hover */
+}
+

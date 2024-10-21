@@ -8,11 +8,13 @@ import AdminHome from './WebAdmin/home'; // Componente del admin
 import UserHome from './WebUsuario/home'; // Componente del usuario
 import Carga from './Loada/Carga'; // Asegúrate de que la ruta del componente Carga sea correcta
 import { doc, getDoc } from 'firebase/firestore'; // Importar funciones necesarias de Firestore
+import CustomSelect from './WebAdmin/VerEstados/Select';
 
 function App() {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(null); // Estado para determinar si es admin o no
   const [loading, setLoading] = useState(true); // Mostrar pantalla de carga mientras se determina el tipo de usuario
+  const [selectedOption, setSelectedOption] = useState('Selecciona una opción'); // Opción seleccionada para el CustomSelect
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -43,10 +45,33 @@ function App() {
     return <Carga />; // Mostrar pantalla de carga mientras se verifica el tipo de usuario
   }
 
+  // Opciones para el CustomSelect
+  const options = ['Opción 1', 'Opción 2', 'Opción 3'];
+
   return (
     <div className="App">
       {user ? (
-        isAdmin ? <AdminHome /> : <UserHome />
+        <>
+          {isAdmin ? (
+            <>
+              <AdminHome />
+              <CustomSelect
+                options={options}
+                selectedOption={selectedOption}
+                onOptionChange={(option) => setSelectedOption(option)}
+              />
+            </>
+          ) : (
+            <>
+              <UserHome />
+              <CustomSelect
+                options={options}
+                selectedOption={selectedOption}
+                onOptionChange={(option) => setSelectedOption(option)}
+              />
+            </>
+          )}
+        </>
       ) : (
         <Login />
       )}

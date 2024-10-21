@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect  } from 'react';
 import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
 import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { app } from '../../firebase';
@@ -8,11 +8,29 @@ import './estados.css';
 
 const firestore = getFirestore(app);
 
+
 function Estados({ onClose }) {
   const [searchValue, setSearchValue] = useState('⚠️');
   const [searchResults, setSearchResults] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
+  // Agregar un listener para la tecla Esc
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose(); // Cerrar el modal
+      }
+    };
 
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Limpiar el listener cuando el componente se desmonta
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
+
+
+  
   const handleSearchValueChange = (event) => {
     setSearchValue(event.target.value);
   };
@@ -212,7 +230,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <button className="close-button" onClick={onClose}>×</button>
+        <button className="boton-cerrar" onClick={onClose}>×</button>
         <div className="search-container">
           <h1>Buscar Cliente por Estado</h1>
           <div className="search-controls">
@@ -244,17 +262,20 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
         </div>
 
         {selectedClient && (
-          <div className="client-details">
-            <h2>Detalles del Cliente</h2>
-            <div>ID: {selectedClient.ID}</div>
-            <div>Nombre: {selectedClient.nombre} {selectedClient.apellido}</div>
-            <div>Estado: {selectedClient.estado}</div>
-            <div>Fecha Final: {selectedClient.fechaFinal}</div>
-            <button onClick={handleRenew}>Renovar</button>
-            <button onClick={handleNoContinuar}>No deseo continuar</button>
-            <button onClick={handleGenerateComprobante}>Generar Comprobante</button>
-          </div>
-        )}
+  <div className="client-details">
+    <h2>Detalles del Cliente</h2>
+    <div>ID: {selectedClient.ID}</div>
+    <div>Nombre: {selectedClient.nombre} {selectedClient.apellido}</div>
+    <div>Estado: {selectedClient.estado}</div>
+    <div>Fecha Final: {selectedClient.fechaFinal}</div>
+    <div>Servicios a vencer: {Array.isArray(selectedClient.servicio) ? selectedClient.servicio.join(', ') : 'Ninguno'}</div>
+    <button onClick={handleRenew}>Renovar</button>
+    <button onClick={handleNoContinuar}>No deseo continuar</button>
+    <button onClick={handleGenerateComprobante}>Generar Comprobante</button>
+  </div>
+)}
+
+
 
       </div>
     </div>

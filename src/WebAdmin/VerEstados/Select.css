@@ -1,0 +1,26 @@
+.custom-select {
+    position: relative;
+    width: 300px; /* Ajusta el ancho según tus necesidades */
+  }
+  
+  .select-dropdown {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ed1b24; /* Color de borde */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #fff; /* Fondo blanco */
+    color: #333; /* Color del texto */
+    font-size: 16px; /* Tamaño de la fuente */
+    appearance: none; /* Oculta la apariencia por defecto */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><polygon points="0,0 10,10 20,0" fill="%23ed1b24"/></svg>'); /* Flecha personalizada */
+    background-repeat: no-repeat;
+    background-position: right 10px center; /* Posiciona la flecha a la derecha */
+    background-size: 10px; /* Tamaño de la flecha */
+    cursor: pointer; /* Cambia el cursor a una mano */
+  }
+  
+  .select-dropdown:focus {
+    border-color: #000; /* Cambia el color del borde al enfocar */
+    outline: none; /* Elimina el contorno */
+  }
+  
