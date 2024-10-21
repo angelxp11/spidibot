@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase'; // Asegúrate de importar Firestore (db)
 import { doc, getDoc } from 'firebase/firestore'; // Importa funciones de Firestore
@@ -15,8 +15,22 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false); // Estado para manejar la carga
   const [isLoginVisible, setIsLoginVisible] = useState(true); // Estado para manejar la visibilidad
-
   const navigate = useNavigate(); // Hook para la redirección
+
+  // Cambiar el estilo del body basado en la visibilidad de login o registro
+  useEffect(() => {
+    if (isLoginVisible) {
+      document.body.classList.add('iniciar-sesion');
+      document.body.classList.remove('registrar');
+    } else {
+      document.body.classList.add('registrar');
+      document.body.classList.remove('iniciar-sesion');
+    }
+    return () => {
+      document.body.classList.remove('iniciar-sesion');
+      document.body.classList.remove('registrar');
+    };
+  }, [isLoginVisible]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -52,7 +66,7 @@ function Login() {
   };
 
   const toggleVisibility = () => {
-    setIsLoginVisible(false); // Cambia la visibilidad a false para ocultar el Login
+    setIsLoginVisible(false); // Cambia la visibilidad a false para mostrar el registro
   };
 
   return (
@@ -88,10 +102,10 @@ function Login() {
             </div>
             <button type="submit" className="login-button">Iniciar Sesión</button>
           </form>
-          {/* Botón para mostrar el componente de registro */}
-          <button onClick={toggleVisibility} className="login-button">
-            Registrarse
-          </button>
+          {/* Texto que invita a registrarse */}
+          <p className="register-link">
+            ¿No tienes cuenta? <span onClick={toggleVisibility}>Regístrate</span>
+          </p>
         </div>
       )}
       {!isLoginVisible && <Registro toggleVisibility={toggleVisibility} />} {/* Muestra el componente Registro */}

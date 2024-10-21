@@ -5,14 +5,6 @@
   box-sizing: border-box;
 }
 
-/* Establecer fuente para todo el documento */
-body {
-  font-family: 'Roboto', sans-serif;
-  background: linear-gradient(135deg, #ed1b24, #000000);
-  background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
-  animation: gradientAnimation 15s ease infinite;
-}
-
 /* Estilo para el cuerpo de la página */
 body, html {
   width: 100%;
@@ -177,4 +169,23 @@ body, html {
 .spidi-button:hover {
   background-color: #ff3b3f;
   transform: scale(1.05);
+}
+
+
+.register-link {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #000000;
+}
+
+.register-link span {
+  color: #ed1b24; /* Color azul para el enlace */
+  text-decoration: underline; /* Subrayado */
+  cursor: pointer; /* Hacer que el cursor sea pointer al pasar sobre el enlace */
+  font-weight: bold;
+}
+
+.register-link span:hover {
+  color: #f3666d; /* Color más oscuro cuando el enlace está en hover */
 }

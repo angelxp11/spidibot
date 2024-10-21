@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth'; 
 import { auth, db } from '../firebase'; 
 import { doc, setDoc } from 'firebase/firestore'; 
 import { useNavigate } from 'react-router-dom'; 
+import { ToastContainer, toast } from 'react-toastify'; // Importar Toastify
+import 'react-toastify/dist/ReactToastify.css'; // Importar estilos de Toastify
 import '../Registrar/Registrar.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Carga from '../Loada/Carga';
@@ -16,29 +18,44 @@ function Registrar() {
   const [showLogin, setShowLogin] = useState(false);
   const navigate = useNavigate(); 
 
+  useEffect(() => {
+    if (showLogin) {
+      document.body.classList.add('iniciar-sesion');
+      document.body.classList.remove('registrar');
+    } else {
+      document.body.classList.add('registrar');
+      document.body.classList.remove('iniciar-sesion');
+    }
+    return () => {
+      document.body.classList.remove('iniciar-sesion');
+      document.body.classList.remove('registrar');
+    };
+  }, [showLogin]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true); // Mostrar pantalla de carga al iniciar sesión
+    setLoading(true);
+
+    if (password.length < 6) {
+      toast.error('Contraseña demasiado corta, intenta que sea mayor a 6 caracteres');
+      setLoading(false);
+      return;
+    }
 
     try {
-      // Crear el usuario con Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const userEmail = userCredential.user.email;
-
-      // Agregar el nuevo usuario a la colección 'usuarios' en Firestore
-      const userDocRef = doc(db, 'usuarios', userCredential.user.uid); // Usa el uid en lugar del email
+      const userDocRef = doc(db, 'usuarios', userCredential.user.uid);
       await setDoc(userDocRef, {
         email: userEmail,
         createdAt: new Date(),
-        // Puedes agregar más campos aquí según sea necesario
       });
-
-      // Redirigir al usuario después del registro
-      navigate('/spidibot/'); // Cambia esta ruta según sea necesario
+      navigate('/spidibot/');
     } catch (error) {
-      console.error('Error al registrar el usuario: ' + error.message); // Muestra el error en la consola
+      console.error('Error al registrar el usuario: ' + error.message);
+      toast.error('Error al registrar el usuario: ' + error.message);
     } finally {
-      setLoading(false); // Ocultar la pantalla de carga cuando termine el proceso
+      setLoading(false);
     }
   };
 
@@ -47,11 +64,12 @@ function Registrar() {
   };
 
   const handleLoginToggle = () => {
-    setShowLogin(true); 
+    setShowLogin(true);
   };
 
   return (
     <div className="registro-container">
+      <ToastContainer />
       {loading && <Carga />}
       {!loading && !showLogin && (
         <div className="registro-box">
@@ -81,11 +99,11 @@ function Registrar() {
               </span>
             </div>
             <button type="submit" className="registro-button">Registrar</button>
-            <div style={{ marginTop: '10px' }}></div>
           </form>
-          <button type="button" className="spidi-button" onClick={handleLoginToggle}>
-            Iniciar Sesión
-          </button>
+          {/* Texto que invita a iniciar sesión */}
+          <p className="login-link">
+            ¿Ya tienes una cuenta? <span onClick={handleLoginToggle}>Inicia Sesión</span>
+          </p>
         </div>
       )}
       {showLogin && <Login />}

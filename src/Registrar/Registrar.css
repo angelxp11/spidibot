@@ -6,12 +6,35 @@
   }
   
   /* Establecer fuente para todo el documento */
-  body {
-    font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg, #ed1b24, #000000);
-    background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
-    animation: gradientAnimation 15s ease infinite;
+  /* Estilos para el body cuando es "Iniciar Sesión" */
+body.iniciar-sesion {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #ed1b24, #000000);
+  background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
+  animation: gradientAnimation 15s ease infinite;
+}
+
+/* Estilos para el body cuando es "Registrar" */
+body.registrar {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #afa5a6, #000000);
+  background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
+  animation: gradientAnimation 15s ease infinite;
+}
+
+/* Mantén la animación y otros estilos de tu body aquí */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
   }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
   
   /* Estilo para el cuerpo de la página */
   body, html {
@@ -179,4 +202,23 @@
     transform: scale(1.05);
   }
   
+  
+
+  .login-link {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #000000;
+  }
+  
+  .login-link span {
+    color: #ed1b24; /* Color azul para el enlace */
+    text-decoration: underline; /* Subrayado */
+    cursor: pointer; /* Hacer que el cursor sea pointer al pasar sobre el enlace */
+    font-weight: bold;
+  }
+  
+  .login-link span:hover {
+    color: #f3666d; /* Color más oscuro cuando el enlace está en hover */
+  }
   
