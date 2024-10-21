@@ -153,7 +153,8 @@ function BuscarCupo({ onClose }) {
             email: grupoInfo.email || '',
             password: grupoInfo.password || '',
             fechaComienzo: verFechas(grupoInfo.fechaComienzo) || '',
-            fechaPago: verFechas(grupoInfo.fechaPago) || ''
+            fechaPago: verFechas(grupoInfo.fechaPago) || '',
+            notas: grupoInfo.notas || '' // Asegúrate de incluir el campo notas
           });
           setInfoDocId(servicioDoc.id); // Guarda el ID del documento
           setIsInfoVisible(true); // Muestra la información del grupo
@@ -167,6 +168,7 @@ function BuscarCupo({ onClose }) {
       console.error('Error al obtener información del servicio:', error);
     }
   };
+  
   const handleCopyPaste = () => {
     const { email, password } = info; // Asume que `info` tiene el email y la contraseña
     const serviceName = servicio; // Asume que `servicio` tiene el nombre del servicio seleccionado
@@ -192,24 +194,31 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
   
 
   const handleSaveChanges = async () => {
+    // Verificar si el campo notas existe en el objeto de servicio
+    const updatedInfo = {
+      email: info.email,
+      password: info.password,
+      fechaComienzo: guardarFechas(info.fechaComienzo),
+      fechaPago: guardarFechas(info.fechaPago),
+      notas: info.notas || '' // Asegúrate de que el campo notas se incluya
+    };
+  
     try {
       const servicioRef = doc(db, 'Servicios', infoDocId);
-      const grupoInfo = {
-        email: info.email,
-        password: info.password,
-        fechaComienzo: guardarFechas(info.fechaComienzo),
-        fechaPago: guardarFechas(info.fechaPago)
-      };
-
+      
+      // Actualizar el grupo con la información
       await updateDoc(servicioRef, {
-        [grupo]: grupoInfo
+        [grupo]: updatedInfo // Actualiza el grupo con toda la información, incluyendo notas
       });
-
+  
       alert('Cambios guardados con éxito.');
+      setIsInfoVisible(false); // Opcional: cerrar el modal después de guardar
     } catch (error) {
       console.error('Error al guardar cambios:', error);
+      alert('Error al guardar cambios. Por favor, intenta nuevamente.');
     }
   };
+  
 
   const handleInputChange = (e, setter) => {
     setter(e.target.value);
@@ -330,11 +339,22 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
           onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, fechaPago: value })))}
         />
       </div>
+      {/* Nuevo campo para Notas */}
+      <div className="form-group">
+        <label>Notas:</label>
+        <input
+          type="text"
+          value={info.notas}
+          onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, notas: value })))}
+          style={{ height: '170px' }} // Establecer altura de 170px
+        />
+      </div>
       <button onClick={handleCopyPaste}>Copiar</button>
       <button onClick={handleSaveChanges}>Guardar Cambios</button>
     </div>
   </div>
 )}
+
     </div>
   );
 }
