@@ -17,7 +17,7 @@ body.iniciar-sesion {
 /* Estilos para el body cuando es "Registrar" */
 body.registrar {
   font-family: 'Roboto', sans-serif;
-  background: linear-gradient(135deg, #afa5a6, #000000);
+  background: linear-gradient(135deg, #58bd57, #000000);
   background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
   animation: gradientAnimation 15s ease infinite;
 }

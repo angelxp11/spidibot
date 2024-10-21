@@ -12,6 +12,13 @@ body, html {
   margin: 0;
   padding: 0;
 }
+ /* Establecer fuente para todo el documento */
+ body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #ed1b24, #000000);
+  background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
+  animation: gradientAnimation 15s ease infinite;
+}
 
 /* Contenedor principal que se adapta a la altura del contenido */
 .home-container {
