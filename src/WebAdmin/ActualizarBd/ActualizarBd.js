@@ -6,35 +6,38 @@ import { collection, getDocs, writeBatch } from "firebase/firestore";
 
 const ActualizarBd = ({ onClose }) => {
   const [loading, setLoading] = useState(true);
+  const [hasUpdated, setHasUpdated] = useState(false); // Nuevo estado para controlar la actualización
 
   useEffect(() => {
     const actualizarBaseDeDatos = async () => {
+      if (hasUpdated) return; // Si ya se ha actualizado, no hacemos nada
+
       try {
         console.log("Iniciando actualización de clientes y grupos...");
-
+      
         const clientesRef = collection(db, 'clientes');
         const serviciosRef = collection(db, 'Servicios');
-
-        // Actualizar clientes
+      
         await actualizarClientes(clientesRef);
-
-        // Actualizar grupos
         await actualizarGrupos(serviciosRef);
-
-        toast.success('Clientes y grupos actualizados');
+        
+        // Muestra solo un toast al final
+        toast.success('Clientes y grupos actualizados', { autoClose: 1000 });
         console.log("Actualización de clientes y grupos completada.");
         setLoading(false);
+        setHasUpdated(true); // Marcamos que ya se ha actualizado
         onClose();
       } catch (error) {
         console.error('Error al actualizar clientes y grupos:', error);
-        toast.error(`Error al actualizar clientes y grupos: ${error.message}`);
+        // Muestra solo un toast de error
+        toast.error(`Error al actualizar clientes y grupos: ${error.message}`, { autoClose: 3000 });
         setLoading(false);
         onClose();
       }
     };
-
+  
     actualizarBaseDeDatos();
-  }, [onClose]);
+  }, [onClose, hasUpdated]); // Cambiamos 'loading' por 'hasUpdated'
 
   const actualizarClientes = async (clientesRef) => {
     const querySnapshot = await getDocs(clientesRef);

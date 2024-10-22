@@ -5,6 +5,21 @@ import './Pruebas.css';
 
 const Pruebas = ({ onClose }) => {
   const [clientIds, setClientIds] = useState([]);
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose(); // Cierra el modal
+      }
+    };
+  
+    window.addEventListener('keydown', handleKeyDown);
+  
+    // Limpiar el listener cuando el componente se desmonta
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
+  
 
   // Función para obtener los IDs de clientes
   const fetchClientIds = async () => {
@@ -41,7 +56,7 @@ const Pruebas = ({ onClose }) => {
       <div className="pruebas-container">
         <h2>Pruebas Component</h2>
         <p>Este es el componente de pruebas.</p>
-        <button onClick={onClose} className="close-button">Cerrar</button>
+        <button onClick={onClose} className="boton-cerrar">x</button>
         <div className="client-ids">
           <h3>Lista de IDs de Clientes:</h3>
           <ul className="client-ids-list">

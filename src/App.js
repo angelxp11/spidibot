@@ -1,46 +1,58 @@
 import React, { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, db } from './firebase'; // Asegúrate de importar la configuración correcta de Firebase
+import { auth, db } from './firebase'; 
 import Login from './IniciarSesion/Login';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AdminHome from './WebAdmin/home'; // Componente del admin
-import UserHome from './WebUsuario/home'; // Componente del usuario
-import Carga from './Loada/Carga'; // Asegúrate de que la ruta del componente Carga sea correcta
-import { doc, getDoc } from 'firebase/firestore'; // Importar funciones necesarias de Firestore
+import AdminHome from './WebAdmin/home'; 
+import UserHome from './WebUsuario/home'; 
+import Carga from './Loada/Carga'; 
+import { doc, getDoc } from 'firebase/firestore'; 
 
 function App() {
   const [user, setUser] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(null); // Estado para determinar si es admin o no
-  const [loading, setLoading] = useState(true); // Mostrar pantalla de carga mientras se determina el tipo de usuario
+  const [isAdmin, setIsAdmin] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setUser(user);
-        setLoading(true); // Mostrar la carga mientras se verifica si es admin
+        setLoading(true);
 
         // Verificar en la colección "admin" si el usuario es admin
-        const adminDocRef = doc(db, 'admin', user.email); // Buscar por el ID igual al email del usuario
+        const adminDocRef = doc(db, 'admin', user.email);
         const adminDocSnap = await getDoc(adminDocRef);
 
         if (adminDocSnap.exists()) {
-          setIsAdmin(true); // Si el documento existe, es admin
+          setIsAdmin(true);
         } else {
-          setIsAdmin(false); // Si no existe, es usuario normal
+          setIsAdmin(false);
         }
+
+        // Solo actualizar la base de datos si es la primera vez que se autentica el usuario
+        if (!user.metadata.lastSignInTime) { // Verifica si es el primer inicio de sesión
+          // Aquí llamas a tu función para actualizar la base de datos
+          await actualizarBaseDeDatos();
+        }
+
       } else {
         setUser(null);
-        setIsAdmin(null); // Reiniciar el estado
+        setIsAdmin(null);
       }
-      setLoading(false); // Ocultar la carga después de verificar
+      setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
+  const actualizarBaseDeDatos = async () => {
+    // Aquí llamas a tu lógica para actualizar la base de datos.
+    // Asegúrate de que esta lógica no cause múltiples ejecuciones.
+  };
+
   if (loading) {
-    return <Carga />; // Mostrar pantalla de carga mientras se verifica el tipo de usuario
+    return <Carga />;
   }
 
   return (

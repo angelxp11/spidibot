@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { getFirestore, collection, getDocs, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { app } from '../../firebase';
 import './AddSeeEstatus.css'; // Asegúrate de crear este archivo para los estilos
@@ -11,6 +11,22 @@ function AddSeeEstatus({ onClose }) {
   const [searchResults, setSearchResults] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedCheckbox, setSelectedCheckbox] = useState(null); // Estado para seleccionar un checkbox
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose(); // Cierra el modal
+      }
+    };
+  
+    window.addEventListener('keydown', handleKeyDown);
+  
+    // Limpiar el listener cuando el componente se desmonta
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
+  
+  
 
   const handleStatusChange = (event) => {
     setSelectedStatus(event.target.value);
@@ -158,7 +174,7 @@ const agregarDias = (fecha, dias) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <button className="close-button" onClick={onClose}>×</button>
+        <button className="boton-cerrar" onClick={onClose}>×</button>
         <div className="search-container">
           <h2>Buscar Estado de Servicios</h2>
           <div className="search-controls">

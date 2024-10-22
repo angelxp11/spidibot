@@ -12,21 +12,23 @@ body, html {
   margin: 0;
   padding: 0;
 }
- /* Establecer fuente para todo el documento */
- body {
+
+/* Establecer fuente para todo el documento */
+body {
   font-family: 'Roboto', sans-serif;
-  background: linear-gradient(135deg, #ed1b24, #000000);
+  background: linear-gradient(135deg, #ed1b24, #000000, #ff3b3f);
+  background-size: 300% 300%; /* Aumenta el tamaño para la animación */
   background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
-  animation: gradientAnimation 15s ease infinite;
+  animation: gradientAnimation 10s ease infinite;
 }
 
 /* Contenedor principal que se adapta a la altura del contenido */
 .home-container {
-  min-height: 100vh; /* Asegúrate de que siempre cubra el 100% de la altura de la ventana */
+  min-height: 100vh;
   display: flex;
-  flex-direction: column; /* Permite que los elementos se apilen verticalmente */
-  justify-content: flex-start; /* Alinea los elementos al inicio */
-  padding: 20px; /* Agrega un poco de espacio alrededor */
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 20px;
 }
 
 .login-container {
@@ -46,7 +48,7 @@ body, html {
   width: 100%;
   max-width: 450px;
   text-align: center;
-  position: relative; /* Añadido para posicionar el mensaje de error correctamente */
+  position: relative;
 }
 
 .login-box h1 {
@@ -115,18 +117,21 @@ body, html {
   }
 }
 
+/* Estilo para el mensaje de error */
 .error-message {
   color: rgb(255, 255, 255);
   margin-top: 30px;
-  text-align: center; /* Centrar el texto */
-  position: absolute; /* Posicionar el mensaje fuera del formulario */
-  bottom: -40px; /* Ajustar según el espacio que necesites */
+  text-align: center;
+  position: absolute;
+  bottom: -40px;
   left: 50%;
   transform: translateX(-50%);
 }
-.login-form{
-  width: 370px; /* Ancho de 370 píxeles */
-  height: 234px; /* Alto de 234 píxeles */
+
+/* Estilo para el formulario */
+.login-form {
+  width: 370px;
+  height: 234px;
 }
 
 /* Estilo para el toast */
@@ -161,7 +166,6 @@ body, html {
   }
 }
 
-
 .spidi-button {
   background-color: #ed1b24;
   color: white;
@@ -178,7 +182,6 @@ body, html {
   transform: scale(1.05);
 }
 
-
 .register-link {
   margin-top: 20px;
   text-align: center;
@@ -187,12 +190,12 @@ body, html {
 }
 
 .register-link span {
-  color: #ed1b24; /* Color azul para el enlace */
-  text-decoration: underline; /* Subrayado */
-  cursor: pointer; /* Hacer que el cursor sea pointer al pasar sobre el enlace */
+  color: #ed1b24;
+  text-decoration: underline;
+  cursor: pointer;
   font-weight: bold;
 }
 
 .register-link span:hover {
-  color: #f3666d; /* Color más oscuro cuando el enlace está en hover */
+  color: #f3666d;
 }

@@ -269,6 +269,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
     <div>Estado: {selectedClient.estado}</div>
     <div>Fecha Final: {selectedClient.fechaFinal}</div>
     <div>Servicios a vencer: {Array.isArray(selectedClient.servicio) ? selectedClient.servicio.join(', ') : 'Ninguno'}</div>
+    <div>Grupos: {Array.isArray(selectedClient.grupo) ? selectedClient.grupo.join(', ') : 'Ninguno'}</div> {/* Nueva línea para mostrar los grupos */}
     <button onClick={handleRenew}>Renovar</button>
     <button onClick={handleNoContinuar}>No deseo continuar</button>
     <button onClick={handleGenerateComprobante}>Generar Comprobante</button>

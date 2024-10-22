@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { getFirestore, collection, query, where, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { app } from '../../firebase';
 import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage"; // Asegúrate de importar estas funciones
@@ -43,6 +43,21 @@ function BuscarCliente({ onClose }) {
     notas: '',
     precio: ''
   });
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose(); // Cierra el modal
+      }
+    };
+  
+    window.addEventListener('keydown', handleKeyDown);
+  
+    // Limpiar el listener cuando el componente se desmonta
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
+  
 
   const handleDeleteClient = async () => {
     if (window.confirm('¿Estás seguro de que deseas eliminar a este cliente?')) {
@@ -353,7 +368,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <button className="close-button" onClick={onClose}>×</button>
+        <button className="boton-cerrar" onClick={onClose}>×</button>
         <div className="search-container">
           <h1>Buscar Cliente</h1>
           <div className="search-controls">

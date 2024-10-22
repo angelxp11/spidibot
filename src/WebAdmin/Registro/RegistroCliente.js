@@ -8,6 +8,7 @@ import html2canvas from 'html2canvas';
 
 const firestore = getFirestore(app);
 
+
 // Función para dar formato a la fecha
 const formatDate = (date) => {
   if (!date) return '';
@@ -33,8 +34,24 @@ function RegistroCliente({ onClose }) {
     estado: '✅',
     grupo: '',
     servicio: '',
+    notas: '',
     precio: ''
   });
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose(); // Cierra el modal
+      }
+    };
+  
+    window.addEventListener('keydown', handleKeyDown);
+  
+    // Limpiar el listener cuando el componente se desmonta
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
+  
 
   const [maxId, setMaxId] = useState(0);
 
@@ -84,6 +101,10 @@ function RegistroCliente({ onClose }) {
       const servicioArray = Array.isArray(clientData.servicio)
         ? clientData.servicio.map(item => item.toUpperCase())
         : (clientData.servicio ? clientData.servicio.split(',').map(item => item.trim().toUpperCase()) : []);
+
+      const notasArray = Array.isArray(clientData.notas)
+        ? clientData.notas.map(item => item.toUpperCase())
+        : (clientData.notas ? clientData.notas.split(',').map(item => item.trim().toUpperCase()) : []);
         
       const precioArray = Array.isArray(clientData.precio)
         ? clientData.precio.map(item => item.toUpperCase())
@@ -98,6 +119,7 @@ function RegistroCliente({ onClose }) {
         telefono: clientData.telefono.toUpperCase(),
         grupo: grupoArray,
         servicio: servicioArray,
+        notas: notasArray,
         precio: precioArray,
         fechaInicial: formatDate(clientData.fechaInicial),
         fechaFinal: formatDate(clientData.fechaFinal),
@@ -123,6 +145,7 @@ function RegistroCliente({ onClose }) {
         estado: '✅',
         grupo: '',
         servicio: '',
+        notas: '',
         precio: ''
       });
       setMaxId(parseInt(clientData.ID, 10)); // Actualiza el ID máximo
@@ -234,7 +257,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
   return (
     <div className="modal-overlay">
       <div className="form-container">
-        <button className="close-button" onClick={onClose}>X</button>
+        <button className="boton-cerrar" onClick={onClose}>X</button>
         <h2>Registro de Cliente</h2>
         <div className="form-input">
           <label>ID</label>
@@ -273,7 +296,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
           />
         </div>
         <div className="form-input">
-          <label>Email</label> {/* Nuevo campo Email */}
+          <label>Email</label>
           <input
             type="email"
             name="email"
@@ -318,6 +341,15 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
           />
         </div>
         <div className="form-input">
+          <label>Notas</label> {/* Nuevo campo Notas */}
+          <input
+            type="text"
+            name="notas"
+            value={clientData.notas}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="form-input">
           <label>Precio</label>
           <input
             type="text"
@@ -332,6 +364,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
       </div>
     </div>
   );
+  
   
 }
 

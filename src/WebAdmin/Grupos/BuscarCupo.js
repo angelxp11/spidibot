@@ -40,6 +40,21 @@ function BuscarCupo({ onClose }) {
   const [infoDocId, setInfoDocId] = useState('');
   const [isResultadosVisible, setIsResultadosVisible] = useState(false);
   const [isInfoVisible, setIsInfoVisible] = useState(false);
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose(); // Cierra el modal
+      }
+    };
+  
+    window.addEventListener('keydown', handleKeyDown);
+  
+    // Limpiar el listener cuando el componente se desmonta
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
+  
 
   // Función para obtener los grupos disponibles del servicio seleccionado
   const fetchGruposDisponibles = async (servicioSeleccionado) => {
@@ -269,7 +284,8 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
         </div>
         <button onClick={handleSearch}>Buscar</button>
         <button onClick={handleInfoClick}>Información</button>
-        <button onClick={onClose}>Cerrar</button>
+        <button className="boton-cerrar" onClick={onClose}>x</button>
+
       </div>
 
       {isResultadosVisible && (
