@@ -32,7 +32,6 @@ function Home() {
   const [isInventarioVisible, setInventarioVisible] = useState(false); // Estado para manejar la visibilidad del inventarioomienza como invisible
   const [isServiciosClientesVisible, setServiciosClientesVisible] = useState(true); // Comienza como visible
   
-  
 
 
 
@@ -284,21 +283,6 @@ const handleViewServices = () => {
   }
 };
 
-const handleBuyServices = () => {
-  if (showServiceContainers) {
-    return; // No hacemos nada si ya se están mostrando los servicios
-  } else {
-    setShowClientContainers(false);
-    setShowServiceContainers(true); // Muestra los servicios al comprar
-
-    // Si el inventario está visible, oculta el platforms-container; si no, muéstralo
-    if (isInventarioVisible) {
-      setShowServiceContainers(false); // Ocultar servicios si el inventario está visible
-    } else {
-      setShowPlatformsContainers(true); // Mostrar platforms-container si el inventario no está visible
-    }
-  }
-};
 
 
 return (
