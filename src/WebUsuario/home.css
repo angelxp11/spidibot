@@ -78,3 +78,11 @@ label {
     color: rgb(255, 255, 255); /* Color negro para el texto */
 }
 
+.inventario-container.hidden {
+    display: none; /* Oculta el contenedor */
+  }
+  
+  .inventario-container.visible {
+    display: block; /* Muestra el contenedor */
+  }
+  

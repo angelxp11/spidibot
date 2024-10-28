@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs, query, where, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '../../firebase'; // Asegúrate de que la ruta a firebase.js sea correcta
 import './Pruebas.css';
 
 const Pruebas = ({ onClose }) => {
   const [clientIds, setClientIds] = useState([]);
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
         onClose(); // Cierra el modal
       }
     };
-  
+
     window.addEventListener('keydown', handleKeyDown);
-  
+
     // Limpiar el listener cuando el componente se desmonta
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [onClose]);
-  
 
   // Función para obtener los IDs de clientes
   const fetchClientIds = async () => {
@@ -35,20 +35,21 @@ const Pruebas = ({ onClose }) => {
     fetchClientIds();
   }, []);
 
-  // Función para eliminar clientes
-  const deleteClients = async () => {
-    const clientCollection = collection(db, 'clientes');
-    const clientQuery = query(clientCollection, where('ID', '>', '00257')); // Consulta para IDs mayores que '00257'
-    const clientSnapshot = await getDocs(clientQuery);
+  // Función para crear una nueva notificación
+  const createNotification = async () => {
+    const notificationData = {
+      title: "Nuevo Servicio Solicitado",
+      body: "Un cliente quiere un servicio.",
+      timestamp: new Date(), // Guarda la fecha y hora actual
+    };
 
-    const deletePromises = clientSnapshot.docs.map(async (doc) => {
-      await deleteDoc(doc.ref); // Eliminar documento
-    });
-
-    await Promise.all(deletePromises); // Esperar a que todas las promesas se resuelvan
-
-    // Volver a cargar los IDs después de la eliminación
-    fetchClientIds();
+    try {
+      // Agregar el documento a la colección de notificaciones
+      await addDoc(collection(db, 'notificaciones'), notificationData);
+      console.log('Notificación creada con éxito');
+    } catch (error) {
+      console.error('Error al crear notificación:', error);
+    }
   };
 
   return (
@@ -65,7 +66,9 @@ const Pruebas = ({ onClose }) => {
             ))}
           </ul>
         </div>
-        <button onClick={deleteClients} className="delete-button">Eliminar Clientes con ID  00257</button>
+        <button onClick={createNotification} className="create-notification-button">
+          Crear Notificación
+        </button>
       </div>
     </div>
   );

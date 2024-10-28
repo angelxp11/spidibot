@@ -1,6 +1,5 @@
 import React, { useState,useEffect } from 'react';
 import { getFirestore, collection, query, where, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { app } from '../../firebase';
 import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage"; // Asegúrate de importar estas funciones
 import './buscarCliente.css';
 import html2canvas from 'html2canvas';

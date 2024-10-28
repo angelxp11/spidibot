@@ -2,12 +2,14 @@
 
 /* Estilo para cada contenedor de plataforma */
 .container-platform {
+    width: 250px;
     background-color: #aeacac; /* Color de fondo blanco */
     border: 1px solid #ddd; /* Borde gris claro */
     border-radius: 8px; /* Bordes redondeados */
     padding: 20px; /* Espaciado interno */
     margin: 10px 0; /* Margen superior e inferior */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    margin: 10px auto 10px auto; /* Margen superior, inferior y centrado horizontal */
   }
   
   /* Título de la plataforma */
@@ -30,3 +32,106 @@
     color: #555; /* Color del texto */
   }
   
+
+  /* src/WebAdmin/containerPlatform.css */
+
+/* Estilo para el botón de adquirir servicio */
+/* Contenedor principal de los elementos */
+.available-services {
+  display: flex;
+  flex-direction: column; /* Para mantener los elementos en una columna */
+  align-items: center; /* Centra los elementos horizontalmente */
+  margin-top: 20px; /* Margen superior */
+}
+
+/* Estilo para cada contenedor de plataforma */
+.container-platform-service { 
+  background-color: #aeacac; /* Color de fondo gris claro */
+  border: 1px solid #ddd; /* Borde gris claro */
+  height: auto;
+  width: 250px;
+  position: relative;
+  border-radius: 8px; /* Bordes redondeados */
+  padding: 20px; /* Espaciado interno */
+  margin: 10px auto 10px auto; /* Margen superior, inferior y centrado horizontal */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  display: block;
+  margin-bottom: 10px; /* Margen inferior */
+}
+
+
+/* Título de la plataforma */
+.container-platform-service h2 {
+    font-size: 1.5rem; /* Tamaño de fuente */
+    color: #333; /* Color del texto */
+    margin: 0; /* Sin margen */
+}
+.container-platform-service button {
+  width: 100%; /* Hace que los botones ocupen todo el ancho del contenedor */
+  padding: 10px; /* Aumenta el espacio interno para que los botones sean más grandes */
+  margin: 5px 0; /* Añade un espacio entre los botones */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  cursor: pointer;
+}
+
+/* Estilo para cada item del grupo */
+.grupo-content-service{ 
+    margin-top: 10px;
+}
+
+.grupo-item-service {
+    margin: 5px 0;
+    color: #555; /* Color del texto */
+}
+
+
+/* Botón de Más Información */
+.masinfo {
+  background-color: #ed1b24; /* Rojo principal */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.masinfo:hover {
+  background-color: #ff3b3f; /* Rojo más claro en hover */
+  transform: scale(1.05); /* Efecto de zoom al hacer hover */
+}
+
+.masinfo:focus {
+  outline: none; /* Elimina el borde de enfoque predeterminado */
+}
+
+/* Botón de Comprar */
+.buy-button {
+  background-color: #2ecc71; /* Verde principal */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.buy-button:hover {
+  background-color: #27ae60; /* Verde más oscuro en hover */
+  transform: scale(1.05); /* Efecto de zoom al hacer hover */
+}
+
+.buy-button:focus {
+  outline: none; /* Elimina el borde de enfoque predeterminado */
+}
+
+.welcome-message {
+  color: #ffffff; /* Color del texto (gris oscuro) */
+  margin: 10px 0; /* Margen superior e inferior para separar del contenido */
+}
+

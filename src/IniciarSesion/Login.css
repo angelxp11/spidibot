@@ -16,7 +16,7 @@ body, html {
 /* Establecer fuente para todo el documento */
 body {
   font-family: 'Roboto', sans-serif;
-  background: linear-gradient(135deg, #ed1b24, #000000, #ff3b3f);
+  background: linear-gradient(135deg, #ccc, #000000, #ff3b3f);
   background-size: 300% 300%; /* Aumenta el tamaño para la animación */
   background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
   animation: gradientAnimation 10s ease infinite;

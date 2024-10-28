@@ -1,12 +1,13 @@
 // src/WebAdmin/ContainerPlatform.js
 import React from 'react';
-import './containerPlatform.css';
+import '../../containerPlatform.css';
 
-const ContainerPlatform = ({ title, grupo, estado, fechaFinal, nombreCliente, onMoreInfo }) => {
+const ContainerPlatformP = ({ title, grupo, estado, fechaFinal, nombreCliente, onMoreInfo }) => {
+  const displayTitle = ['NETFLIX', 'NETFLIXME', 'NETFLIXTV'].includes(title) ? 'NETFLIX' : title;
   return (
     <div className="container-platform">
-      <h2 className="servicio-title">{title}</h2>
-      <p className="grupo-text"><strong>Grupo:</strong> {grupo}</p>
+      <h2 className="servicio-title">{{displayTitle}}</h2>
+      <p className="nombre-cliente-text"><strong>Nombre del Cliente:</strong> {nombreCliente}</p><p className="grupo-text"><strong>Grupo:</strong> {grupo}</p>
       <p className="estado-text"><strong>Estado:</strong> {estado}</p>
       <p className="fecha-final-text"><strong>Fecha Final:</strong> {fechaFinal}</p>
       
@@ -26,4 +27,4 @@ const ContainerPlatform = ({ title, grupo, estado, fechaFinal, nombreCliente, on
   );
 };
 
-export default ContainerPlatform;
+export default ContainerPlatformP;
