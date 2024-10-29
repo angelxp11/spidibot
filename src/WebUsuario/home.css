@@ -86,3 +86,8 @@ label {
     display: block; /* Muestra el contenedor */
   }
   
+  .h2negro {
+    color: black;              /* Color del texto */
+    font-weight: bold;        /* Negrita */
+    text-align: center;         /* Alineación del texto (puedes cambiar a 'center' o 'right' si lo deseas) */
+}

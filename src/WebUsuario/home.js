@@ -32,11 +32,6 @@ function Home() {
   const [isInventarioVisible, setInventarioVisible] = useState(false); // Estado para manejar la visibilidad del inventarioomienza como invisible
   const [isServiciosClientesVisible, setServiciosClientesVisible] = useState(true); // Comienza como visible
   
-
-
-
-
-
   useEffect(() => {
     if (!user) {
       navigate('/spidibot');
@@ -94,45 +89,57 @@ function Home() {
       const q = query(collection(db, 'clientes'), where('email', '==', email));
       const querySnapshot = await getDocs(q);
       const serviciosData = [];
-      const emailCounts = {}; 
+      let isProveedor = false; // Bandera para verificar si el usuario es proveedor
+      let providerData = null; // Para almacenar los datos del proveedor si se encuentra
+      let matchingDocuments = []; // Para llevar un registro de documentos con el correo coincidente
   
+      // Recopilar todos los documentos coincidentes
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        const nombreCliente = data.nombre || 'Nombre no disponible'; 
+        matchingDocuments.push(data);
+  
+        // Verificar si este documento es un proveedor
+        if (data.proveedor === 'sí') {
+          isProveedor = true;
+          providerData = data; // Almacenar datos del proveedor
+        }
+  
+        const nombreCliente = data.nombre || 'Nombre no disponible';
         setNombreCliente(nombreCliente);
   
-        const fechaFinal = data.fechaFinal || 'Fecha no disponible'; 
+        const fechaFinal = data.fechaFinal || 'Fecha no disponible';
   
         if (data.servicio && data.grupo && data.notas) {
           data.servicio.forEach((servicio, index) => {
-            const grupo = data.grupo[index]; 
-            const estado = data.PENDEJOALEJANDRO.estado;
+            const grupo = data.grupo[index] || 'Grupo no disponible';
+            const estado = data.PENDEJOALEJANDRO?.estado || 'Estado no disponible';
   
             serviciosData.push({
               servicio,
               grupo,
               estado,
-              fechaFinal, 
+              fechaFinal,
               nombreCliente,
-              nota: data.notas[index] || ''  // Agregamos la nota correspondiente
+              nota: data.notas[index] || 'Nota no disponible',
             });
           });
-  
-          emailCounts[email] = (emailCounts[email] || 0) + 1; 
         }
       });
   
-      const isProvider = serviciosData.length > 0 && serviciosData[0].estado === 'Proveedor';
-      const isEmailRepeated = emailCounts[email] > 1;
-  
-      setHasProvider(isProvider || isEmailRepeated); 
+      console.log("Servicios Data:", serviciosData); // Verifica el contenido aquí
       setServicios(serviciosData);
+  
+      // Aquí puedes establecer el estado de hasProvider en función de isProveedor
+      setHasProvider(isProveedor);
     } catch (error) {
       console.error('Error al obtener los servicios:', error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
+  
+  
+
   const fetchTvSteps = async (servicioNombre) => {
     try {
       // Normalizar el nombre del servicio
@@ -161,8 +168,6 @@ function Home() {
       setTvSteps(['Error al cargar los pasos.']);
     }
   };
-  
-  
 
   const getUserName = () => {
     if (nombreCliente) {
@@ -310,60 +315,62 @@ return (
 
       {/* Contenedor de plataformas */}
       <div className="platforms-container" style={{ display: isServiciosClientesVisible ? 'block' : 'none' }}>
-            {servicios.length > 0 ? (
-                showServiceContainers ? ( // Muestra los servicios para comprar
-                    servicios.map((servicioData, index) => (
-                        <div key={index}>
-                            {hasProvider ? ( // Mostrar ContainerPlatformP si hay proveedor
-                                <ContainerPlatformP
-                                    title={servicioData.servicio}
-                                    nombreCliente={servicioData.nombreCliente}
-                                    grupo={servicioData.grupo}
-                                    fechaFinal={servicioData.fechaFinal}
-                                    estado={servicioData.estado}
-                                    onMoreInfo={() => handleMoreInfo(servicioData.servicio, servicioData.grupo, servicioData.servicio, servicioData.estado)}
-                                />
-                            ) : ( // Mostrar ContainerPlatform si no hay proveedor
-                                <ContainerPlatform
-                                    title={servicioData.servicio}
-                                    nombreCliente={servicioData.nombreCliente}
-                                    grupo={servicioData.grupo}
-                                    fechaFinal={servicioData.fechaFinal}
-                                    estado={servicioData.estado}
-                                    onMoreInfo={() => handleMoreInfo(servicioData.servicio, servicioData.grupo, servicioData.servicio, servicioData.estado)}
-                                />
-                            )}
-                        </div>
-                    ))
-                ) : ( // Muestra los servicios ya adquiridos
-                    servicios.map((servicioData, index) => (
-                        <div key={index}>
-                            {hasProvider ? ( // Mostrar ContainerPlatformP si hay proveedor
-                                <ContainerPlatformP
-                                    title={servicioData.servicio}
-                                    nombreCliente={servicioData.nombreCliente}
-                                    grupo={servicioData.grupo}
-                                    fechaFinal={servicioData.fechaFinal}
-                                    estado={servicioData.estado}
-                                    onMoreInfo={() => handleMoreInfo(servicioData.servicio, servicioData.grupo, servicioData.servicio, servicioData.estado)}
-                                />
-                            ) : ( // Mostrar ContainerPlatform si no hay proveedor
-                                <ContainerPlatform
-                                    title={servicioData.servicio}
-                                    nombreCliente={servicioData.nombreCliente}
-                                    grupo={servicioData.grupo}
-                                    fechaFinal={servicioData.fechaFinal}
-                                    estado={servicioData.estado}
-                                    onMoreInfo={() => handleMoreInfo(servicioData.servicio, servicioData.grupo, servicioData.servicio, servicioData.estado)}
-                                />
-                            )}
-                        </div>
-                    ))
-                )
-            ) : (
-                <p>No hay servicios disponibles.</p>
+    {servicios.length > 0 ? (
+      showServiceContainers ? ( // Muestra los servicios para comprar
+        servicios.map((servicioData, index) => (
+          <div key={index}>
+            {console.log(servicioData)} {/* Agrega este log para verificar el contenido */}
+            {hasProvider ? ( // Mostrar ContainerPlatformP si hay proveedor
+              <ContainerPlatformP
+                title={typeof servicioData.servicio === 'string' ? servicioData.servicio : servicioData.servicio.displayTitle} // Asegúrate de que sea un string
+                nombreCliente={typeof servicioData.nombreCliente === 'string' ? servicioData.nombreCliente : 'Nombre no disponible'}
+                grupo={typeof servicioData.grupo === 'string' ? servicioData.grupo : 'Grupo no disponible'}
+                fechaFinal={typeof servicioData.fechaFinal === 'string' ? servicioData.fechaFinal : 'Fecha no disponible'}
+                estado={typeof servicioData.estado === 'string' ? servicioData.estado : 'Estado no disponible'}
+                onMoreInfo={() => handleMoreInfo(servicioData.servicio, servicioData.grupo, servicioData.servicio, servicioData.estado)}
+              />
+            ) : ( // Mostrar ContainerPlatform si no hay proveedor
+              <ContainerPlatform
+                title={typeof servicioData.servicio === 'string' ? servicioData.servicio : servicioData.servicio.displayTitle} // Asegúrate de que sea un string
+                nombreCliente={typeof servicioData.nombreCliente === 'string' ? servicioData.nombreCliente : 'Nombre no disponible'}
+                grupo={typeof servicioData.grupo === 'string' ? servicioData.grupo : 'Grupo no disponible'}
+                fechaFinal={typeof servicioData.fechaFinal === 'string' ? servicioData.fechaFinal : 'Fecha no disponible'}
+                estado={typeof servicioData.estado === 'string' ? servicioData.estado : 'Estado no disponible'}
+                onMoreInfo={() => handleMoreInfo(servicioData.servicio, servicioData.grupo, servicioData.servicio, servicioData.estado)}
+              />
             )}
-        </div>
+          </div>
+        ))
+      ) : ( // Muestra los servicios ya adquiridos
+        servicios.map((servicioData, index) => (
+          <div key={index}>
+            {console.log(servicioData)} {/* Agrega este log para verificar el contenido */}
+            {hasProvider ? ( // Mostrar ContainerPlatformP si hay proveedor
+              <ContainerPlatformP
+                title={typeof servicioData.servicio === 'string' ? servicioData.servicio : servicioData.servicio.displayTitle} // Asegúrate de que sea un string
+                nombreCliente={typeof servicioData.nombreCliente === 'string' ? servicioData.nombreCliente : 'Nombre no disponible'}
+                grupo={typeof servicioData.grupo === 'string' ? servicioData.grupo : 'Grupo no disponible'}
+                fechaFinal={typeof servicioData.fechaFinal === 'string' ? servicioData.fechaFinal : 'Fecha no disponible'}
+                estado={typeof servicioData.estado === 'string' ? servicioData.estado : 'Estado no disponible'}
+                onMoreInfo={() => handleMoreInfo(servicioData.servicio, servicioData.grupo, servicioData.servicio, servicioData.estado)}
+              />
+            ) : ( // Mostrar ContainerPlatform si no hay proveedor
+              <ContainerPlatform
+                title={typeof servicioData.servicio === 'string' ? servicioData.servicio : servicioData.servicio.displayTitle} // Asegúrate de que sea un string
+                nombreCliente={typeof servicioData.nombreCliente === 'string' ? servicioData.nombreCliente : 'Nombre no disponible'}
+                grupo={typeof servicioData.grupo === 'string' ? servicioData.grupo : 'Grupo no disponible'}
+                fechaFinal={typeof servicioData.fechaFinal === 'string' ? servicioData.fechaFinal : 'Fecha no disponible'}
+                estado={typeof servicioData.estado === 'string' ? servicioData.estado : 'Estado no disponible'}
+                onMoreInfo={() => handleMoreInfo(servicioData.servicio, servicioData.grupo, servicioData.servicio, servicioData.estado)}
+              />
+            )}
+          </div>
+        ))
+      )
+    ) : (
+      <p>No hay servicios disponibles.</p>
+    )}
+  </div>
 
 
     {/* Pantalla de carga como overlay */}
@@ -389,7 +396,7 @@ return (
           {showSteps ? (
             // Mostrar los pasos para ingresar al TV desde Firestore
             <>
-              <h2>Como ingresar TV</h2>
+              <h2 className="h2negro">Como ingresar Tv</h2>
               <div className="steps-container">
                 {tvSteps.length > 0 ? (
                   tvSteps.map((step, index) => (
@@ -409,7 +416,7 @@ return (
           ) : (
             // Mostrar la información de acceso
             <>
-              <h2>Detalles de la cuenta</h2>
+              <h2 className="h2negro">Detalles de la cuenta</h2>
               <div className="modal-item">
                 <label>Email:</label>
               </div>

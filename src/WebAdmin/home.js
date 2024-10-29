@@ -12,6 +12,7 @@ import AddSeeEstatus from './Grupos/AddSeeEstatus';
 import PasswordReset from './PasswordReset/PasswordReset';
 import Notificaciones from './Notificaciones/Notificaciones';
 import { getFirestore, collection, onSnapshot } from 'firebase/firestore';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import './home.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
@@ -29,14 +30,28 @@ function Home() {
   const [showPasswordReset, setShowPasswordReset] = useState(false);
   const [showNotificaciones, setShowNotificaciones] = useState(false);
   const [notificacionCount, setNotificacionCount] = useState(0);
-
+  
   const db = getFirestore();
+  const messaging = getMessaging(); // Inicializa FCM
 
-  // Función para solicitar permisos de notificación
+  // Solicitar permisos de notificación
   const requestNotificationPermission = async () => {
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
       console.log('Permiso para notificaciones concedido.');
+      // Obtiene el token para enviar notificaciones
+      getToken(messaging, { vapidKey: 'YOUR_PUBLIC_VAPID_KEY' }) // Cambia a tu VAPID Key
+        .then((currentToken) => {
+          if (currentToken) {
+            console.log('Token FCM:', currentToken);
+            // Aquí puedes enviar el token a tu servidor si es necesario
+          } else {
+            console.warn('No se pudo obtener el token de FCM. Asegúrate de haber habilitado las notificaciones.');
+          }
+        })
+        .catch((error) => {
+          console.error('Error al obtener el token de FCM:', error);
+        });
     } else {
       console.error('Permiso para notificaciones denegado.');
     }
@@ -44,6 +59,7 @@ function Home() {
 
   useEffect(() => {
     requestNotificationPermission(); // Solicitar permiso al cargar el componente
+
     const unsubscribe = onSnapshot(collection(db, 'notificaciones'), (snapshot) => {
       setNotificacionCount(snapshot.size);
       snapshot.docChanges().forEach((change) => {
@@ -58,15 +74,26 @@ function Home() {
     });
 
     return () => unsubscribe();
-  }, [db]);
+  }, [db, messaging]);
 
   // Función para mostrar notificaciones del navegador
   const showBrowserNotification = (title, body) => {
     new Notification(title, {
       body: body,
-      icon: 'path/to/icon.png', // Cambia a la ruta de tu icono
+      icon: '/icon.png', // Ruta del icono en la carpeta public
     });
   };
+  
+
+  // Manejar mensajes en primer plano
+  useEffect(() => {
+    const unsubscribeFromMessages = onMessage(messaging, (payload) => {
+      console.log('Mensaje recibido en primer plano: ', payload);
+      showBrowserNotification(payload.notification.title, payload.notification.body);
+    });
+
+    return () => unsubscribeFromMessages();
+  }, [messaging]);
 
   const handleSignOut = async () => {
     try {
