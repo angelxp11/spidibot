@@ -16,6 +16,9 @@ const firebaseConfig = {
   measurementId: "G-5F3JLQFPCN"
 };
 
+// Clave pública VAPID
+const vapidKey = 'BOo6VG4uksfoYr1GN-1X8FxGPNEe8MiNyCU5wCqG1TvNgO_H4K90b_IJ_QIXpDIySj3bxf3bEhvHWzCZBI32810';
+
 // Inicializa la aplicación Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
@@ -37,7 +40,7 @@ export const requestPermission = async () => {
   try {
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
-      const token = await getToken(messaging, { vapidKey: 'BPTQnOUzaxKQjsWX5O8T09A77fnKCy-renXG6dL6BOAm9YE1NFmdfMLCePYXAewEeGu-nHYKXd8F3Bz9aK15GNA' }); // Cambia a tu VAPID Key
+      const token = await getToken(messaging, { vapidKey });
       console.log('FCM Token:', token);
       return token;
     } else {
@@ -54,8 +57,9 @@ onMessage(messaging, (payload) => {
   // Mostrar notificación
   new Notification(payload.notification.title, {
     body: payload.notification.body,
-    icon: payload.notification.icon, // Asegúrate de tener una imagen para el icono
+    icon: payload.notification.icon || 'path/to/icon.png', // Asegúrate de tener una imagen para el icono
   });
 });
 
+// Exportar variables y funciones
 export { auth, app, db, messaging };
