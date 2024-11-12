@@ -115,7 +115,7 @@ function Login() {
       
       <ToastContainer autoClose={3000} hideProgressBar /> {/* Componente de Toast para mensajes */}
     </div>
-  );D
+  );
 }
 
 export default Login;
