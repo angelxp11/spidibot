@@ -135,3 +135,32 @@
   margin: 10px 0; /* Margen superior e inferior para separar del contenido */
 }
 
+/*////////////////////////////////*/
+/* Estilos adicionales para DISNEY+ si se requiere */
+/* Estilo adicional para el título y el precio cuando el servicio sea DISNEY+ */
+.container-platform-service.disney-plus h2,
+.container-platform-service.disney-plus .precio-text {
+  color: white; /* Establece el color blanco para el título y el precio */
+}
+
+/* Estilos específicos para el título en servicios NETFLIX TV y NETFLIX SIN TV */
+.container-platform-service.netflix-title {
+  color: red; /* Color rojo para el título */
+}
+/* Estilo para el fondo de CRUNCHYROLL */
+.container-platform-service.crunchyroll-title {
+  background-color: #ff6308; /* Fondo naranja */
+  color: white; /* Texto y título blanco */
+}
+/* Estilo para el fondo de YOUTUBE PREMIUM y YOUTUBE + GOOGLE */
+.container-platform-service.youtube-premium-title,
+.container-platform-service.youtube-google-title {
+  background-color: #ff08088a; /* Fondo rojo */
+  color: white; /* Texto blanco */
+}
+
+/* Estilo para los elementos de lista */
+li {
+  color: black; /* Color de texto negro */
+}
+

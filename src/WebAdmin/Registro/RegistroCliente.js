@@ -90,6 +90,34 @@ function RegistroCliente({ onClose }) {
       [name]: value
     }));
   };
+  const handleDateChange = (event) => {
+    const { name, value } = event.target;
+    
+    if (name === 'fechaInicial') {
+      const selectedDate = new Date(value);
+      const nextMonthDate = new Date(selectedDate);
+  
+      // Sumar un mes
+      nextMonthDate.setMonth(selectedDate.getMonth() + 1);
+  
+      // Manejar caso en que el día exceda los días del nuevo mes
+      if (nextMonthDate.getDate() !== selectedDate.getDate()) {
+        nextMonthDate.setDate(0); // Ajusta al último día del mes
+      }
+  
+      setClientData((prevData) => ({
+        ...prevData,
+        fechaInicial: value,
+        fechaFinal: nextMonthDate.toISOString().split('T')[0], // Formatear como YYYY-MM-DD
+      }));
+    } else {
+      setClientData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
+  
 
   const handleSaveClient = async () => {
     try {
@@ -305,23 +333,24 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
           />
         </div>
         <div className="form-input">
-          <label>Fecha Inicial</label>
-          <input
-            type="date"
-            name="fechaInicial"
-            value={clientData.fechaInicial}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-input">
-          <label>Fecha Final</label>
-          <input
-            type="date"
-            name="fechaFinal"
-            value={clientData.fechaFinal}
-            onChange={handleChange}
-          />
-        </div>
+  <label>Fecha Inicial</label>
+  <input
+    type="date"
+    name="fechaInicial"
+    value={clientData.fechaInicial}
+    onChange={handleDateChange}
+  />
+</div>
+<div className="form-input">
+  <label>Fecha Final</label>
+  <input
+    type="date"
+    name="fechaFinal"
+    value={clientData.fechaFinal}
+    onChange={handleChange} // Permite editar manualmente si es necesario
+  />
+</div>
+
         <div className="form-input">
           <label>Grupo</label>
           <input

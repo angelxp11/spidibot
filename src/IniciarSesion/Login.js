@@ -73,8 +73,10 @@ function Login() {
     <div className={`login-container ${!isLoginVisible ? 'hidden' : ''}`}>
       {/* Mostrar la pantalla de carga si loading es true */}
       {loading && <Carga />}
+      
       {!loading && isLoginVisible && (
-        <div className="login-box">
+        <div className="login-xbox">
+          {/* Contenedor de login */}
           <h1>Iniciar Sesión</h1>
           <form className="login-form" onSubmit={handleSubmit}>
             <div className="input-group">
@@ -108,10 +110,12 @@ function Login() {
           </p>
         </div>
       )}
+      
       {!isLoginVisible && <Registro toggleVisibility={toggleVisibility} />} {/* Muestra el componente Registro */}
+      
       <ToastContainer autoClose={3000} hideProgressBar /> {/* Componente de Toast para mensajes */}
     </div>
-  );
+  );D
 }
 
 export default Login;

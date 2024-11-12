@@ -208,17 +208,17 @@ body.registrar {
     margin-top: 20px;
     text-align: center;
     font-size: 14px;
-    color: #000000;
+    color: #ffffff;
   }
   
   .login-link span {
-    color: #ed1b24; /* Color azul para el enlace */
+    color: #ffc2c5; /* Color azul para el enlace */
     text-decoration: underline; /* Subrayado */
     cursor: pointer; /* Hacer que el cursor sea pointer al pasar sobre el enlace */
     font-weight: bold;
   }
   
   .login-link span:hover {
-    color: #f3666d; /* Color más oscuro cuando el enlace está en hover */
+    color: #ff000d; /* Color más oscuro cuando el enlace está en hover */
   }
   

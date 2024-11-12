@@ -296,7 +296,7 @@ return (
     <p className="welcome-message">Bienvenido a tu panel de usuario.</p>
 
     <div className="container-inventario" style={{ display: isInventarioVisible ? 'block' : 'none' }}>
-        <h2>Servicios a la Venta</h2>
+    <h2 class="h2titleblanco">Servicios a la Venta</h2>
         {serviciosEnVenta.length > 0 ? (
           serviciosEnVenta.map((servicio) => (
             <ContainerPlatformService 

@@ -31,10 +31,20 @@
 
 
 h2 {
-  color: #ffffff;
+  color: black;
   margin-bottom: 20px;
   font-family: 'Arial', sans-serif;
 }
+
+.h2titleblanco {
+  color: white; /* Cambia el color del texto a blanco */
+  font-size: 24px; /* Tamaño de fuente ajustable */
+  font-weight: bold; /* Texto en negrita */
+  text-align: center; /* Centra el texto */
+  margin: 20px 0; /* Espaciado superior e inferior */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para resaltar el texto */
+}
+
 
 .form-input {
   margin-bottom: 15px;

@@ -60,3 +60,24 @@
 .yes-button:hover {
   background-color: darkred;
 }
+
+
+.cerrabutton {
+  background-color: red; /* Fondo rojo */
+  color: white; /* Texto blanco */
+  border: none; /* Sin borde */
+  padding: 10px 20px; /* Espaciado interno */
+  border-radius: 5px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+  font-size: 16px; /* Tamaño de fuente */
+  font-weight: bold; /* Texto en negrita */
+}
+
+.cerrabutton:hover {
+  background-color: darkred; /* Fondo más oscuro al pasar el cursor */
+}
+
+ul {
+  list-style-type: none; /* Elimina las viñetas */
+  padding-left: 0; /* Elimina el margen izquierdo */
+}

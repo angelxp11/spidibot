@@ -39,7 +39,7 @@ body {
   animation: zoomIn 0.5s ease-in-out;
 }
 
-.login-box {
+.login-xbox {
   background: rgba(255, 255, 255, 0.2);
   width: 400px;
   padding: 40px;
@@ -49,9 +49,10 @@ body {
   max-width: 450px;
   text-align: center;
   position: relative;
+  margin-top: 20px;
 }
 
-.login-box h1 {
+.login-xbox h1 {
   margin-bottom: 20px;
   color: white;
 }
@@ -105,6 +106,7 @@ body {
   background-color: #ff3b3f;
 }
 
+/* Animación de fondo */
 @keyframes gradientAnimation {
   0% {
     background-position: 0% 50%;
@@ -166,6 +168,7 @@ body {
   }
 }
 
+/* Botón de Spidi */
 .spidi-button {
   background-color: #ed1b24;
   color: white;
@@ -177,16 +180,18 @@ body {
   font-size: 1rem;
   transition: background-color 0.3s, transform 0.2s;
 }
+
 .spidi-button:hover {
   background-color: #ff3b3f;
   transform: scale(1.05);
 }
 
+/* Estilo para el enlace de registro */
 .register-link {
   margin-top: 20px;
   text-align: center;
   font-size: 14px;
-  color: #000000;
+  color: #ffffff;
 }
 
 .register-link span {

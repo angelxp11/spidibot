@@ -102,7 +102,7 @@ function Registrar() {
           </form>
           {/* Texto que invita a iniciar sesión */}
           <p className="login-link">
-            ¿Ya tienes una cuenta? <span onClick={handleLoginToggle}>Inicia Sesión</span>
+            ¿Ya tienes una cuenta? <span onClick={handleLoginToggle}>Iniciar Sesión</span>
           </p>
         </div>
       )}
