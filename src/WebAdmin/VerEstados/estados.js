@@ -38,7 +38,7 @@ function Estados({ onClose }) {
   const handleNoContinuar = async () => {
     if (selectedClient) {
       const confirmar = window.confirm(
-        "En verdad el cliente no quiere seguir?"
+        "En verdad el cliente no quiere seguir? 💀"
       );
   
       if (!confirmar) {
