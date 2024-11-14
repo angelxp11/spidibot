@@ -37,29 +37,35 @@ function Estados({ onClose }) {
 
   const handleNoContinuar = async () => {
     if (selectedClient) {
-      const nuevaFechaInicio = '07/07/2003';
+      const confirmar = window.confirm(
+        "En verdad el cliente no quiere seguir?"
+      );
+  
+      if (!confirmar) {
+        return; // Si el usuario selecciona "No", salimos de la función
+      }
+    
       const nuevaFechaFinal = '07/07/2003';
-
+  
       const clientRef = doc(firestore, 'clientes', selectedClient.id);
       await updateDoc(clientRef, {
-        fechaInicial: nuevaFechaInicio,
         fechaFinal: nuevaFechaFinal,
         'PENDEJOALEJANDRO.estado': '😶‍🌫️',
         pagado: "NO"
       });
-
+  
       setSelectedClient({
         ...selectedClient,
-        fechaInicio: nuevaFechaInicio,
         fechaFinal: nuevaFechaFinal,
         estado: '❌'
       });
-
-      alert('El cliente no continuara con los servicios.');
+  
+      alert('El cliente no continuará con los servicios.');
       await handleSearch();
       setSelectedClient(null);
     }
   };
+  
 
   const searchByState = async (searchValue) => {
     try {
@@ -147,6 +153,18 @@ function Estados({ onClose }) {
       await handleSearch();
     }
   };
+  // Función para formatear el precio
+const formatPrice = (price) => {
+  const priceStr = price.toString();
+
+  // Si el precio tiene exactamente 4 caracteres
+  if (priceStr.length === 4) {
+    return `$ ${priceStr.slice(0, 1)}.${priceStr.slice(1)}`;
+  }
+
+  // Si el precio tiene más de 4 caracteres, usamos el formato de miles estándar
+  return `$ ${new Intl.NumberFormat('es-ES').format(price)}`;
+};
 
   const handleGenerateComprobante = async () => {
     if (selectedClient) {
@@ -269,14 +287,26 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
     <div>Estado: {selectedClient.estado}</div>
     <div>Fecha Final: {selectedClient.fechaFinal}</div>
     <div>Servicios a vencer: {Array.isArray(selectedClient.servicio) ? selectedClient.servicio.join(', ') : 'Ninguno'}</div>
-    <div>Grupos: {Array.isArray(selectedClient.grupo) ? selectedClient.grupo.join(', ') : 'Ninguno'}</div> {/* Nueva línea para mostrar los grupos */}
+    <div>Grupos: {Array.isArray(selectedClient.grupo) ? selectedClient.grupo.join(', ') : 'Ninguno'}</div>
+    <div>
+      Precios: {Array.isArray(selectedClient.precio) ? (
+        <>
+          {selectedClient.precio.map((precio, index) => (
+            <span key={index}>
+              {index > 0 ? ', ' : ''}{formatPrice(precio)}
+            </span>
+          ))}
+          <br />
+          <br />
+          <strong>Total: {formatPrice(selectedClient.precio.reduce((acc, curr) => acc + Number(curr), 0))}</strong>
+        </>
+      ) : 'Sin precios'}
+    </div>
     <button onClick={handleRenew}>Renovar</button>
     <button onClick={handleNoContinuar}>No deseo continuar</button>
     <button onClick={handleGenerateComprobante}>Generar Comprobante</button>
   </div>
 )}
-
-
 
       </div>
     </div>

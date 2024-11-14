@@ -62,7 +62,6 @@ function App() {
       ) : (
         <Login />
       )}
-      <ToastContainer />
     </div>
   );
 }
