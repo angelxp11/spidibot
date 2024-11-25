@@ -34,3 +34,45 @@
     background-color: #0056b3; /* Efecto hover */
   }
   
+  .lista-pedidos {
+    flex: 1; /* Ocupa el espacio restante */
+    padding: 20px;
+    overflow-y: auto;
+    border-right: 2px solid #ccc; /* Separador entre las dos secciones */
+  }
+  
+  .pedido-detalles {
+    flex: 2; /* Ocupa el doble de espacio que la lista de pedidos */
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
+  .lista-pedidos ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .lista-pedidos li {
+    margin-bottom: 10px;
+  }
+  
+  .ver-pedido-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .ver-pedido-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .pedido-detalle-modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  

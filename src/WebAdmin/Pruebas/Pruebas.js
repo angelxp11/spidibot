@@ -5,6 +5,7 @@ import './Pruebas.css';
 
 const Pruebas = ({ onClose }) => {
   const [clientIds, setClientIds] = useState([]);
+  const [notificationSent, setNotificationSent] = useState(false); // Estado para controlar la notificación
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -35,8 +36,17 @@ const Pruebas = ({ onClose }) => {
     fetchClientIds();
   }, []);
 
+  // Solicitar permiso para las notificaciones al cargar la página
+  useEffect(() => {
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+  }, []);
+
   // Función para crear una nueva notificación
   const createNotification = async () => {
+    if (notificationSent) return; // Si ya se envió la notificación, no hacer nada más
+
     const notificationData = {
       title: "Nuevo Servicio Solicitado",
       body: "Un cliente quiere un servicio.",
@@ -47,6 +57,17 @@ const Pruebas = ({ onClose }) => {
       // Agregar el documento a la colección de notificaciones
       await addDoc(collection(db, 'notificaciones'), notificationData);
       console.log('Notificación creada con éxito');
+
+      // Mostrar la notificación al usuario
+      if (Notification.permission === "granted") {
+        new Notification(notificationData.title, {
+          body: notificationData.body,
+        });
+      }
+
+      // Actualizar el estado para evitar que se envíe otra notificación
+      setNotificationSent(true);
+
     } catch (error) {
       console.error('Error al crear notificación:', error);
     }
@@ -72,6 +93,6 @@ const Pruebas = ({ onClose }) => {
       </div>
     </div>
   );
-}
+};
 
 export default Pruebas;

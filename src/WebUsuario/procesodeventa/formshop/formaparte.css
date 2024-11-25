@@ -1,0 +1,229 @@
+/* Fondo del modal con opacidad negra */
+.formaparte-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 902;
+    overflow-y: auto; /* Barra de desplazamiento vertical */
+}
+
+/* Estilo del modal */
+.formaparte-modal {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh; /* Limita la altura del modal */
+    overflow-y: auto; /* Agrega barra de desplazamiento vertical */
+}
+
+/* Botón de cerrar específico para este modal */
+.formaparte-modal .formaparte-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.formaparte-modal .formaparte-close-btn:hover {
+    background-color: darkred;
+}
+
+/* Encabezado del modal */
+h2 {
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Estilo de los campos de entrada y labels */
+.formaparte-group {
+    margin-bottom: 15px;
+}
+
+.labelform {
+    color: black;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Agregar barra de desplazamiento vertical al select */
+select {
+    overflow-y: auto;
+    max-height: 150px; /* Limita la altura del select */
+}
+
+/* Botón de envío */
+button {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4caf50;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Estilo para los labels de los campos en el formulario */
+.labelform {
+    color: black;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+/* Contenedor principal de la pregunta con radio buttons */
+.checkformspoti-group {
+    display: flex; /* Usamos flexbox para organizar el contenido */
+    flex-direction: column; /* Alinear los elementos verticalmente */
+    margin-bottom: 15px; /* Separación entre grupos */
+}
+
+/* Estilo para cada opción de radio button */
+.checkformspoti {
+    color: rgb(0, 0, 0); /* Texto en negro */
+    margin-bottom: 10px; /* Separación entre opciones */
+    display: flex; /* Usamos flexbox para el alineado del radio button y el texto */
+    align-items: center; /* Alinear verticalmente */
+    cursor: pointer; /* Cursor al pasar sobre las opciones */
+}
+
+/* Margen derecho para los radio buttons */
+.checkformspoti input {
+    margin-right: 30px; /* Espacio entre el radio button y el texto */
+}
+
+/* Estilo para el input radio */
+.spotify-radio {
+    accent-color: #4caf50; /* Cambia el color del radio button a verde */
+    width: 20px; /* Tamaño personalizado del radio button */
+    height: 20px; /* Tamaño personalizado del radio button */
+    cursor: pointer; /* Cambio de cursor cuando pasas sobre el radio button */
+    margin-right: 10px; /* Espacio entre el radio button y el texto */
+    transition: all 0.3s ease; /* Animación suave al interactuar */
+  }
+  
+  .spotify-radio:hover {
+    transform: scale(1.2); /* Aumenta el tamaño del radio button al pasar el mouse */
+  }
+  
+  .spotify-radio:checked {
+    background-color: #4caf50; /* Fondo verde cuando está seleccionado */
+    border-color: #4caf50; /* Borde verde cuando está seleccionado */
+  }
+  
+/* Estilo para el checkbox */
+.checkboxinformation {
+    margin-right: 10px; /* Espacio entre el checkbox y el texto */
+    cursor: pointer; /* Cursor al pasar sobre el checkbox */
+    transform: scale(1.1); /* Un pequeño aumento en el tamaño del checkbox */
+    transition: all 0.3s ease; /* Suavizado de la transición al interactuar */
+  }
+  
+  /* Aumentar el tamaño del checkbox al pasar el mouse */
+  .checkboxinformation:hover {
+    transform: scale(1.2); /* Aumenta el tamaño al pasar el mouse */
+  }
+  
+  /* Estilo para el texto junto al checkbox */
+  .checkboxinformation + span {
+    font-weight: bold; /* Hace el texto en negrita */
+    color: #333; /* Color oscuro para el texto */
+    cursor: pointer; /* Cambio de cursor al pasar sobre el texto */
+    font-size: 16px; /* Tamaño de fuente */
+  }
+  
+  /* Cambia el color del texto a verde cuando el checkbox está seleccionado */
+  .checkboxinformation:checked + span {
+    color: #4caf50; /* Cambia el color del texto a verde cuando el checkbox está seleccionado */
+  }
+  
+  /* Contenedor principal del checkbox */
+.checkformcheckbox-group {
+    display: flex; /* Usamos flexbox para organizar el contenido */
+    flex-direction: column; /* Alinear los elementos verticalmente */
+    margin-bottom: 15px; /* Separación entre grupos */
+}
+
+/* Estilo para el label del checkbox */
+.checkformcheckbox {
+    color: rgb(0, 0, 0); /* Texto en negro */
+    font-weight: bold; /* Texto en negrita */
+    margin-bottom: 10px; /* Separación entre opciones */
+    display: flex; /* Usamos flexbox para el alineado del checkbox y el texto */
+    align-items: center; /* Alinear verticalmente */
+    cursor: pointer; /* Cursor al pasar sobre las opciones */
+}
+
+/* Margen derecho para los checkboxes */
+.checkformcheckbox input {
+    margin-right: 30px; /* Espacio entre el checkbox y el texto */
+}
+
+/* Estilo para el input checkbox */
+.checkbox-input {
+    accent-color: #4caf50; /* Cambia el color del checkbox a verde */
+    width: 20px; /* Tamaño personalizado del checkbox */
+    height: 20px; /* Tamaño personalizado del checkbox */
+    cursor: pointer; /* Cambio de cursor cuando pasas sobre el checkbox */
+    margin-right: 10px; /* Espacio entre el checkbox y el texto */
+    transition: all 0.3s ease; /* Animación suave al interactuar */
+}
+
+/* Efecto al pasar el mouse sobre el checkbox */
+.checkbox-input:hover {
+    transform: scale(1.2); /* Aumenta el tamaño del checkbox al pasar el mouse */
+}
+
+/* Estilo cuando el checkbox está marcado */
+.checkbox-input:checked {
+    background-color: #4caf50; /* Fondo verde cuando está seleccionado */
+    border-color: #4caf50; /* Borde verde cuando está seleccionado */
+}
+.Toastify__toast {
+    position: fixed !important;  /* Asegura que el toast esté fijo en la pantalla */
+    top: 20px;  /* Ajusta la distancia desde la parte superior */
+    z-index: 9999;  /* Asegura que esté por encima de otros elementos */
+    transition: transform 0.3s ease-in-out;  /* Transición para suavizar el movimiento */
+    max-width: 90%;  /* Asegura que el toast se vea bien en pantallas pequeñas */
+    box-sizing: border-box;  /* Evita que el padding y el borde desajusten el tamaño */
+}
+
+/* Ajuste específico para pantallas pequeñas */
+@media (max-width: 768px) {
+    .Toastify__toast {
+        top: 10%;  /* Ajusta la distancia para pantallas pequeñas */
+    }
+}
+

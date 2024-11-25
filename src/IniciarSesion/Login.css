@@ -13,22 +13,12 @@ body, html {
   padding: 0;
 }
 
-/* Establecer fuente para todo el documento */
 body {
   font-family: 'Roboto', sans-serif;
   background: linear-gradient(135deg, #ccc, #000000, #ff3b3f);
-  background-size: 300% 300%; /* Aumenta el tamaño para la animación */
-  background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
+  background-size: 300% 300%;
+  background-attachment: fixed;
   animation: gradientAnimation 10s ease infinite;
-}
-
-/* Contenedor principal que se adapta a la altura del contenido */
-.home-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  padding: 20px;
 }
 
 .login-container {
@@ -37,26 +27,44 @@ body {
   justify-content: center;
   min-height: 100vh;
   animation: zoomIn 0.5s ease-in-out;
+  width: 100%; /* Asegúrate que el contenedor ocupe todo el ancho */
 }
 
+/* Contenedor de inicio de sesión */
 .login-xbox {
   background: rgba(255, 255, 255, 0.2);
-  width: 470px;
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
   width: 100%;
-  max-width: 450px;
+  width: 450px; /* Dimensiones específicas para pantallas grandes */
+  height: 410px; /* Ajuste de altura específica */
+  max-width: 450px; /* Ajuste al tamaño máximo en pantallas grandes */
+  min-width: 390px; /* Asegura que no se reduzca más allá de este tamaño */
+  height: 410px; /* Ajuste de altura específica */
   text-align: center;
   position: relative;
-  margin-top: 20px;
+  transition: all 0.3s ease-in-out;
 }
+
+@media (max-width: 768px) {
+  .login-xbox {
+    width: 390px;
+    height: 410px;
+    padding: 20px;
+    margin: 0 auto; /* Centrado */
+  }
+}
+
+
+
 
 .login-xbox h1 {
   margin-bottom: 20px;
   color: white;
 }
 
+/* Estilo para los inputs */
 .input-group {
   margin-bottom: 20px;
   text-align: left;
@@ -69,34 +77,38 @@ body {
   color: white;
 }
 
-/* Ajustar los inputs para que se mantengan dentro del formulario */
 .input-group input {
-  width: 100%; /* Asegura que el input ocupe el 100% del contenedor */
-  max-width: 100%; /* Evita que el input sea más ancho que el contenedor */
-  min-width: 0; /* Permite que el input se ajuste correctamente */
+  width: 90%; /* Ajusta el ancho al 90% del contenedor */
+  max-width: 90%; /* No excede el contenedor */
+  margin: 0 auto; /* Centrado dentro del contenedor */
   padding: 12px;
   border-radius: 5px;
   border: none;
   font-size: 1rem;
-  box-sizing: border-box; /* Garantiza que padding y borde no afecten el ancho */
+  display: block; /* Asegura que el ancho sea respetado */
+  box-sizing: border-box;
 }
 
+/* Estilo para la visibilidad de contraseña */
 .password-group {
   position: relative;
 }
 
 .password-toggle {
   position: absolute;
-  background-color: #ffffff;
   top: 45px;
   font-size: 20px;
-  right: 10px;
+  right: 5%;
   transform: translateY(-50%);
   cursor: pointer;
 }
 
 /* Botón de inicio de sesión */
-.login-button {
+.login-buttons {
+  width: 90%; /* Ajusta el ancho al 90% del contenedor */
+  max-width: 90%; /* No excede el contenedor */
+  margin: 0 auto; /* Centrado dentro del contenedor */
+  display: block;
   background-color: #ed1b24;
   color: white;
   border: none;
@@ -105,9 +117,10 @@ body {
   cursor: pointer;
   font-size: 1.1rem;
   transition: background-color 0.3s;
+  margin-top: 20px;
 }
 
-.login-button:hover {
+.login-buttons:hover {
   background-color: #ff3b3f;
 }
 
@@ -124,31 +137,6 @@ body {
   }
 }
 
-/* Estilo para el mensaje de error */
-.error-message {
-  color: rgb(255, 255, 255);
-  margin-top: 30px;
-  text-align: center;
-  position: absolute;
-  bottom: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* Estilo para el formulario */
-.login-form {
-  width: 370px;
-  height: 234px;
-}
-
-/* Estilo para el toast */
-.Toastify__toast-container {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 9999;
-}
-
 /* Animación de zoom-in */
 @keyframes zoomIn {
   from {
@@ -159,36 +147,6 @@ body {
     transform: scale(1);
     opacity: 1;
   }
-}
-
-/* Animación de zoom-out */
-@keyframes zoomOut {
-  from {
-    transform: scale(1);
-    opacity: 1;
-  }
-  to {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-}
-
-/* Botón de Spidi */
-.spidi-button {
-  background-color: #ed1b24;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  margin-top: 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-.spidi-button:hover {
-  background-color: #ff3b3f;
-  transform: scale(1.05);
 }
 
 /* Estilo para el enlace de registro */
@@ -208,23 +166,4 @@ body {
 
 .register-link span:hover {
   color: #f3666d;
-}
-
-#email:focus, #password:focus {
-  background-color: #333; /* Fondo gris oscuro al enfocar */
-  border-color: #ff3b3f; /* Borde rojo para indicar el foco */
-  outline: none; /* Elimina el borde predeterminado del navegador */
-}
-
-/* Estilo general para los inputs (email y password) */
-#email, #password {
-  width: 100%; /* Asegura que el input ocupe el 100% del contenedor */
-  padding: 12px;
-  font-size: 1rem;
-  color: white;
-  background-color: #000000; /* Fondo negro */
-  border: 2px solid #333; /* Borde oscuro para contraste */
-  border-radius: 5px;
-  box-sizing: border-box; /* Para que el padding no afecte el ancho */
-  transition: background-color 0.3s, border-color 0.3s; /* Transiciones suaves */
 }

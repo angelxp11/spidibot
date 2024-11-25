@@ -146,3 +146,28 @@
   font-size: 12px; /* Tamaño de fuente */
   font-weight: bold; /* Negrita */
 }
+
+
+/* home.css */
+.cuentas-disponibles-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+  background-color: #f9f9f9;
+  margin-top: 20px;
+}
+
+.cuentas-disponibles-container h2 {
+  font-size: 24px;
+}
+
+.cuentas-disponibles-container button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.cuentas-disponibles-container button:hover {
+  background-color: #0056b3;
+}

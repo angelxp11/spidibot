@@ -71,29 +71,32 @@ function Login() {
 
   return (
     <div className={`login-container ${!isLoginVisible ? 'hidden' : ''}`}>
+      {/* Componente de Toast para mensajes (fuera de .login-xbox) */}
+      <ToastContainer autoClose={3000} hideProgressBar />
+  
       {/* Mostrar la pantalla de carga si loading es true */}
       {loading && <Carga />}
-      
+  
       {!loading && isLoginVisible && (
         <div className="login-xbox">
           {/* Contenedor de login */}
           <h1>Iniciar Sesión</h1>
           <form className="login-form" onSubmit={handleSubmit}>
             <div className="input-group">
-              <label htmlFor="email">Correo Electrónico:</label>
+              <label htmlFor="emails">Correo Electrónico:</label>
               <input
                 type="email"
-                id="email"
+                id="emails"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
             <div className="input-group password-group">
-              <label htmlFor="password">Contraseña:</label>
+              <label htmlFor="passwords">Contraseña:</label>
               <input
                 type={showPassword ? 'text' : 'password'}
-                id="password"
+                id="passwords"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -102,20 +105,20 @@ function Login() {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
-            <button type="submit" className="login-button">Iniciar Sesión</button>
+            <button type="submit" className="login-buttons">Iniciar Sesión</button>
           </form>
           {/* Texto que invita a registrarse */}
+          <br />
           <p className="register-link">
             ¿No tienes cuenta? <span onClick={toggleVisibility}>Regístrate</span>
           </p>
         </div>
       )}
-      
-      {!isLoginVisible && <Registro toggleVisibility={toggleVisibility} />} {/* Muestra el componente Registro */}
-      
-      <ToastContainer autoClose={3000} hideProgressBar /> {/* Componente de Toast para mensajes */}
+  
+      {!isLoginVisible && <Registro toggleVisibility={toggleVisibility} />}
     </div>
   );
+  
 }
 
 export default Login;

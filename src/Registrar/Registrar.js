@@ -98,8 +98,9 @@ function Registrar() {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
-            <button type="submit" className="registro-button">Registrar</button>
+            <button type="submit" className="login-buttons">Registrar</button>
           </form>
+          <br />
           {/* Texto que invita a iniciar sesión */}
           <p className="login-link">
             ¿Ya tienes una cuenta? <span onClick={handleLoginToggle}>Iniciar Sesión</span>

@@ -270,7 +270,6 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
             <option value="CRUNCHY">CRUNCHY</option>
             <option value="SPOTIFY">SPOTIFY</option>
             <option value="YOUTUBE">YOUTUBE</option>
-            <option value="VIX">VIX</option>
           </select>
         </div>
         <div className="form-group">

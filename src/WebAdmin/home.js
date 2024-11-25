@@ -1,3 +1,4 @@
+// src/Home.js
 import React, { useEffect, useState } from 'react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
@@ -11,6 +12,7 @@ import Pruebas from './Pruebas/Pruebas';
 import AddSeeEstatus from './Grupos/AddSeeEstatus';
 import PasswordReset from './PasswordReset/PasswordReset';
 import Notificaciones from './Notificaciones/Notificaciones';
+import CuentasDisponibles from './CuentasDisponibles.js';  // Importamos el nuevo componente
 import { getFirestore, collection, onSnapshot } from 'firebase/firestore';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import './home.css';
@@ -29,8 +31,10 @@ function Home() {
   const [showAddSeeEstatus, setShowAddSeeEstatus] = useState(false);
   const [showPasswordReset, setShowPasswordReset] = useState(false);
   const [showNotificaciones, setShowNotificaciones] = useState(false);
+  const [showCuentasDisponibles, setShowCuentasDisponibles] = useState(true); // Estado para mostrar "Cuentas Disponibles"
   const [notificacionCount, setNotificacionCount] = useState(0);
-  
+  const [notificaciones, setNotificaciones] = useState([]); // Estado para almacenar las notificaciones
+
   const db = getFirestore();
   const messaging = getMessaging(); // Inicializa FCM
 
@@ -61,7 +65,9 @@ function Home() {
     requestNotificationPermission(); // Solicitar permiso al cargar el componente
 
     const unsubscribe = onSnapshot(collection(db, 'notificaciones'), (snapshot) => {
-      setNotificacionCount(snapshot.size);
+      const notificacionesData = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+      setNotificaciones(notificacionesData);
+      setNotificacionCount(notificacionesData.filter(notificacion => notificacion.id !== "hola").length); // Contar solo las notificaciones que no tienen id "hola"
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'added') {
           // Mostrar notificación en el navegador
@@ -83,7 +89,6 @@ function Home() {
       icon: '/icon.png', // Ruta del icono en la carpeta public
     });
   };
-  
 
   // Manejar mensajes en primer plano
   useEffect(() => {
@@ -128,6 +133,9 @@ function Home() {
         <button onClick={() => setShowPruebas(true)} className="home-button">Pruebas</button>
         <button onClick={() => setShowAddSeeEstatus(true)} className="home-button">GruposEstados</button>
         <button onClick={() => setShowPasswordReset(true)} className="home-button">Email Clientes</button>
+        
+        {/* Nuevo botón para mostrar "Cuentas Disponibles" */}
+        <button onClick={() => setShowCuentasDisponibles(true)} className="home-button">Cuentas Disponibles</button>
 
         {/* Botón de Notificaciones con contador */}
         <div className="notification-button" onClick={handleOpenNotificaciones}>
@@ -148,6 +156,9 @@ function Home() {
       {showAddSeeEstatus && <AddSeeEstatus onClose={() => setShowAddSeeEstatus(false)} />}
       {showPasswordReset && <PasswordReset onClose={() => setShowPasswordReset(false)} />}
       {showNotificaciones && <Notificaciones onClose={handleCloseNotificaciones} />}
+      
+      {/* Mostrar el componente CuentasDisponibles si está activado */}
+      {showCuentasDisponibles && <CuentasDisponibles onClose={() => setShowCuentasDisponibles(false)} />}
 
       <ToastContainer />
     </div>
