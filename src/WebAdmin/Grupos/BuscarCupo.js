@@ -29,6 +29,7 @@ const verFechas = (fecha) => {
   return `${year}-${month}-${day}`;
 };
 
+
 function BuscarCupo({ onClose }) {
   const [servicio, setServicio] = useState('');
   const [grupo, setGrupo] = useState('');
@@ -36,8 +37,16 @@ function BuscarCupo({ onClose }) {
   const [clientes, setClientes] = useState([]);
   const [selectedClientes, setSelectedClientes] = useState({});
   const [clientesColores, setClientesColores] = useState({});
-  const [info, setInfo] = useState({ email: '', password: '', fechaComienzo: '', fechaPago: '' });
-  const [infoDocId, setInfoDocId] = useState('');
+  const [info, setInfo] = useState({
+    email: '',
+    password: '',
+    fechaComienzo: '',
+    fechaPago: '',
+    notas: '',
+    direccion: '',
+    enlace: ''
+  });
+    const [infoDocId, setInfoDocId] = useState('');
   const [isResultadosVisible, setIsResultadosVisible] = useState(false);
   const [isInfoVisible, setIsInfoVisible] = useState(false);
   useEffect(() => {
@@ -169,7 +178,9 @@ function BuscarCupo({ onClose }) {
             password: grupoInfo.password || '',
             fechaComienzo: verFechas(grupoInfo.fechaComienzo) || '',
             fechaPago: verFechas(grupoInfo.fechaPago) || '',
-            notas: grupoInfo.notas || '' // Asegúrate de incluir el campo notas
+            notas: grupoInfo.notas || '',
+            direccion: grupoInfo.direccion || '', // Nuevo campo
+            enlace: grupoInfo.enlace || '' // Nuevo campo
           });
           setInfoDocId(servicioDoc.id); // Guarda el ID del documento
           setIsInfoVisible(true); // Muestra la información del grupo
@@ -183,6 +194,7 @@ function BuscarCupo({ onClose }) {
       console.error('Error al obtener información del servicio:', error);
     }
   };
+  
   
   const handleCopyPaste = () => {
     const { email, password } = info; // Asume que `info` tiene el email y la contraseña
@@ -215,7 +227,9 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
       password: info.password,
       fechaComienzo: guardarFechas(info.fechaComienzo),
       fechaPago: guardarFechas(info.fechaPago),
-      notas: info.notas || '' // Asegúrate de que el campo notas se incluya
+      notas: info.notas || '', // Asegúrate de que el campo notas se incluya
+      direccion: info.direccion || '', // Nuevo campo
+      enlace: info.enlace || '' // Nuevo campo
     };
   
     try {
@@ -223,7 +237,7 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
       
       // Actualizar el grupo con la información
       await updateDoc(servicioRef, {
-        [grupo]: updatedInfo // Actualiza el grupo con toda la información, incluyendo notas
+        [grupo]: updatedInfo // Actualiza el grupo con toda la información, incluyendo notas, direccion y enlace
       });
   
       alert('Cambios guardados con éxito.');
@@ -233,6 +247,7 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
       alert('Error al guardar cambios. Por favor, intenta nuevamente.');
     }
   };
+  
   
 
   const handleInputChange = (e, setter) => {
@@ -322,6 +337,7 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
     <div className="modal-content1">
       <button className="close-btn" onClick={() => setIsInfoVisible(false)}>Cerrar</button>
       <h3>Información del Grupo:</h3>
+      
       <div className="form-group">
         <label>Email:</label>
         <input
@@ -330,45 +346,67 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
           onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, email: value })))}
         />
       </div>
+      
       <div className="form-group">
-        <label>Password:</label>
+        <label>Contraseña:</label>
         <input
           type="text"
           value={info.password}
           onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, password: value })))}
         />
       </div>
+      
       <div className="form-group">
         <label>Fecha de Comienzo:</label>
         <input
-          type="date"
+          type="text"
           value={info.fechaComienzo}
           onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, fechaComienzo: value })))}
         />
       </div>
+      
       <div className="form-group">
         <label>Fecha de Pago:</label>
         <input
-          type="date"
+          type="text"
           value={info.fechaPago}
           onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, fechaPago: value })))}
         />
       </div>
-      {/* Nuevo campo para Notas */}
+      
       <div className="form-group">
         <label>Notas:</label>
         <input
           type="text"
           value={info.notas}
           onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, notas: value })))}
-          style={{ height: '170px' }} // Establecer altura de 170px
         />
       </div>
-      <button onClick={handleCopyPaste}>Copiar</button>
+      
+      <div className="form-group">
+        <label>Dirección:</label>
+        <input
+          type="text"
+          value={info.direccion}
+          onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, direccion: value })))}
+        />
+      </div>
+      
+      <div className="form-group">
+        <label>Enlace:</label>
+        <input
+          type="text"
+          value={info.enlace}
+          onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, enlace: value })))}
+        />
+      </div>
+
       <button onClick={handleSaveChanges}>Guardar Cambios</button>
     </div>
   </div>
 )}
+
+
 
     </div>
   );

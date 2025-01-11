@@ -1,0 +1,180 @@
+/* DatosSpotify.css */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 600px; /* Limitar la altura máxima */
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modal-title {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+form {
+
+  flex-direction: column;
+  gap: 10px; /* Reducir el espacio entre los elementos */
+}
+
+/* Estilos de los campos del formulario */
+.form-group {
+  padding-top: 10px; /* Reducir el padding superior */
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.form-input {
+  padding: 8px; /* Reducir el padding */
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  background-color: #f9f9f9;
+}
+
+.form-input:focus {
+  border-color: #1db954;
+  background-color: #fff;
+}
+
+.password-container {
+  position: relative;
+}
+
+.password-container input {
+  padding-right: 30px;
+}
+
+.spotify-password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 30%;
+  transform: translateY(-50%);
+  font-size: 18px; /* Reducir el tamaño del icono */
+  cursor: pointer;
+}
+
+/* Estilos del enlace */
+.info-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-text {
+  font-size: 13px; /* Reducir el tamaño del texto */
+  color: #555;
+  flex: 1;
+}
+
+.enlace-clicable {
+  color: #1db954;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.enlace-clicable:hover {
+  text-decoration: underline;
+}
+
+/* Estilos del botón copiar */
+.copy-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px; /* Reducir el padding */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+  position: relative;
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.copy-button:hover {
+  background-color: #f0f0f0;
+  border-radius: 8px;
+}
+
+.copy-icon {
+  font-size: 14px; /* Reducir el tamaño del icono */
+  color: #555;
+  transition: color 0.3s;
+}
+
+.copy-button:hover .copy-icon {
+  color: #1db954;
+}
+
+/* Estilos de los botones de acción */
+.button-group {
+  display: flex;
+  justify-content: center; /* Centrar los botones horizontalmente */
+  gap: 10px; /* Reducir el espacio entre los botones */
+  width: 100%;
+}
+
+.save-button,
+.close-button {
+  padding: 8px; /* Reducir el padding */
+  font-size: 15px; /* Reducir el tamaño del texto */
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  width: 48%;
+}
+
+.save-button {
+  background-color: #1db954;
+  color: white;
+}
+
+.save-button:hover {
+  background-color: #1aa34a;
+}
+
+.close-button {
+  background-color: #ccc;
+  color: #333;
+}
+
+.close-button:hover {
+  background-color: #bbb;
+}
+
+.copy-button {
+  margin-top: 10px;
+}
+
+.button-group {
+  flex-direction: row; /* Asegurarse de que los botones estén en fila */
+}
