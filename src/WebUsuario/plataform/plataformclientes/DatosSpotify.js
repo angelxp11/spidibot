@@ -168,7 +168,7 @@ const DatosSpotify = ({ onClose }) => {
       {loading ? (
         <Carga /> // Este es tu componente de carga
       ) : (
-        <div className="overlay" onClick={handleOverlayClick}>
+        <div className="overlay-datos" onClick={handleOverlayClick}>
           <div className="modal">
             <h2 className="modal-title">Datos de Spotify</h2>
             <form>
@@ -209,7 +209,7 @@ const DatosSpotify = ({ onClose }) => {
                 <label htmlFor="direccion" className="form-label">Dirección</label>
                 <div className="info-container">
                   <p id="direccion" className="info-text">{direccion || 'Cargando dirección...'}</p>
-                  <button type="button" className="copy-button" onClick={() => copyToClipboard(direccion)}>
+                  <button type="button" className="copy-botones" onClick={() => copyToClipboard(direccion)}>
                     <FaCopy className="copy-icon" />
                   </button>
                 </div>
@@ -236,7 +236,7 @@ const DatosSpotify = ({ onClose }) => {
                 <button type="button" className="save-button" onClick={handleSave}>
                   Guardar
                 </button>
-                <button type="button" className="close-button" onClick={onClose}>
+                <button type="button" className="save-button" onClick={onClose}>
                   Cerrar
                 </button>
               </div>
