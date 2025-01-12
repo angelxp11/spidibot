@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth'; 
-import { auth, db } from '../firebase'; 
-import { doc, setDoc } from 'firebase/firestore'; 
-import { useNavigate } from 'react-router-dom'; 
-import { ToastContainer, toast } from 'react-toastify'; // Importar Toastify
-import 'react-toastify/dist/ReactToastify.css'; // Importar estilos de Toastify
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth, db } from '../firebase';
+import { doc, setDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../Registrar/Registrar.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Carga from '../Loada/Carga';
-import Login from '../IniciarSesion/Login.js'; 
+import Login from '../IniciarSesion/Login.js';
 
 function Registrar() {
   const [email, setEmail] = useState('');
@@ -16,7 +16,7 @@ function Registrar() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (showLogin) {
@@ -54,6 +54,33 @@ function Registrar() {
     } catch (error) {
       console.error('Error al registrar el usuario: ' + error.message);
       toast.error('Error al registrar el usuario: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    const provider = new GoogleAuthProvider();
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      const userDocRef = doc(db, 'usuarios', user.uid);
+
+      // Check if the user already exists
+      const userDoc = await userDocRef.get();
+      if (!userDoc.exists) {
+        // New user, create a document for them
+        await setDoc(userDocRef, {
+          email: user.email,
+          createdAt: new Date(),
+        });
+      }
+      navigate('/spidibot/');
+    } catch (error) {
+      console.error('Error en Google Login: ' + error.message);
+      toast.error('Error al iniciar sesión con Google: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -98,11 +125,16 @@ function Registrar() {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
-            <button type="submit" className="login-buttons">Registrar</button>
+            <button type="submit" className="register-buttons">Registrar</button>
           </form>
+          {/* Botón de inicio de sesión con Google */}
+          <button onClick={handleGoogleSignIn} className="google-registering-button">
+            <img src={require('../recursos/google-logo.svg').default} alt="Google" className="google-icon" />
+            <span>Registrate con Google</span>
+          </button>
           <br />
           {/* Texto que invita a iniciar sesión */}
-          <p className="login-link">
+          <p className="reegister-link">
             ¿Ya tienes una cuenta? <span onClick={handleLoginToggle}>Iniciar Sesión</span>
           </p>
         </div>

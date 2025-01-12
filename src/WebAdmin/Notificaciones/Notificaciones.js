@@ -1,7 +1,7 @@
-import { toast } from 'react-toastify'; // Importa el toast para mostrar el mensaje
+import { toast } from 'react-toastify'; 
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, doc, setDoc, addDoc, deleteDoc } from 'firebase/firestore';
-import { db, messaging } from '../../firebase'; // Asegúrate de tener la configuración de Firestore en firebase.js
+import { collection, getDocs, query, orderBy, doc, deleteDoc,addDoc } from 'firebase/firestore';
+import { db } from '../../firebase'; // Asegúrate de tener la configuración de Firestore en firebase.js
 import './notificaciones.css'; // Estilos para el modal
 
 const Notificaciones = ({ onClose }) => {
@@ -24,37 +24,16 @@ const requestNotificationPermission = async () => {
     console.error("Error al solicitar permiso para notificaciones:", error);
   }
 };
-
-
-  
-
   // Obtener pedidos desde Firestore
   useEffect(() => {
     requestNotificationPermission();
-    const fetchPedidos = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, 'notificaciones'));
-        const pedidosArray = [];
-        querySnapshot.forEach((doc) => {
-          pedidosArray.push({ id: doc.id, ...doc.data() });
-        });
-        setPedidos(pedidosArray); // Almacena los pedidos en el estado
-      } catch (error) {
-        console.error('Error obteniendo los pedidos: ', error);
-      }
-    };
-
     fetchPedidos();
   }, []);
-
-  
-
-  // Función para generar ID con formato de 5 dígitos
+ // Función para generar ID con formato de 5 dígitos
   const generateId = (maxId) => {
     const newId = (maxId + 1).toString().padStart(5, '0');
     return newId;
   };
-  
 
   // Función para obtener el ID más grande de la colección 'clientes'
   const obtenerNuevoID = async () => {
@@ -120,102 +99,102 @@ const requestNotificationPermission = async () => {
     const [year, month, day] = date.split('-');
     return `${day}/${month}/${year}`;
   };
-
-  // Función para activar un cliente (crear si no existe)
-
 // Función para activar un cliente (crear si no existe)
-  const handleActivarCliente = async () => {
-    if (pedidoSeleccionado) {
-      const {
-        id, // Este es el ID del cliente que está en el input
-        nombre,
-        apellido,
-        telefono,
-        email,
-        fechaInicial,
-        fechaFinal,
-        grupo,
-        servicio, // Ahora servicio será un array de strings
-        notas, // Ahora es un array
-        precio, // Ahora es un array de strings
-        estado, // Extraemos el campo estado para incluirlo en PENDEJOALEJANDRO
-      } = pedidoSeleccionado;
+const handleActivarCliente = async () => {
+  if (pedidoSeleccionado) {
+    const {
+      id, // Este es el ID del cliente que está en el input
+      nombre,
+      apellido,
+      telefono,
+      email,
+      fechaInicial,
+      fechaFinal,
+      grupo,
+      servicio, // Ahora servicio será un array de strings
+      notas, // Ahora es un array
+      precio, // Ahora es un array de strings
+    } = pedidoSeleccionado;
 
-      // Aplicamos el formato de fecha a fechaInicial y fechaFinal
-      const fechaInicialFormateada = formatDate(fechaInicial);
-      const fechaFinalFormateada = formatDate(fechaFinal);
+    // Aplicamos el formato de fecha a fechaInicial y fechaFinal
+    const fechaInicialFormateada = formatDate(fechaInicial);
+    const fechaFinalFormateada = formatDate(fechaFinal);
 
-      // Guardar la ID del documento en la colección 'notificaciones' antes de crear el cliente
-      const pedidoId = pedidoSeleccionado.id;
+    // Guardar la ID del documento en la colección 'notificaciones' antes de crear el cliente
+    const pedidoId = pedidoSeleccionado.id;
 
-      try {
-        // Crear un nuevo documento con ID aleatorio en la colección 'clientes'
-        const clienteRef = await addDoc(collection(db, 'clientes'), {
-          nombre: nombre || '',
-          apellido: apellido || '',
-          telefono: telefono || '',
-          email: email || '',
-          fechaInicial: fechaInicialFormateada || '', // Fecha inicial formateada
-          fechaFinal: fechaFinalFormateada || '', // Fecha final formateada
-          pagado: 'SI', // Campo pagado con valor fijo 'SI'
-          grupo: Array.isArray(grupo) ? grupo.map(g => g.toUpperCase()) : [grupo.toUpperCase()] || [], // Convertir a mayúsculas
-          servicio: Array.isArray(servicio) ? servicio.map(s => String(s)) : [String(servicio)] || [], // Aseguramos que 'servicio' sea un array de strings
-          notas: Array.isArray(notas) ? notas.map(nota => nota.toUpperCase()) : [notas.toUpperCase()] || [], // Aseguramos que 'notas' sea un array y en mayúsculas
-          precio: Array.isArray(precio) ? precio.map(p => String(p)) : [String(precio)] || [], // Aseguramos que 'precio' sea un array de strings
-          PENDEJOALEJANDRO: { // Campo de mapa con un campo de tipo string
-            estado: estado || 'pendiente', // Colocamos el campo 'estado' dentro de PENDEJOALEJANDRO
-          },
-          ID: id, // Guardar el ID del cliente dentro del documento
-        });
+    try {
+      // Crear un nuevo documento con ID aleatorio en la colección 'clientes'
+      const clienteRef = await addDoc(collection(db, 'clientes'), {
+        nombre: nombre || '',
+        apellido: apellido || '',
+        telefono: telefono || '',
+        email: email || '',
+        fechaInicial: fechaInicialFormateada || '', // Fecha inicial formateada
+        fechaFinal: fechaFinalFormateada || '', // Fecha final formateada
+        pagado: 'SI', // Campo pagado con valor fijo 'SI'
+        grupo: Array.isArray(grupo) ? grupo.map(g => g.toUpperCase()) : [grupo.toUpperCase()] || [], // Convertir a mayúsculas
+        servicio: Array.isArray(servicio) ? servicio.map(s => String(s)) : [String(servicio)] || [], // Aseguramos que 'servicio' sea un array de strings
+        notas: Array.isArray(notas) ? notas.map(nota => nota.toUpperCase()) : [notas.toUpperCase()] || [], // Aseguramos que 'notas' sea un array y en mayúsculas
+        precio: Array.isArray(precio) ? precio.map(p => String(p)) : [String(precio)] || [], // Aseguramos que 'precio' sea un array de strings
+        PENDEJOALEJANDRO: { 
+          estado: '✅', // Estado fijo siempre "✅"
+        },
+        ID: id, // Guardar el ID del cliente dentro del documento
+      });
 
-        console.log('Cliente activado/actualizado con ID aleatorio:', clienteRef.id);
+      console.log('Cliente activado/actualizado con ID aleatorio:', clienteRef.id);
 
-        // Verifica si la ID del pedido es válida antes de intentar eliminarlo
-        if (pedidoIdDocumento) {
-          // Ahora eliminamos el pedido de la colección 'notificaciones' usando la ID previamente guardada
-          const pedidoRef = doc(db, 'notificaciones', pedidoIdDocumento);
-          await deleteDoc(pedidoRef);
-          console.log(`Pedido con ID ${pedidoIdDocumento} eliminado de la colección notificaciones`);
-        } else {
-          console.error('No se pudo obtener la ID del pedido para eliminarlo');
-        }
-
-        // Limpiar los detalles del pedido
-        setPedidoSeleccionado(null);
-
-        // Recargar la lista de pedidos
-        await fetchPedidos();
-
-        // Mostrar el toast de éxito cuando el cliente es activado
-        toast.success('¡Cliente activado exitosamente!', {
-          position: "top-right", // Cambié de toast.POSITION.TOP_RIGHT a la cadena "top-right"
-          autoClose: 3000, // Se cierra en 3 segundos
-          hideProgressBar: true, // Opcional: para ocultar la barra de progreso
-        });
-
-      } catch (error) {
-        console.error('Error activando/actualizando el cliente: ', error);
-        toast.error('Hubo un error al activar el cliente.', {
-          position: "top-right", // Cambié de toast.POSITION.TOP_RIGHT a la cadena "top-right"
-          autoClose: 3000, // Se cierra en 3 segundos
-          hideProgressBar: true, // Opcional: para ocultar la barra de progreso
-        });
+      // Verifica si la ID del pedido es válida antes de intentar eliminarlo
+      if (pedidoIdDocumento) {
+        // Ahora eliminamos el pedido de la colección 'notificaciones' usando la ID previamente guardada
+        const pedidoRef = doc(db, 'notificaciones', pedidoIdDocumento);
+        await deleteDoc(pedidoRef);
+        console.log(`Pedido con ID ${pedidoIdDocumento} eliminado de la colección notificaciones`);
+      } else {
+        console.error('No se pudo obtener la ID del pedido para eliminarlo');
       }
+
+      // Limpiar los detalles del pedido
+      setPedidoSeleccionado(null);
+
+      // Recargar la lista de pedidos
+      await fetchPedidos();
+
+      // Mostrar el toast de éxito cuando el cliente es activado
+      toast.success('¡Cliente activado exitosamente!', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+      });
+
+    } catch (error) {
+      console.error('Error activando/actualizando el cliente: ', error);
+      toast.error('Hubo un error al activar el cliente.', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+      });
     }
-  };
+  }
+};
 
-
-  // Función para obtener los pedidos
+// Función para obtener pedidos ordenados por timestamp
 const fetchPedidos = async () => {
   try {
-    // Obtén todos los documentos de la colección 'notificaciones'
-    const querySnapshot = await getDocs(collection(db, 'notificaciones'));
+    // Crea una consulta que ordena los documentos por el campo 'timestamp' en orden descendente
+    const pedidosQuery = query(
+      collection(db, 'notificaciones'),
+      orderBy('timestamp', 'desc') // Ordenar por 'timestamp' de más reciente a más antiguo
+    );
+
+    // Obtén todos los documentos de la colección 'notificaciones' con la consulta ordenada
+    const querySnapshot = await getDocs(pedidosQuery);
     const pedidosArray = [];
     
-    // Recorre los documentos de la colección
     querySnapshot.forEach((doc) => {
       // Excluir documentos cuyo ID sea 'pedidoIdDocumento' o 'ajua'
-      if (doc.id === pedidoIdDocumento || doc.id === 'ajua') {
+      if (doc.id === pedidoIdDocumento || doc.id === 'hola') {
         return; // No se agrega a la lista
       }
       
@@ -223,15 +202,13 @@ const fetchPedidos = async () => {
       pedidosArray.push({ id: doc.id, ...doc.data() });
     });
 
-    // Actualizamos el estado con la lista de pedidos filtrados
+    // Actualizamos el estado con la lista de pedidos filtrados y ordenados
     setPedidos(pedidosArray);
   } catch (error) {
     console.error('Error obteniendo los pedidos:', error);
   }
 };
 
-  
-  
   const handleCancelarPedido = async () => {
     if (pedidoIdDocumento) {  // Verifica que haya un pedido seleccionado
       try {
@@ -275,11 +252,7 @@ const fetchPedidos = async () => {
       });
     }
   };
-
-  
-  
-
-
+  ///////
 
   return (
     <div className="modal-overlay">
@@ -288,18 +261,25 @@ const fetchPedidos = async () => {
           <h2>Lista de Pedidos</h2>
           {pedidos.length > 0 ? (
             <ul>
-            {pedidos
-              .filter((pedido) => pedido.id !== 'hola') // Filtra los pedidos con id 'hola'
-              .map((pedido) => (
-                <li key={pedido.id}>
-                  <strong>{pedido.nombre} {pedido.apellido}</strong>
-                  <button onClick={() => handleVerPedido(pedido)} className="ver-pedido-btn">
-                    Ver Pedido
-                  </button>
-                </li>
-              ))}
-          </ul>
-          
+              {pedidos
+                .filter((pedido) => pedido.id !== 'hola') // Filtra los pedidos con id 'hola'
+                .map((pedido) => (
+                  <li 
+  key={pedido.id} 
+  className={`pedido-item ${pedido.compra ? 'compra' : 'renovacion'}`}>
+  <div>
+    <strong>{pedido.nombre} {pedido.apellido}</strong>
+    <span className={`label ${pedido.compra ? 'compra' : 'renovacion'}`}>
+      {pedido.compra ? 'COMPRA' : 'RENOVACIÓN'}
+    </span>
+  </div>
+  <button onClick={() => handleVerPedido(pedido)} className="ver-pedido-btn">
+    Ver Pedido
+  </button>
+</li>
+
+                ))}
+            </ul>
           ) : (
             <p>No hay pedidos pendientes.</p>
           )}
@@ -386,16 +366,18 @@ const fetchPedidos = async () => {
                 />
               </p>
               <p>
-                <strong>Estado:</strong>
-                <input
-                  type="text"
-                  name="estado"
-                  value={pedidoSeleccionado.estado || ''}
-                  onChange={handleChange}
-                  className="detail-input"
-                  placeholder="Estado"
-                />
-              </p>
+  <strong>Estado:</strong>
+  <input
+    type="text"
+    name="estado"
+    value={pedidoSeleccionado.estado || '✅'}
+    readOnly
+    disabled
+    className="detail-input non-editable"
+    placeholder="Estado"
+  />
+</p>
+
               <p>
                 <strong>Grupo:</strong>
                 <input
@@ -460,8 +442,7 @@ const fetchPedidos = async () => {
       </div>
     </div>
   );
-  
-  
+
 };
 
 export default Notificaciones;

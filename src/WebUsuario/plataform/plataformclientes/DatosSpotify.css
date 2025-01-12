@@ -125,9 +125,13 @@ form {
 }
 
 .copy-icon {
-  font-size: 14px; /* Reducir el tamaño del icono */
+  font-size: 30px; /* Reducir el tamaño del icono */
   color: #555;
   transition: color 0.3s;
+  display: flex;
+  justify-content: center; /* Centra el icono horizontalmente */
+  align-items: center; /* Centra el icono verticalmente */
+  height: 100%; /* Asegúrate de que el contenedor tenga una altura */
 }
 
 .copy-button:hover .copy-icon {

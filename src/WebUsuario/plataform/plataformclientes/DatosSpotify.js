@@ -23,12 +23,12 @@ const DatosSpotify = ({ onClose }) => {
       try {
         const auth = getAuth();
         const user = auth.currentUser;
-
+  
         if (user) {
           const clientesRef = collection(db, 'clientes');
           const q = query(clientesRef, where('email', '==', user.email));
           const querySnapshot = await getDocs(q);
-
+  
           if (!querySnapshot.empty) {
             for (const clientDoc of querySnapshot.docs) {
               const data = clientDoc.data();
@@ -36,21 +36,28 @@ const DatosSpotify = ({ onClose }) => {
               setPassword(data.SPOTIFY?.password || '');
               setServicios(data.servicio || []);
               setGrupos(data.grupo || []);
-
-              for (const [index, servicio] of (data.servicio || []).entries()) {
+  
+              // Ensure that services and groups are not undefined
+              const servicios = data.servicio || [];
+              const grupos = data.grupo || [];
+  
+              // Iterate over each service and group pair by index
+              for (const [index, servicio] of servicios.entries()) {
+                const grupoItem = grupos[index];  // Ensure we get the correct group from its index
                 const docRef = doc(db, 'Servicios', servicio);
                 const docSnap = await getDoc(docRef);
-
+  
                 if (docSnap.exists()) {
                   const serviceData = docSnap.data();
-
-                  for (const [groupIndex, grupoItem] of (data.grupo || []).entries()) {
-                    if (serviceData[grupoItem]) {
-                      const grupoData = serviceData[grupoItem];
-                      const enlace = grupoData.enlace || 'No disponible';
-                      const direccion = grupoData.direccion || 'No disponible';
-
-                      if (servicio.toLowerCase() === 'spotify') {
+  
+                  if (serviceData[grupoItem]) {
+                    const grupoData = serviceData[grupoItem];
+                    const enlace = grupoData.enlace || 'No disponible';
+                    const direccion = grupoData.direccion || 'No disponible';
+  
+                    // Select service based on its group index
+                    if (servicio.toLowerCase() === 'spotify') {
+                      if (grupoItem === 'G1' || grupoItem === 'G2' || grupoItem === 'G3' || grupoItem === 'G6') {
                         setEnlace(enlace);
                         setDireccion(direccion);
                       }
@@ -58,7 +65,6 @@ const DatosSpotify = ({ onClose }) => {
                   }
                 }
               }
-
               break;
             }
           }
@@ -66,12 +72,15 @@ const DatosSpotify = ({ onClose }) => {
       } catch (error) {
         console.error('Error al obtener los datos de Firestore:', error);
       } finally {
-        setLoading(false); // Cambiar el estado de carga a false
+        setLoading(false);
       }
     };
-
+  
     fetchData();
   }, [db]);
+  
+  
+  
 
   const handleSave = async () => {
     try {
@@ -194,6 +203,16 @@ const DatosSpotify = ({ onClose }) => {
                   </span>
                 </div>
               </div>
+              
+              <div className="form-group">
+                <label htmlFor="direccion" className="form-label">Dirección</label>
+                <div className="info-container">
+                  <p id="direccion" className="info-text">{direccion || 'Cargando dirección...'}</p>
+                  <button type="button" className="copy-button" onClick={() => copyToClipboard(direccion)}>
+                    <FaCopy className="copy-icon" />
+                  </button>
+                </div>
+              </div>
 
               <div className="form-group">
                 <label htmlFor="enlace" className="form-label">Enlace</label>
@@ -210,15 +229,7 @@ const DatosSpotify = ({ onClose }) => {
                 </div>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="direccion" className="form-label">Dirección</label>
-                <div className="info-container">
-                  <p id="direccion" className="info-text">{direccion || 'Cargando dirección...'}</p>
-                  <button type="button" className="copy-button" onClick={() => copyToClipboard(direccion)}>
-                    <FaCopy className="copy-icon" />
-                  </button>
-                </div>
-              </div>
+              
 
               <div className="button-group">
                 <button type="button" className="save-button" onClick={handleSave}>

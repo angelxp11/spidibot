@@ -21,44 +21,31 @@ body {
   animation: gradientAnimation 10s ease infinite;
 }
 
+/* Contenedor de inicio de sesión */
 .login-container {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
   animation: zoomIn 0.5s ease-in-out;
-  width: 100%; /* Asegúrate que el contenedor ocupe todo el ancho */
+  width: 100%;
 }
 
-/* Contenedor de inicio de sesión */
+/* Contenedor de la caja de login */
 .login-xbox {
   background: rgba(255, 255, 255, 0.2);
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
   width: 100%;
-  width: 450px; /* Dimensiones específicas para pantallas grandes */
-  height: 410px; /* Ajuste de altura específica */
-  max-width: 450px; /* Ajuste al tamaño máximo en pantallas grandes */
-  min-width: 390px; /* Asegura que no se reduzca más allá de este tamaño */
-  height: 410px; /* Ajuste de altura específica */
+  max-width: 450px;
+  height: auto;
   text-align: center;
   position: relative;
   transition: all 0.3s ease-in-out;
 }
 
-@media (max-width: 768px) {
-  .login-xbox {
-    width: 390px;
-    height: 410px;
-    padding: 20px;
-    margin: 0 auto; /* Centrado */
-  }
-}
-
-
-
-
+/* Títulos de la caja de login */
 .login-xbox h1 {
   margin-bottom: 20px;
   color: white;
@@ -78,14 +65,12 @@ body {
 }
 
 .input-group input {
-  width: 90%; /* Ajusta el ancho al 90% del contenedor */
-  max-width: 90%; /* No excede el contenedor */
-  margin: 0 auto; /* Centrado dentro del contenedor */
+  width: 100%; 
   padding: 12px;
   border-radius: 5px;
   border: none;
   font-size: 1rem;
-  display: block; /* Asegura que el ancho sea respetado */
+  display: block;
   box-sizing: border-box;
 }
 
@@ -105,10 +90,7 @@ body {
 
 /* Botón de inicio de sesión */
 .login-buttons {
-  width: 90%; /* Ajusta el ancho al 90% del contenedor */
-  max-width: 90%; /* No excede el contenedor */
-  margin: 0 auto; /* Centrado dentro del contenedor */
-  display: block;
+  width: 100%;
   background-color: #ed1b24;
   color: white;
   border: none;
@@ -118,24 +100,35 @@ body {
   font-size: 1.1rem;
   transition: background-color 0.3s;
   margin-top: 20px;
+  font-weight: bold;
+
 }
 
 .login-buttons:hover {
   background-color: #ff3b3f;
 }
 
-/* Animación de fondo */
-@keyframes gradientAnimation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+/* Estilo para el enlace de registro */
+.reegister-link {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 18px;
+  color: white;
+  display: inline-block;  /* Cambio a inline-block para ajustarse al contenedor */
+  width: 100%; 
 }
+
+.reegister-link span {
+  color: #ffffff;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.reegister-link span:hover {
+  color: #f3666d;
+}
+
 
 /* Animación de zoom-in */
 @keyframes zoomIn {
@@ -149,21 +142,28 @@ body {
   }
 }
 
-/* Estilo para el enlace de registro */
-.register-link {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 14px;
-  color: #ffffff;
-}
-
-.register-link span {
-  color: #ed1b24;
-  text-decoration: underline;
-  cursor: pointer;
+.google-signin-button {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centra el contenido horizontalmente */
+  background-color: #eeeeee; /* Color de fondo de Google */
+  color: red;
+  padding: 10px;
+  border: none;
   font-weight: bold;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
 }
 
-.register-link span:hover {
-  color: #f3666d;
+.google-signin-button:hover {
+  background-color: #ffffff;
+}
+
+.google-icon {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px; /* Ajuste para mantener espacio entre el icono y el texto */
 }

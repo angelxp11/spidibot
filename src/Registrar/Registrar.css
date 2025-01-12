@@ -5,9 +5,20 @@
   box-sizing: border-box;
 }
 
-/* Establecer fuente para todo el documento */
+/* Estilo para el cuerpo de la página */
+body, html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #ff3b3f , #000000, #ff3b3f);
+  background-size: 300% 300%;
+  background-attachment: fixed;
+  animation: gradientAnimation 10s ease infinite;
 }
 
 /* Estilo para el body cuando es "Iniciar Sesión" */
@@ -24,60 +35,37 @@ body.registrar {
   animation: gradientAnimation 15s ease infinite;
 }
 
-@keyframes gradientAnimation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* Estilo para el cuerpo de la página */
-body, html {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-/* Contenedor principal */
+/* Contenedor de registro */
 .registro-container {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
   animation: zoomIn 0.5s ease-in-out;
+  width: 100%;
 }
 
-/* Contenedor de registro */
+/* Contenedor de la caja de registro */
 .registro-box {
   background: rgba(255, 255, 255, 0.2);
-  width: 450px; /* Dimensiones específicas para pantallas grandes */
-  height: 410px; /* Ajuste de altura específica */
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 450px;
+  height: auto;
   text-align: center;
-  position: relative; /* Para el mensaje de error */
+  position: relative;
+  transition: all 0.3s ease-in-out;
 }
 
+/* Títulos de la caja de registro */
 .registro-box h1 {
   margin-bottom: 20px;
   color: white;
-  font-size: 32px;
-  transition: font-size 0.3s ease; /* Transición para cambios de tamaño */
 }
 
-/* Estilos para el formulario */
-.registro-form {
-  width: 100%;
-  max-width: 370px;
-}
-
+/* Estilo para los inputs */
 .input-group {
   margin-bottom: 20px;
   text-align: left;
@@ -90,70 +78,81 @@ body, html {
   color: white;
 }
 
-/* Inputs y botón */
-.input-group input,
-.registro-button {
+.input-group input {
   width: 100%;
   padding: 12px;
-  font-size: 1rem;
   border-radius: 5px;
   border: none;
-  transition: all 0.3s ease;
+  font-size: 1rem;
+  display: block;
+  box-sizing: border-box;
 }
 
-.registro-button {
-  background-color: #ed1b24;
-  color: white;
-  cursor: pointer;
-}
-
-.registro-button:hover {
-  background-color: #ff3b3f;
-}
-
-/* Grupo de contraseña con icono */
+/* Estilo para la visibilidad de contraseña */
 .password-group {
   position: relative;
 }
 
 .password-toggle {
   position: absolute;
-  background-color: #ffffff00;
   top: 45px;
-  font-size: 25px;
-  right: 25px;
+  font-size: 20px;
+  right: 5%;
   transform: translateY(-50%);
   cursor: pointer;
 }
 
-/* Texto que invita a iniciar sesión */
-.login-link {
+/* Botón de registro */
+.register-buttons {
+  width: 100%;
+  background-color: #58bd57;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color 0.3s;
   margin-top: 20px;
-  text-align: center;
-  font-size: 14px;
-  color: #ffffff;
+  font-weight: bold;
 }
 
-.login-link span {
-  color: #ffc2c5;
+.login-buttons:hover {
+  background-color: #ff3b3f;
+}
+
+/* Estilo para el enlace de inicio de sesión */
+.reegister-link {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 18px;
+  color: white;
+  display: inline-block;
+  width: 100%;
+}
+
+.reegister-link span {
+  color: #ffffff;
   text-decoration: underline;
   cursor: pointer;
   font-weight: bold;
 }
 
-.login-link span:hover {
-  color: #ff000d;
+.reegister-link span:hover {
+  color: #f3666d;
 }
 
-/* Mensaje de error */
-.error-message {
-  color: rgb(255, 255, 255);
-  margin-top: 30px;
-  text-align: center;
-  position: absolute;
-  bottom: -40px;
-  left: 50%;
-  transform: translateX(-50%);
+/* Animación de fondo */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Animación de zoom-in */
@@ -168,25 +167,28 @@ body, html {
   }
 }
 
-/* Responsividad */
-@media (max-width: 768px) {
-  .registro-box {
-    width: 390px;
-    height: 410px;
-    padding: 20px;
-  }
+.google-registering-button {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centra el contenido horizontalmente */
+  background-color: #eeeeee; /* Color de fondo de Google */
+  color: #58bd57;
+  padding: 10px;
+  border: none;
+  font-weight: bold;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
+}
 
-  .registro-box h1 {
-    font-size: 32px;
-  }
+.google-registering-button:hover {
+  background-color: #ffffff;
+}
 
-  .input-group input {
-    font-size: 0.9rem;
-    padding: 10px;
-  }
-
-  .registro-button {
-    font-size: 0.9rem;
-    padding: 10px;
-  }
+.google-icon {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px; /* Ajuste para mantener espacio entre el icono y el texto */
 }

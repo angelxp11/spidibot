@@ -163,4 +163,29 @@
 li {
   color: black; /* Color de texto negro */
 }
+.button-group {
+  display: flex;
+  flex-direction: column; /* Organiza los botones en una columna */
+  gap: 10px; /* Espaciado entre los botones */
+}
 
+.button-group .home-button {
+  width: 100%; /* Asegura que los botones ocupen el ancho completo del contenedor */
+  padding: 10px; /* Añade espacio interno para mejor apariencia */
+  border: none; /* Sin bordes visibles */
+  border-radius: 5px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+  background-color: #ed1b24; /* Color de fondo del botón */
+  color: #333; /* Color del texto */
+  font-size: 1rem; /* Tamaño del texto */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button-group .home-button:hover {
+  background-color: #ff3b3f; /* Color de fondo en hover */
+  transform: scale(1.05); /* Efecto de zoom */
+}
+
+.button-group .home-button:focus {
+  outline: none; /* Sin borde al enfocar */
+}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth, db } from '../firebase'; // Asegúrate de importar Firestore (db)
 import { doc, getDoc } from 'firebase/firestore'; // Importa funciones de Firestore
 import { useNavigate } from 'react-router-dom'; // Para la redirección
@@ -69,14 +69,42 @@ function Login() {
     setIsLoginVisible(false); // Cambia la visibilidad a false para mostrar el registro
   };
 
+  // Función para manejar el inicio de sesión con Google
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      setLoading(true);
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      const userEmail = user.email;
+
+      // Buscar si el usuario es admin en la colección 'admin'
+      const adminDocRef = doc(db, 'admin', userEmail);
+      const adminDoc = await getDoc(adminDocRef);
+
+      if (adminDoc.exists()) {
+        // Si el documento existe, es admin, redirige a WebAdmin
+        navigate('/WebAdmin/home');
+      } else {
+        // Si no existe, redirige a WebUsuario
+        navigate('/spidibot/');
+      }
+    } catch (error) {
+      toast.error('Error al iniciar sesión con Google');
+      console.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={`login-container ${!isLoginVisible ? 'hidden' : ''}`}>
       {/* Componente de Toast para mensajes (fuera de .login-xbox) */}
       <ToastContainer autoClose={3000} hideProgressBar />
-  
+
       {/* Mostrar la pantalla de carga si loading es true */}
       {loading && <Carga />}
-  
+
       {!loading && isLoginVisible && (
         <div className="login-xbox">
           {/* Contenedor de login */}
@@ -107,18 +135,25 @@ function Login() {
             </div>
             <button type="submit" className="login-buttons">Iniciar Sesión</button>
           </form>
-          {/* Texto que invita a registrarse */}
+
+          {/* Botón de inicio de sesión con Google */}
+          <button onClick={handleGoogleSignIn} className="google-signin-button">
+  <img src={require('../recursos/google-logo.svg').default} alt="Google" className="google-icon" />
+  <span>Iniciar sesión con Google</span>
+</button>
+
+
+          {/* Texto que invita a registrarse, dentro del login-box */}
           <br />
-          <p className="register-link">
+          <p className="reegister-link">
             ¿No tienes cuenta? <span onClick={toggleVisibility}>Regístrate</span>
           </p>
         </div>
       )}
-  
+
       {!isLoginVisible && <Registro toggleVisibility={toggleVisibility} />}
     </div>
   );
-  
 }
 
 export default Login;

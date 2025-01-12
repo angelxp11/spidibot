@@ -195,7 +195,7 @@ function Home() {
   // Función para manejar el clic en "Más Información"
   const handleMoreInfo = async (servicioId, grupo, servicioNombre, estado) => {
     if (servicioNombre === "YOUTUBE" || servicioNombre === "SPOTIFY") {
-      setAdviceMessage('Comunicarse con su asesor');
+      toast.info('Comunicarse con su asesor', { autoClose: 3000 }); // Muestra el toast con duración de 3 segundos
       return;
     }
   
@@ -225,18 +225,16 @@ function Home() {
         const validStates = ["✅", "⚠️"];
   
         if (cuentaInfo && validStates.includes(estado)) {
-          // Obtener el índice del servicio
           const servicioIndex = servicios.findIndex(
             (serv) => serv.servicio === servicioNombre && serv.grupo === grupo
           );
-          const nota = servicioIndex !== -1 ? servicios[servicioIndex].nota : 'Nota no disponible'; // Obtener la nota
+          const nota = servicioIndex !== -1 ? servicios[servicioIndex].nota : 'Nota no disponible';
   
-          // Asegúrate de que el servicio esté en modalData
           setModalData({
             email: cuentaInfo.email,
             password: cuentaInfo.password,
             nota, 
-            servicio: servicioNombre, // Asegúrate de que el nombre del servicio esté en modalData
+            servicio: servicioNombre,
           });
         } else {
           setModalData(null);
@@ -249,6 +247,7 @@ function Home() {
       setLoading(false);
     }
   };
+  
 
   // Función para cerrar el modal
   const handleCloseModal = () => {
@@ -376,10 +375,10 @@ return (
     {/* Pantalla de carga como overlay */}
     {loading && <div className="loading-overlay"><Carga /></div>}
     <div className="button-group">
-                <button onClick={toggleVisibility} className="logout-button">
-                    {isInventarioVisible ? 'Ver mis servicios' : 'Adquirir servicios'}
+    <button onClick={toggleVisibility} className="fixed-button">
+  {isInventarioVisible ? 'Ver mis servicios' : 'Adquirir servicios'}
+</button>
 
-                </button>
             </div>
   
 

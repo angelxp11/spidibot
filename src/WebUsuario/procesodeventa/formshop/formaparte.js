@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './formaparte.css'; // Asegúrate de importar los estilos para el modal
-import { addDoc , collection, query, where, getDocs } from 'firebase/firestore';
+import { addDoc , collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth'; // Importamos el auth para obtener el usuario autenticado
 import { db } from '../../../firebase'; // Asegúrate de importar 'db' desde tu configuración de Firebase
-import { toast } from 'react-toastify'; // Importamos el toast para mostrar el mensaje
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const FormAparte = ({ service, onClose }) => {
   const [nombre, setNombre] = useState('');
@@ -17,17 +17,53 @@ const FormAparte = ({ service, onClose }) => {
   const [nombrePerfil, setNombrePerfil] = useState(''); // Estado para nombre de perfil
   const [pinPerfil, setPinPerfil] = useState(''); // Estado para PIN del perfil
   const precio = service?.precio || ''; // Obtener el precio desde el prop `service`
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e) => {
+
+  const handleSubmit = async (e) => { 
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
   
     // Convertir nombre, apellido y notas a mayúsculas
     const nombreFormateado = nombre.toUpperCase();
     const apellidoFormateado = apellido.toUpperCase();
-    const notasFormateadas = pinPerfil ? [`${nombrePerfil.toUpperCase()}, ${pinPerfil.toUpperCase()}`] : [nombrePerfil.toUpperCase()];
+  
+    // Validar que el pin solo sea numérico
+    const pinNumerico = /^[0-9]+$/.test(pinPerfil) ? pinPerfil : ''; // Si no es numérico, se asigna un string vacío
+  
+    // Crear el formato de las notas según el pin y nombre de perfil
+    const notasFormateadas = pinNumerico ? [`PERFIL ${nombrePerfil.toUpperCase()} PIN ${pinNumerico}`] : [`PERFIL ${nombrePerfil.toUpperCase()}`];
   
     // Convertir el precio a número (sin el signo $ y comas) y guardarlo en un array
     const precioNumerico = parseInt(precio.replace(/\D/g, ''), 10); // Elimina caracteres no numéricos
+  
+    // Función para formatear el nombre del servicio
+    const getServiceName = (servicio) => {
+      switch (servicio.toUpperCase()) {
+        case 'CRUNCHYROLL':
+          return 'CRUNCHY';
+        case 'DISNEY+':
+          return 'DISNEY';
+        case 'NETFLIX SIN TV':
+          return 'NETFLIX';
+        case 'NETFLIX TV':
+          return 'NETFLIXTV';
+        case 'PARAMOUNT+':
+          return 'PARAMOUNT';
+        case 'PRIME VIDEO':
+          return 'PRIMEVIDEO';
+        case 'YOUTUBE + GOOGLE':
+          return 'YOUTUBE+';
+        case 'YOUTUBE PREMIUM':
+          return 'YOUTUBE';
+        default:
+          return servicio.toUpperCase(); // Devuelve el servicio tal cual si no coincide con ninguno de los casos
+      }
+    };
+  
+    // Obtener el servicio formateado
+    const servicioFormateado = getServiceName(service?.name);
   
     try {
       // Crear el documento en Firestore
@@ -37,27 +73,25 @@ const FormAparte = ({ service, onClose }) => {
         email: email,
         telefono: telefono,
         notas: notasFormateadas, // Guardamos como array
-        servicio: [service?.name], // Guardamos el servicio como array
+        servicio: [servicioFormateado], // Guardamos el servicio como array
         precio: [precioNumerico], // Guardamos el precio como array
+        compra: true, // Campo nuevo para indicar si la compra ha sido realizada
+        timestamp: Timestamp.now(), // Campo timestamp con la fecha y hora actual
       });
   
-      // Mostrar un toast de éxito
-      toast.success('🎉 Tu pedido ha sido creado con éxito. En breve serás redirigido para enviar el comprobante de pago. 📲💳');
-      // Desplazar hacia el toast para asegurarse de que sea visible
-setTimeout(() => {
-  const toastElement = document.querySelector('.Toastify__toast');
-  if (toastElement) {
-      toastElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-}, 100);
+      toast.success('🎉 Tu pedido ha sido creado con éxito. En breve serás redirigido para enviar el comprobante de pago. 📲💳', {
+        autoClose: 1000, // Tiempo del toast
+        onClose: () => {
+          // Redirigir y cerrar después del toast
+          setTimeout(() => {
+            onClose(); // Cierra el modal de FormAparte
+          }, 1250); // Espera un poco para asegurarse de que el toast desaparezca
   
-      // Cerrar ambos modales
-      onClose(); // Cierra el modal de FormAparte y el modal principal en ProcessVent
-  
-      // Redirigir a la URL de WhatsApp
-      setTimeout(() => {
-        window.location.href = 'https://wa.me/message/3QL4QO5JTVOTL1';
-      }, 2000); // Esperar 2 segundos antes de redirigir
+          setTimeout(() => {
+            window.location.href = 'https://wa.me/message/3QL4QO5JTVOTL1'; // Redirección
+          }, 1500); // Espera para redirigir después de cerrar el modal
+        }
+      });
     } catch (error) {
       console.error('Error creando documento: ', error);
       toast.error('Hubo un error al crear el pedido. Intenta de nuevo.');
@@ -65,7 +99,7 @@ setTimeout(() => {
   };
   
   
-
+  
   // Función para capitalizar la primera letra de una cadena
   const capitalizeFirstLetter = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -259,7 +293,7 @@ const handleTelefonoChange = (e) => {
               {/* Mostrar PIN solo si el servicio no es Paramount+ ni Crunchyroll */}
               {['NETFLIX TV', 'NETFLIX SIN TV', 'MAX', 'DISNEY+', 'PRIME VIDEO'].includes(service?.name) && (
                 <div className="formaparte-group">
-                  <label htmlFor="pinPerfil" className="labelform">PIN de {service?.name === 'PRIME VIDEO' ? '5' : '4'} dígitos:</label>
+                  <label htmlFor="pinPerfil" className="labelform">PIN de {service?.name === 'PRIME VIDEO' ? '5' : '4'} dígitos (numéricos):</label>
                   <input
                     type="text"
                     id="pinPerfil"
@@ -285,9 +319,13 @@ const handleTelefonoChange = (e) => {
             />
           </div>
   
-          <button type="submit">Comprar</button>
+          <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Procesando...' : 'Comprar'}
+        </button>
         </form>
       </div>
+      {/* Agrega el ToastContainer aquí para mostrar los mensajes */}
+      <ToastContainer />
     </div>
   );
   

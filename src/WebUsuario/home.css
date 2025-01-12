@@ -91,3 +91,40 @@ label {
     font-weight: bold;        /* Negrita */
     text-align: center;         /* Alineación del texto (puedes cambiar a 'center' o 'right' si lo deseas) */
 }
+
+.fixed-button {
+    position: fixed; /* Fijo en la pantalla */
+    bottom: 20px; /* A 20px de la parte inferior */
+    right: 0px; /* A 50px de la parte derecha */
+    width: 90px; /* Ancho fijo para que sea más proporcionado */
+    height: 60px; /* Alto fijo para que sea más proporcionado */
+    background: linear-gradient(135deg, #333333, #000000); /* Degradado en tonos oscuros */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    border-radius: 50%; /* Redondeado */
+    font-size: 16px; /* Tamaño de texto */
+    font-weight: bold; /* Negrita para el texto */
+    display: flex;
+    align-items: center; /* Centrado vertical */
+    justify-content: center; /* Centrado horizontal */
+    cursor: pointer; /* Cambio de cursor */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5); /* Sombra más prominente */
+    transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease; /* Transición suave */
+    z-index: 1000; /* Asegura que el botón esté por encima del contenido */
+  }
+  
+  .fixed-button:hover {
+    transform: scale(1.1); /* Efecto de aumento al pasar el ratón */
+    background: linear-gradient(135deg, #444444, #1a1a1a); /* Degradado más oscuro al hacer hover */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.6); /* Sombra más pronunciada al pasar el ratón */
+  }
+  
+  .fixed-button:focus {
+    outline: none; /* Quita el contorno por defecto */
+  }
+  
+  .fixed-button:active {
+    transform: scale(1); /* Restaura el tamaño original al hacer clic */
+    background: linear-gradient(135deg, #222222, #111111); /* Degradado más oscuro al hacer clic */
+  }
+  
