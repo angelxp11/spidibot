@@ -55,13 +55,14 @@ const DatosSpotify = ({ onClose }) => {
                     const enlace = grupoData.enlace || 'No disponible';
                     const direccion = grupoData.direccion || 'No disponible';
   
-                    // Select service based on its group index
                     if (servicio.toLowerCase() === 'spotify') {
-                      if (grupoItem === 'G1' || grupoItem === 'G2' || grupoItem === 'G3' || grupoItem === 'G6') {
-                        setEnlace(enlace);
-                        setDireccion(direccion);
+                      // Procesar todos los grupos dinámicamente
+                      if (grupoItem.startsWith('G')) {
+                        setEnlace((prevEnlace) => `${prevEnlace ? `${prevEnlace}, ` : ''}${enlace}`);
+                        setDireccion((prevDireccion) => `${prevDireccion ? `${prevDireccion}, ` : ''}${direccion}`);
                       }
                     }
+                    
                   }
                 }
               }
