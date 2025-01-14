@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/spidibot/static/css/main.f40343de.css",
-    "main.js": "/spidibot/static/js/main.eac4ced1.js",
+    "main.css": "/spidibot/static/css/main.c37076c3.css",
+    "main.js": "/spidibot/static/js/main.ff655bdf.js",
     "static/media/spidi512.png": "/spidibot/static/media/spidi512.5e2520cdc2f6f3955473.png",
     "static/media/fondo.png": "/spidibot/static/media/fondo.51558b44d0823d282204.png",
     "static/media/copy.png": "/spidibot/static/media/copy.66cf9419c7bf5cb1b66a.png",
     "static/media/google-logo.svg": "/spidibot/static/media/google-logo.efa560d32653a615a1db742bbf78c815.svg",
     "index.html": "/spidibot/index.html",
-    "main.f40343de.css.map": "/spidibot/static/css/main.f40343de.css.map",
-    "main.eac4ced1.js.map": "/spidibot/static/js/main.eac4ced1.js.map"
+    "main.c37076c3.css.map": "/spidibot/static/css/main.c37076c3.css.map",
+    "main.ff655bdf.js.map": "/spidibot/static/js/main.ff655bdf.js.map"
   },
   "entrypoints": [
-    "static/css/main.f40343de.css",
-    "static/js/main.eac4ced1.js"
+    "static/css/main.c37076c3.css",
+    "static/js/main.ff655bdf.js"
   ]
 }
