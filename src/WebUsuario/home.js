@@ -99,7 +99,7 @@ function Home() {
         matchingDocuments.push(data);
   
         // Verificar si este documento es un proveedor
-        if (data.proveedor === 'sí') {
+        if (data.proveedor === true) { // Comparar como booleano
           isProveedor = true;
           providerData = data; // Almacenar datos del proveedor
         }
@@ -136,7 +136,8 @@ function Home() {
     } finally {
       setLoading(false);
     }
-  };
+};
+
   
   
 
@@ -194,12 +195,23 @@ function Home() {
   };
   // Función para manejar el clic en "Más Información"
   const handleMoreInfo = async (servicioId, grupo, servicioNombre, estado) => {
-    if (servicioNombre === "YOUTUBE" || servicioNombre === "SPOTIFY") {
+    // Determina el texto del botón dependiendo del estado del servicio
+    let buttonText = '';
+    if (estado === '✅' || estado === '⚠️') {
+      buttonText = 'Ver enlace';
+    } else if (estado === '❌') {
+      buttonText = 'Renovación';
+    } else if (estado === '😶‍🌫️') {
+      buttonText = ''; // Se manejarán dos botones para este estado
+    }
+  
+    // Manejo de acciones basadas en el nombre del servicio
+    if (servicioNombre === 'YOUTUBE' || servicioNombre === 'SPOTIFY') {
       toast.info('Comunicarse con su asesor', { autoClose: 3000 }); // Muestra el toast con duración de 3 segundos
       return;
     }
   
-    if (servicioNombre.toUpperCase() === "NETFLIXME") {
+    if (servicioNombre.toUpperCase() === 'NETFLIXME') {
       toast.info('El servicio es directamente con tu correo');
       return;
     }
@@ -211,7 +223,7 @@ function Home() {
     try {
       let docRef;
   
-      if (servicioNombre.toUpperCase() === "NETFLIX" || servicioNombre.toUpperCase() === "NETFLIXTV") {
+      if (servicioNombre.toUpperCase() === 'NETFLIX' || servicioNombre.toUpperCase() === 'NETFLIXTV') {
         docRef = doc(db, 'Servicios', 'NETFLIX,NETFLIXTV,NETFLIXME');
       } else {
         docRef = doc(db, 'Servicios', servicioId);
@@ -222,7 +234,7 @@ function Home() {
       if (docSnap.exists()) {
         const data = docSnap.data();
         const cuentaInfo = data[grupo];
-        const validStates = ["✅", "⚠️"];
+        const validStates = ['✅', '⚠️'];
   
         if (cuentaInfo && validStates.includes(estado)) {
           const servicioIndex = servicios.findIndex(
@@ -233,7 +245,7 @@ function Home() {
           setModalData({
             email: cuentaInfo.email,
             password: cuentaInfo.password,
-            nota, 
+            nota,
             servicio: servicioNombre,
           });
         } else {

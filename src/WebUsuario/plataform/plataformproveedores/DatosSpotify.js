@@ -7,7 +7,7 @@ import { FaCopy } from 'react-icons/fa';
 import Carga from '../../../Loada/Carga'; // Componente de carga
 import './DatosSpotify.css';
 
-const DatosSpotify = ({ onClose, grupo, title }) => {
+const DatosSpotify = ({ onClose, grupo, title, nombreCliente }) => {
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState('');
   const [direccion, setDireccion] = useState('');
@@ -20,7 +20,7 @@ const DatosSpotify = ({ onClose, grupo, title }) => {
     const fetchData = async () => {
       const auth = getAuth();
       const user = auth.currentUser;
-      
+
       if (user) {
         const db = getFirestore();
         const clientesRef = collection(db, 'clientes');
@@ -79,6 +79,38 @@ const DatosSpotify = ({ onClose, grupo, title }) => {
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
     toast.success('Texto copiado al portapapeles');
+  };
+
+  // Función para copiar la plantilla de Spotify
+  const copySpotifyTemplate = () => {
+    const message = `¡Hola ${nombreCliente}! 👋
+
+¡Ya puedes disfrutar de Spotify! 🎧 Aquí tienes los datos para que ingreses a tu cuenta:
+
+- *Usuario:* ${email} 📧
+- *Contraseña:* ${password} 🔐
+
+¡Que disfrutes de la música! 🎵  
+El equipo de Jadeplatform 🎶`;
+
+    copyToClipboard(message); // Copia el mensaje al portapapeles
+  };
+
+  // Función para copiar la plantilla personalizada
+  const copyCustomTemplate = () => {
+    const message = `¡Hola ${nombreCliente}! 👋
+
+Aquí tienes la información de tu cuenta personalizada:
+
+- *Dirección de Envío:* ${direccion} 📦
+- *Enlace de Acceso:* ${enlace} 🔗
+
+Si tienes alguna pregunta, no dudes en contactarnos. ✨
+
+¡Te deseamos una experiencia increíble! 🎶  
+El equipo de Jadeplatform 🎧`;
+
+    copyToClipboard(message); // Copia el mensaje al portapapeles
   };
 
   const handleSave = async () => {
@@ -206,11 +238,21 @@ const DatosSpotify = ({ onClose, grupo, title }) => {
                 <button type="button" className="save-button" onClick={handleSave}>
                   Guardar
                 </button>
-                <button type="button" className="save-button" onClick={onClose}>
+                <button type="button" className="saves-button" onClick={onClose}>
                   Cerrar
                 </button>
               </div>
             </form>
+  
+            {/* Botón para copiar la plantilla personalizada */}
+            <button type="button" className="copiar-button" onClick={copySpotifyTemplate}>
+              Copiar Información de acceso Spotify
+            </button>
+
+            {/* Botón para copiar la plantilla personalizada */}
+            <button type="button" className="copiar-button" onClick={copyCustomTemplate}>
+              Copiar Plantilla Personalizada
+            </button>
           </div>
         </div>
       )}

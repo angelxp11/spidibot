@@ -50,7 +50,7 @@ function Login() {
         navigate('/WebAdmin/home');
       } else {
         // Si no existe, redirige a WebUsuario
-        navigate('/spidibot/');
+        navigate('/spidibot');
       }
     } catch (error) {
       // Muestra el error en un toast
@@ -87,7 +87,7 @@ function Login() {
         navigate('/WebAdmin/home');
       } else {
         // Si no existe, redirige a WebUsuario
-        navigate('/spidibot/');
+        navigate('/spidibot');
       }
     } catch (error) {
       toast.error('Error al iniciar sesión con Google');

@@ -13,24 +13,79 @@ const ContainerPlatform = ({ title, grupo, estado, fechaFinal, onMoreInfo }) => 
   const handleOpenModal = () => setShowDatosSpotify(true);
   const handleCloseModal = () => setShowDatosSpotify(false);
 
-  // Mostrar el toast
-    const handleShowToast = () => {
-      toast.info('Comunícate con un asesor', {
-        position: 'bottom-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: 'colored',
-      });
-    };
+  // Función para mostrar el toast
+  const handleShowToast = () => {
+    toast.info('Comunícate con un asesor', {
+      position: 'bottom-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: 'colored',
+    });
+  };
+
+  // Lógica para los botones según el servicio y su estado
+  const renderButton = () => {
+    if (title === 'SPOTIFY') { 
+      if (estado === '❌') {
+        return (
+          <button className="home-button" onClick={handleShowToast}>
+            Renovar
+          </button>
+        );
+      } else if (estado === '✅' || estado === '⚠️') {
+        return (
+          <button className="home-button" onClick={handleOpenModal}>
+            Ver enlace 
+          </button>
+        );
+      } else if (estado === '😶‍🌫️') {
+        return (
+          <>
+            <button className="home-button" onClick={handleShowToast}>
+              Renovar
+            </button>
+            <button className="home-button" onClick={handleShowToast}>
+              Borrar
+            </button>
+          </>
+        );
+      }
+    } else {
+      if (estado === '❌') {
+        return (
+          <button className="home-button" onClick={handleShowToast}>
+            Renovar
+          </button>
+        );
+      } else if (estado === '✅' || estado === '⚠️') {
+        return (
+          <button className="home-button" onClick={onMoreInfo}>
+            Más información
+          </button>
+        );
+      } else if (estado === '😶‍🌫️') {
+        return (
+          <>
+            <button className="home-button" onClick={handleShowToast}>
+              Renovar
+            </button>
+            <button className="home-button" onClick={handleShowToast}>
+              Borrar
+            </button>
+          </>
+        );
+      }
+    }
+  };
 
   // Render principal
   return (
     <div className="container-platform">
       {/* Modal de DatosSpotify */}
-      {showDatosSpotify && <DatosSpotify onClose={handleCloseModal} />}
+      {showDatosSpotify && <DatosSpotify onClose={handleCloseModal} grupo={grupo} title={title} />}
 
       {/* Información del servicio */}
       <h2 className="servicio-title">{displayTitle}</h2>
@@ -38,18 +93,8 @@ const ContainerPlatform = ({ title, grupo, estado, fechaFinal, onMoreInfo }) => 
       <p className="estado-text"><strong>Estado:</strong> {estado}</p>
       <p className="fecha-final-text"><strong>Fecha Final:</strong> {fechaFinal}</p>
 
-      {/* Botones para las acciones */}
-      {title === 'SPOTIFY' ? (
-        // Botón para abrir el modal de SPOTIFY
-        <button className="home-button" onClick={handleOpenModal}>
-          Ver Enlace
-        </button>
-      ) : (
-        // Botón para otros servicios
-        <button className="home-button" onClick={onMoreInfo}>
-          Más Información
-        </button>
-      )}
+      {/* Mostrar el botón adecuado */}
+      {renderButton()}
     </div>
   );
 };
