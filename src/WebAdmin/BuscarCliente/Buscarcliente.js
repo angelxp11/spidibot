@@ -260,7 +260,6 @@ const handleKeyPress = (event) => {
       }
 
       await updateDoc(clientDocRef, updates);
-      alert('Cambios guardados con éxito');
       handleSearch(null);
       setSelectedClient(null);
     } catch (error) {
@@ -348,7 +347,6 @@ Si tienes alguna pregunta o necesitas asistencia, estamos aquí para ayudarte. �
 
 Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
         await navigator.clipboard.writeText(mensaje);
-        alert('Mensaje copiado al portapapeles');
         const whatsappNumber = selectedClient.telefono; // Obtener el número de WhatsApp del cliente
         const encodedMessage = encodeURIComponent(mensaje);
         const whatsappUrl = `https://web.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
@@ -356,7 +354,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
         // Abre WhatsApp Web
         window.open(whatsappUrl, '_blank');
   
-        alert('El comprobante ha sido generado, guardado en Firebase Storage y enviado por WhatsApp.');
+        toast('El comprobante ha sido generado, guardado en Firebase Storage y enviado por WhatsApp.');
   
         document.body.removeChild(comprobanteContainer);
       });
@@ -565,9 +563,9 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                 />
               </label>
               <button onClick={handleSaveChanges} className="save-button">Guardar Cambios</button>
-              <button onClick={onClose} className="close-button">Cerrar</button>
-              <button onClick={handleGenerateComprobante} className="generate-button">Generar Comprobante</button>
-              <button onClick={handleDeleteClient}>Eliminar</button>
+              <button onClick={onClose} className="saves-button">Cerrar</button>
+              <button onClick={handleGenerateComprobante} className="save-button">Generar Comprobante</button>
+              <button onClick={handleDeleteClient}className="save-button">Eliminar</button>
             </div>
           </div>
         )}

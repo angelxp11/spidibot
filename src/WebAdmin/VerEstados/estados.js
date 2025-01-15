@@ -5,6 +5,8 @@ import { app } from '../../firebase';
 import html2canvas from 'html2canvas';
 import fondo from '../../fondo.png';
 import './estados.css';
+import { toast } from 'react-toastify'; // Asegúrate de instalar react-toastify
+
 
 const firestore = getFirestore(app);
 
@@ -231,13 +233,12 @@ Si tienes alguna pregunta o necesitas asistencia, estamos aquí para ayudarte. �
 Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
         
         await navigator.clipboard.writeText(mensaje);
-        alert('Mensaje copiado al portapapeles');
+        toast('Mensaje copiado al portapapeles');
         const whatsappNumber = selectedClient.telefono; 
         const encodedMessage = encodeURIComponent(mensaje);
         const whatsappUrl = `https://web.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
 
         window.open(whatsappUrl, '_blank');
-        alert('El comprobante ha sido generado, guardado en Firebase Storage y enviado por WhatsApp.');
 
         document.body.removeChild(comprobanteContainer);
         setSelectedClient(null);
@@ -264,13 +265,13 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             {searchResults.length > 0 ? (
               <ul>
                 {searchResults.map((result) => (
-                  <li key={result.id}>
-                    <div>ID: {result.ID}</div>
-                    <div>Nombre: {result.nombre} {result.apellido}</div>
-                    <div>Estado: {result.estado}</div>
-                    <div>Fecha Final: {result.fechaFinal}</div>
-                    <button onClick={() => handleSelectClient(result)}>Seleccionar</button>
-                  </li>
+                  <li key={result.id} className="estatusmod">
+                  <div>ID: {result.ID}</div>
+                  <div>Nombre: {result.nombre} {result.apellido}</div>
+                  <div>Estado: {result.estado}</div>
+                  <div>Fecha Final: {result.fechaFinal}</div>
+                  <button onClick={() => handleSelectClient(result)}>Seleccionar</button>
+                </li>
                 ))}
               </ul>
             ) : (

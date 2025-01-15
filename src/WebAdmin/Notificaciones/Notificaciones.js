@@ -28,6 +28,10 @@ const requestNotificationPermission = async () => {
   useEffect(() => {
     requestNotificationPermission();
     fetchPedidos();
+    document.addEventListener('keydown', handleEscKey);
+    return () => {
+      document.removeEventListener('keydown', handleEscKey);
+    };
   }, []);
  // Función para generar ID con formato de 5 dígitos
   const generateId = (maxId) => {
@@ -253,9 +257,20 @@ const fetchPedidos = async () => {
     }
   };
   ///////
+  const handleOverlayClick = (e) => {
+    if (e.target.classList.contains('modal-overlay')) {
+      onClose(); // Cierra el modal cuando se hace clic en el overlay
+    }
+  };
+  // Función para manejar la tecla ESC
+  const handleEscKey = (event) => {
+    if (event.key === "Escape") {
+      onClose();
+    }
+  };
 
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal-content">
         <div className="lista-pedidos">
           <h2>Lista de Pedidos</h2>

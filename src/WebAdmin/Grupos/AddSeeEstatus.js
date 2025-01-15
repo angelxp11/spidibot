@@ -189,7 +189,7 @@ const agregarDias = (fecha, dias) => {
             {searchResults.length > 0 ? (
               <ul>
                 {searchResults.map((result) => (
-                  <li key={result.id} className="result-item">
+                  <li key={result.id} className="estatusmod">
                     <div>ID: {result.id}</div>
                     <div>Nombre del Grupo: {result.groupName}</div>
                     <div>Estado: {result.estado}</div>

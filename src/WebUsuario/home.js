@@ -23,6 +23,7 @@ function Home() {
   const [modalOpen, setModalOpen] = useState(false); // Estado para controlar la apertura del modal
   const [adviceMessage, setAdviceMessage] = useState(''); // Estado para manejar el mensaje de asesor
   const [hasProvider, setHasProvider] = useState(false); // Estado para comprobar si hay proveedor
+  const [providerName, setProviderName] = useState(null);  // Estado para guardar el nombre del proveedor
   const [showSteps, setShowSteps] = useState(false); // Estado para manejar la visualización de pasos
   const [tvSteps, setTvSteps] = useState([]); // Estado para almacenar los pasos del TV
   const [showConfirmLogout, setShowConfirmLogout] = useState(false);
@@ -129,6 +130,11 @@ function Home() {
       console.log("Servicios Data:", serviciosData); // Verifica el contenido aquí
       setServicios(serviciosData);
   
+      // Si encontramos un proveedor, guardamos su nombre en el estado
+      if (providerData) {
+        setProviderName(providerData.nombre || 'Proveedor no disponible');
+      }
+  
       // Aquí puedes establecer el estado de hasProvider en función de isProveedor
       setHasProvider(isProveedor);
     } catch (error) {
@@ -137,6 +143,7 @@ function Home() {
       setLoading(false);
     }
 };
+
 
   
   
@@ -171,8 +178,8 @@ function Home() {
   };
 
   const getUserName = () => {
-    if (nombreCliente) {
-      return `Hola, ${nombreCliente.charAt(0).toUpperCase() + nombreCliente.slice(1).toLowerCase()}!`; // Personaliza el saludo
+    if (providerName ) {
+      return `Hola, ${providerName .charAt(0).toUpperCase() + providerName .slice(1).toLowerCase()}!`; // Personaliza el saludo
     }
     return 'Hola, Usuario!'; // Saludo por defecto
   };
@@ -325,10 +332,16 @@ return (
 
 
       {/* Contenedor de plataformas */}
-      <div className="platforms-container" style={{ display: isServiciosClientesVisible ? 'block' : 'none' }}>
-    {servicios.length > 0 ? (
-      showServiceContainers ? ( // Muestra los servicios para comprar
-        servicios.map((servicioData, index) => (
+<div className="platforms-container" style={{ display: isServiciosClientesVisible ? 'block' : 'none' }}>
+  {servicios.length > 0 ? (
+    showServiceContainers ? ( // Muestra los servicios para comprar
+      // Ordenamos los servicios según su estado
+      servicios
+        .sort((a, b) => {
+          const order = { '✅': 1, '⚠️': 2, '❌': 3, '😶‍🌫️': 4 }; 
+          return order[a.estado] - order[b.estado];
+        })
+        .map((servicioData, index) => (
           <div key={index}>
             {console.log(servicioData)} {/* Agrega este log para verificar el contenido */}
             {hasProvider ? ( // Mostrar ContainerPlatformP si hay proveedor
@@ -352,8 +365,13 @@ return (
             )}
           </div>
         ))
-      ) : ( // Muestra los servicios ya adquiridos
-        servicios.map((servicioData, index) => (
+    ) : ( // Muestra los servicios ya adquiridos
+      servicios
+        .sort((a, b) => {
+          const order = { '✅': 1, '⚠️': 2, '❌': 3, '😶‍🌫️': 4 }; 
+          return order[a.estado] - order[b.estado];
+        })
+        .map((servicioData, index) => (
           <div key={index}>
             {console.log(servicioData)} {/* Agrega este log para verificar el contenido */}
             {hasProvider ? ( // Mostrar ContainerPlatformP si hay proveedor
@@ -377,11 +395,12 @@ return (
             )}
           </div>
         ))
-      )
-    ) : (
-      <p>No hay servicios disponibles.</p>
-    )}
-  </div>
+    )
+  ) : (
+    <p>No hay servicios disponibles.</p>
+  )}
+</div>
+
 
 
     {/* Pantalla de carga como overlay */}

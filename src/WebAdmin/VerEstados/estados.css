@@ -217,6 +217,7 @@
   border-radius: 5px;
   margin-bottom: 10px;
   width: 100%;
+  
 }
 .boton-cerrar {
   position: fixed; /* Fijado en la pantalla para estar siempre visible */
@@ -242,3 +243,32 @@
   background-color: #eb7a78; /* Color ligeramente más oscuro al hacer hover */
 }
 
+.estatusmod {
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #fdfdfd;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  align-items: center; /* Centra los elementos horizontalmente */
+}
+
+.estatusmod div {
+  font-size: 14px;
+  color: #333;
+}
+
+.estatusmod button {
+  padding: 5px 10px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  position: relative;
+  margin-top: 10px; /* Añade un espacio entre el contenido y el botón */
+}

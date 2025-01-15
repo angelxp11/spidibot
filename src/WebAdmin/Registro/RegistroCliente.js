@@ -160,7 +160,7 @@ function RegistroCliente({ onClose }) {
       // Guardar en Firestore
       await addDoc(collection(firestore, 'clientes'), newClient);
 
-      alert('Cliente registrado con éxito');
+      toast('Cliente registrado con éxito');
       setClientData({
         ID: '',
         nombre: '',
@@ -269,16 +269,13 @@ Hemos recibido con éxito tu comprobante de pago y renovación. 🎊 Apreciamos 
 Si tienes alguna pregunta o necesitas asistencia, estamos aquí para ayudarte. ¡Disfruta al máximo de tu servicio renovado! 😊🙌
 
 Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
-        alert('Mensaje copiado al portapapeles');
         const whatsappNumber = selectedClient.telefono; // Obtener el número de WhatsApp del cliente
         const encodedMessage = encodeURIComponent(mensaje);
         const whatsappUrl = `https://web.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
   
         // Abre WhatsApp Web
         window.open(whatsappUrl, '_blank');
-  
-        alert('El comprobante ha sido generado y enviado por WhatsApp.');
-      });
+        });
     }
   };
 

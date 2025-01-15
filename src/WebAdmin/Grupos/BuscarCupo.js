@@ -185,10 +185,10 @@ function BuscarCupo({ onClose }) {
           setInfoDocId(servicioDoc.id); // Guarda el ID del documento
           setIsInfoVisible(true); // Muestra la información del grupo
         } else {
-          alert('No se encontró información para el grupo especificado.');
+          toast('No se encontró información para el grupo especificado.');
         }
       } else {
-        alert('No se encontró el servicio especificado.');
+        toast('No se encontró el servicio especificado.');
       }
     } catch (error) {
       console.error('Error al obtener información del servicio:', error);
@@ -212,7 +212,7 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
     
     // Copiar al portapapeles
     navigator.clipboard.writeText(textToCopy).then(() => {
-      alert('Información copiada al portapapeles.');
+      toast('Información copiada al portapapeles.');
     }).catch(err => {
       console.error('Error al copiar al portapapeles: ', err);
     });
@@ -240,7 +240,7 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
         [grupo]: updatedInfo // Actualiza el grupo con toda la información, incluyendo notas, direccion y enlace
       });
   
-      alert('Cambios guardados con éxito.');
+      toast('Cambios guardados con éxito.');
       setIsInfoVisible(false); // Opcional: cerrar el modal después de guardar
     } catch (error) {
       console.error('Error al guardar cambios:', error);
@@ -318,10 +318,12 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
                     style={{ backgroundColor: clientesColores[cliente.id] || 'transparent' }}
                   >
                     <input
-                      type="checkbox"
-                      checked={!!selectedClientes[cliente.id]}
-                      onChange={() => handleCheckboxChange(cliente.id)}
-                    />
+  type="checkbox"
+  className="custom-checkbox"
+  checked={!!selectedClientes[cliente.id]}
+  onChange={() => handleCheckboxChange(cliente.id)}
+/>
+
                     <span>{cliente.id}🔛{cliente.pagado === 'SI' ? '✔️' : '✖️'}</span> {/* Mostrar ✔️ o ✖️ basado en el valor de "pagado" */}
                     <span>{cliente.nombre} {cliente.apellido}</span>
                   </li>
@@ -359,7 +361,7 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
       <div className="form-group">
         <label>Fecha de Comienzo:</label>
         <input
-          type="text"
+          type="date"
           value={info.fechaComienzo}
           onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, fechaComienzo: value })))}
         />
@@ -368,7 +370,7 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
       <div className="form-group">
         <label>Fecha de Pago:</label>
         <input
-          type="text"
+          type="date"
           value={info.fechaPago}
           onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, fechaPago: value })))}
         />
@@ -402,6 +404,7 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
       </div>
 
       <button onClick={handleSaveChanges}>Guardar Cambios</button>
+      <button onClick={handleCopyPaste}>Copiar Informaciòn</button>
     </div>
   </div>
 )}
