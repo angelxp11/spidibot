@@ -5,6 +5,8 @@ import './RegistroCliente.css';
 import fondo from '../../fondo.png'; // Asegúrate de que la imagen fondo.png esté en la carpeta correcta
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage'; // Añadido para manejar Firebase Storage
 import html2canvas from 'html2canvas';
+import { toast } from 'react-toastify'; // Importa toast
+
 
 const firestore = getFirestore(app);
 
