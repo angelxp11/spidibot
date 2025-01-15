@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, query, where, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import './BuscarCupo.css';
+import { toast } from 'react-toastify'; // Importa toast
+
 
 // Define la función para obtener colores
 const getColorForIndex = (index) => {
