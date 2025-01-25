@@ -3,6 +3,7 @@ import { getFirestore, collection, getDocs, doc, getDoc, updateDoc } from 'fireb
 import { app } from '../../firebase';
 import './AddSeeEstatus.css'; // Asegúrate de crear este archivo para los estilos
 import { toast } from 'react-toastify';
+import { FaSyncAlt } from 'react-icons/fa';
 
 const firestore = getFirestore(app);
 
@@ -11,6 +12,8 @@ function AddSeeEstatus({ onClose }) {
   const [searchResults, setSearchResults] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedCheckbox, setSelectedCheckbox] = useState(null); // Estado para seleccionar un checkbox
+  const [selectedResultId, setSelectedResultId] = useState(null); // Estado para el ID del resultado seleccionado
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
@@ -26,11 +29,14 @@ function AddSeeEstatus({ onClose }) {
     };
   }, [onClose]);
   
-  
-
   const handleStatusChange = (event) => {
     setSelectedStatus(event.target.value);
   };
+  useEffect(() => {
+    setSelectedStatus('⚠️'); // Valor predeterminado
+    handleSearch(); // Ejecutar búsqueda
+}, []);
+
 
   const handleCheckboxChange = (checkbox) => {
     setSelectedCheckbox(checkbox); // Actualizar el estado con el checkbox seleccionado
@@ -76,7 +82,6 @@ function AddSeeEstatus({ onClose }) {
       toast.error(`Error al realizar la búsqueda: ${error.message}`);
     }
   };
-  
 
   const handleViewDetails = (result) => {
     const groupDetails = result[result.groupName];
@@ -85,6 +90,7 @@ function AddSeeEstatus({ onClose }) {
       groupName: result.groupName,
       ...groupDetails
     });
+    setSelectedResultId(result.id); // Establecer el ID del resultado seleccionado
   };
 
   const handleRenew = async (groupId) => {
@@ -172,28 +178,31 @@ const agregarDias = (fecha, dias) => {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <button className="boton-cerrar" onClick={onClose}>×</button>
-        <div className="search-container">
+    <div className="addseeestatus-modal-overlay" onClick={onClose}>
+      <div className="addseeestatus-modal-content" onClick={(e) => e.stopPropagation()}>
+        <button className="addseeestatus-boton-cerrar" onClick={onClose}>X</button>
+        <div className="addseeestatus-search-container">
           <h2>Buscar Estado de Servicios</h2>
-          <div className="search-controls">
-            <select value={selectedStatus} onChange={handleStatusChange} className="search-select">
+          <div className="addseeestatus-search-controls">
+            <select value={selectedStatus} onChange={handleStatusChange} className="addseeestatus-search-select">
               <option value="❌">❌</option>
               <option value="✅">✅</option>
               <option value="⚠️">⚠️</option>
             </select>
-            <button onClick={handleSearch} className="search-button">Buscar</button>
+            <button onClick={handleSearch} className="addseeestatus-search-button">Buscar</button>
           </div>
-          <div className="search-results">
+          <div className="addseeestatus-search-results">
             {searchResults.length > 0 ? (
               <ul>
                 {searchResults.map((result) => (
-                  <li key={result.id} className="estatusmod">
+                  <li
+                    key={result.id}
+                    className={`addseeestatus-estatusmod ${selectedResultId === result.id ? 'selected' : ''}`}
+                  >
                     <div>ID: {result.id}</div>
                     <div>Nombre del Grupo: {result.groupName}</div>
                     <div>Estado: {result.estado}</div>
-                    <button onClick={() => handleViewDetails(result)} className="details-button">Ver Detalles</button>
+                    <button onClick={() => handleViewDetails(result)} className="addseeestatus-details-button">Ver Detalles</button>
                   </li>
                 ))}
               </ul>
@@ -202,9 +211,9 @@ const agregarDias = (fecha, dias) => {
             )}
           </div>
         </div>
-        <div className="details-container">
+        <div className="addseeestatus-details-container">
           {selectedGroup && (
-            <div className="details-content">
+            <div className="addseeestatus-details-content">
               <h3>Detalles del Grupo</h3>
               <div>
                 <strong>ID:</strong> {selectedGroup.id}
@@ -232,6 +241,7 @@ const agregarDias = (fecha, dias) => {
                   type="checkbox" 
                   checked={selectedCheckbox === 'addMonth'}
                   onChange={() => handleCheckboxChange('addMonth')}
+                  className="addseeestatus-checkbox"
                 />
                 Renovación 1 mes todos los servicios (30 días)
               </label>
@@ -240,6 +250,7 @@ const agregarDias = (fecha, dias) => {
                   type="checkbox" 
                   checked={selectedCheckbox === 'netflixFamiliar'}
                   onChange={() => handleCheckboxChange('netflixFamiliar')}
+                  className="addseeestatus-checkbox"
                 />
                 Renovación Netflix Familiar 20k con dos miembros extras (10 días)
               </label>
@@ -248,6 +259,7 @@ const agregarDias = (fecha, dias) => {
                   type="checkbox" 
                   checked={selectedCheckbox === 'netflixDuoExtra'}
                   onChange={() => handleCheckboxChange('netflixDuoExtra')}
+                  className="addseeestatus-checkbox"
                 />
                 Renovación Netflix Duo 20k con un miembro extra (16 días)
               </label>
@@ -256,10 +268,13 @@ const agregarDias = (fecha, dias) => {
                   type="checkbox" 
                   checked={selectedCheckbox === 'netflixDuo'}
                   onChange={() => handleCheckboxChange('netflixDuo')}
+                  className="addseeestatus-checkbox"
                 />
                 Renovación Netflix Duo 20k sin miembros extras (23 días)
               </label>
-              <button onClick={() => handleRenew(selectedGroup.id)} className="renew-button">Renovar</button>
+              <button onClick={() => handleRenew(selectedGroup.id)} className="addseeestatus-renew-button">
+                <FaSyncAlt /> Renovar
+              </button>
             </div>
           )}
         </div>

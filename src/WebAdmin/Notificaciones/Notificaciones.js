@@ -1,8 +1,9 @@
 import { toast } from 'react-toastify'; 
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, orderBy, doc, deleteDoc,addDoc } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, deleteDoc, addDoc } from 'firebase/firestore';
 import { db } from '../../firebase'; // Asegúrate de tener la configuración de Firestore en firebase.js
 import './notificaciones.css'; // Estilos para el modal
+import { FaCheck, FaTimes, FaTrashAlt } from 'react-icons/fa'; // Import icons from react-icons
 
 const Notificaciones = ({ onClose }) => {
   const [pedidos, setPedidos] = useState([]);
@@ -11,19 +12,20 @@ const Notificaciones = ({ onClose }) => {
   const [toastMessage, setToastMessage] = useState(''); // Estado para el mensaje del toast
   const [isToastVisible, setIsToastVisible] = useState(false); // Estado para mostrar el toast
 
-    // Pedir permiso para mostrar notificaciones
-const requestNotificationPermission = async () => {
-  try {
-    const permission = await Notification.requestPermission();
-    if (permission === "granted") {
-      console.log("Permiso para notificaciones concedido.");
-    } else {
-      console.log("Permiso para notificaciones denegado.");
+  // Pedir permiso para mostrar notificaciones
+  const requestNotificationPermission = async () => {
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission === "granted") {
+        console.log("Permiso para notificaciones concedido.");
+      } else {
+        console.log("Permiso para notificaciones denegado.");
+      }
+    } catch (error) {
+      console.error("Error al solicitar permiso para notificaciones:", error);
     }
-  } catch (error) {
-    console.error("Error al solicitar permiso para notificaciones:", error);
-  }
-};
+  };
+
   // Obtener pedidos desde Firestore
   useEffect(() => {
     requestNotificationPermission();
@@ -33,7 +35,8 @@ const requestNotificationPermission = async () => {
       document.removeEventListener('keydown', handleEscKey);
     };
   }, []);
- // Función para generar ID con formato de 5 dígitos
+
+  // Función para generar ID con formato de 5 dígitos
   const generateId = (maxId) => {
     const newId = (maxId + 1).toString().padStart(5, '0');
     return newId;
@@ -76,7 +79,6 @@ const requestNotificationPermission = async () => {
   const handleCerrarDetalle = () => {
     setPedidoSeleccionado(null); // Cerrar el modal de detalles
   };
-  
 
   // Función para manejar cambios en los inputs del formulario
   const handleChange = (e) => {
@@ -103,115 +105,116 @@ const requestNotificationPermission = async () => {
     const [year, month, day] = date.split('-');
     return `${day}/${month}/${year}`;
   };
-// Función para activar un cliente (crear si no existe)
-const handleActivarCliente = async () => {
-  if (pedidoSeleccionado) {
-    const {
-      id, // Este es el ID del cliente que está en el input
-      nombre,
-      apellido,
-      telefono,
-      email,
-      fechaInicial,
-      fechaFinal,
-      grupo,
-      servicio, // Ahora servicio será un array de strings
-      notas, // Ahora es un array
-      precio, // Ahora es un array de strings
-    } = pedidoSeleccionado;
 
-    // Aplicamos el formato de fecha a fechaInicial y fechaFinal
-    const fechaInicialFormateada = formatDate(fechaInicial);
-    const fechaFinalFormateada = formatDate(fechaFinal);
+  // Función para activar un cliente (crear si no existe)
+  const handleActivarCliente = async () => {
+    if (pedidoSeleccionado) {
+      const {
+        id, // Este es el ID del cliente que está en el input
+        nombre,
+        apellido,
+        telefono,
+        email,
+        fechaInicial,
+        fechaFinal,
+        grupo,
+        servicio, // Ahora servicio será un array de strings
+        notas, // Ahora es un array
+        precio, // Ahora es un array de strings
+      } = pedidoSeleccionado;
 
-    // Guardar la ID del documento en la colección 'notificaciones' antes de crear el cliente
-    const pedidoId = pedidoSeleccionado.id;
+      // Aplicamos el formato de fecha a fechaInicial y fechaFinal
+      const fechaInicialFormateada = formatDate(fechaInicial);
+      const fechaFinalFormateada = formatDate(fechaFinal);
 
-    try {
-      // Crear un nuevo documento con ID aleatorio en la colección 'clientes'
-      const clienteRef = await addDoc(collection(db, 'clientes'), {
-        nombre: nombre || '',
-        apellido: apellido || '',
-        telefono: telefono || '',
-        email: email || '',
-        fechaInicial: fechaInicialFormateada || '', // Fecha inicial formateada
-        fechaFinal: fechaFinalFormateada || '', // Fecha final formateada
-        pagado: 'SI', // Campo pagado con valor fijo 'SI'
-        grupo: Array.isArray(grupo) ? grupo.map(g => g.toUpperCase()) : [grupo.toUpperCase()] || [], // Convertir a mayúsculas
-        servicio: Array.isArray(servicio) ? servicio.map(s => String(s)) : [String(servicio)] || [], // Aseguramos que 'servicio' sea un array de strings
-        notas: Array.isArray(notas) ? notas.map(nota => nota.toUpperCase()) : [notas.toUpperCase()] || [], // Aseguramos que 'notas' sea un array y en mayúsculas
-        precio: Array.isArray(precio) ? precio.map(p => String(p)) : [String(precio)] || [], // Aseguramos que 'precio' sea un array de strings
-        PENDEJOALEJANDRO: { 
-          estado: '✅', // Estado fijo siempre "✅"
-        },
-        ID: id, // Guardar el ID del cliente dentro del documento
-      });
+      // Guardar la ID del documento en la colección 'notificaciones' antes de crear el cliente
+      const pedidoId = pedidoSeleccionado.id;
 
-      console.log('Cliente activado/actualizado con ID aleatorio:', clienteRef.id);
+      try {
+        // Crear un nuevo documento con ID aleatorio en la colección 'clientes'
+        const clienteRef = await addDoc(collection(db, 'clientes'), {
+          nombre: nombre || '',
+          apellido: apellido || '',
+          telefono: telefono || '',
+          email: email || '',
+          fechaInicial: fechaInicialFormateada || '', // Fecha inicial formateada
+          fechaFinal: fechaFinalFormateada || '', // Fecha final formateada
+          pagado: 'SI', // Campo pagado con valor fijo 'SI'
+          grupo: Array.isArray(grupo) ? grupo.map(g => g.toUpperCase()) : [grupo.toUpperCase()] || [], // Convertir a mayúsculas
+          servicio: Array.isArray(servicio) ? servicio.map(s => String(s)) : [String(servicio)] || [], // Aseguramos que 'servicio' sea un array de strings
+          notas: Array.isArray(notas) ? notas.map(nota => nota.toUpperCase()) : [notas.toUpperCase()] || [], // Aseguramos que 'notas' sea un array y en mayúsculas
+          precio: Array.isArray(precio) ? precio.map(p => String(p)) : [String(precio)] || [], // Aseguramos que 'precio' sea un array de strings
+          PENDEJOALEJANDRO: { 
+            estado: '✅', // Estado fijo siempre "✅"
+          },
+          ID: id, // Guardar el ID del cliente dentro del documento
+        });
 
-      // Verifica si la ID del pedido es válida antes de intentar eliminarlo
-      if (pedidoIdDocumento) {
-        // Ahora eliminamos el pedido de la colección 'notificaciones' usando la ID previamente guardada
-        const pedidoRef = doc(db, 'notificaciones', pedidoIdDocumento);
-        await deleteDoc(pedidoRef);
-        console.log(`Pedido con ID ${pedidoIdDocumento} eliminado de la colección notificaciones`);
-      } else {
-        console.error('No se pudo obtener la ID del pedido para eliminarlo');
+        console.log('Cliente activado/actualizado con ID aleatorio:', clienteRef.id);
+
+        // Verifica si la ID del pedido es válida antes de intentar eliminarlo
+        if (pedidoIdDocumento) {
+          // Ahora eliminamos el pedido de la colección 'notificaciones' usando la ID previamente guardada
+          const pedidoRef = doc(db, 'notificaciones', pedidoIdDocumento);
+          await deleteDoc(pedidoRef);
+          console.log(`Pedido con ID ${pedidoIdDocumento} eliminado de la colección notificaciones`);
+        } else {
+          console.error('No se pudo obtener la ID del pedido para eliminarlo');
+        }
+
+        // Limpiar los detalles del pedido
+        setPedidoSeleccionado(null);
+
+        // Recargar la lista de pedidos
+        await fetchPedidos();
+
+        // Mostrar el toast de éxito cuando el cliente es activado
+        toast.success('¡Cliente activado exitosamente!', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+        });
+
+      } catch (error) {
+        console.error('Error activando/actualizando el cliente: ', error);
+        toast.error('Hubo un error al activar el cliente.', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+        });
       }
-
-      // Limpiar los detalles del pedido
-      setPedidoSeleccionado(null);
-
-      // Recargar la lista de pedidos
-      await fetchPedidos();
-
-      // Mostrar el toast de éxito cuando el cliente es activado
-      toast.success('¡Cliente activado exitosamente!', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-      });
-
-    } catch (error) {
-      console.error('Error activando/actualizando el cliente: ', error);
-      toast.error('Hubo un error al activar el cliente.', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-      });
     }
-  }
-};
+  };
 
-// Función para obtener pedidos ordenados por timestamp
-const fetchPedidos = async () => {
-  try {
-    // Crea una consulta que ordena los documentos por el campo 'timestamp' en orden descendente
-    const pedidosQuery = query(
-      collection(db, 'notificaciones'),
-      orderBy('timestamp', 'desc') // Ordenar por 'timestamp' de más reciente a más antiguo
-    );
+  // Función para obtener pedidos ordenados por timestamp
+  const fetchPedidos = async () => {
+    try {
+      // Crea una consulta que ordena los documentos por el campo 'timestamp' en orden descendente
+      const pedidosQuery = query(
+        collection(db, 'notificaciones'),
+        orderBy('timestamp', 'desc') // Ordenar por 'timestamp' de más reciente a más antiguo
+      );
 
-    // Obtén todos los documentos de la colección 'notificaciones' con la consulta ordenada
-    const querySnapshot = await getDocs(pedidosQuery);
-    const pedidosArray = [];
-    
-    querySnapshot.forEach((doc) => {
-      // Excluir documentos cuyo ID sea 'pedidoIdDocumento' o 'ajua'
-      if (doc.id === pedidoIdDocumento || doc.id === 'hola') {
-        return; // No se agrega a la lista
-      }
+      // Obtén todos los documentos de la colección 'notificaciones' con la consulta ordenada
+      const querySnapshot = await getDocs(pedidosQuery);
+      const pedidosArray = [];
       
-      // Si el ID no coincide, agregamos el documento a la lista de pedidos
-      pedidosArray.push({ id: doc.id, ...doc.data() });
-    });
+      querySnapshot.forEach((doc) => {
+        // Excluir documentos cuyo ID sea 'pedidoIdDocumento' o 'ajua'
+        if (doc.id === pedidoIdDocumento || doc.id === 'hola') {
+          return; // No se agrega a la lista
+        }
+        
+        // Si el ID no coincide, agregamos el documento a la lista de pedidos
+        pedidosArray.push({ id: doc.id, ...doc.data() });
+      });
 
-    // Actualizamos el estado con la lista de pedidos filtrados y ordenados
-    setPedidos(pedidosArray);
-  } catch (error) {
-    console.error('Error obteniendo los pedidos:', error);
-  }
-};
+      // Actualizamos el estado con la lista de pedidos filtrados y ordenados
+      setPedidos(pedidosArray);
+    } catch (error) {
+      console.error('Error obteniendo los pedidos:', error);
+    }
+  };
 
   const handleCancelarPedido = async () => {
     if (pedidoIdDocumento) {  // Verifica que haya un pedido seleccionado
@@ -256,12 +259,13 @@ const fetchPedidos = async () => {
       });
     }
   };
-  ///////
+
   const handleOverlayClick = (e) => {
-    if (e.target.classList.contains('modal-overlay')) {
+    if (e.target.classList.contains('notificaciones-modal-overlay')) {
       onClose(); // Cierra el modal cuando se hace clic en el overlay
     }
   };
+
   // Función para manejar la tecla ESC
   const handleEscKey = (event) => {
     if (event.key === "Escape") {
@@ -270,9 +274,9 @@ const fetchPedidos = async () => {
   };
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
-      <div className="modal-content">
-        <div className="lista-pedidos">
+    <div className="notificaciones-modal-overlay" onClick={handleOverlayClick}>
+      <div className="notificaciones-modal-content">
+        <div className="notificaciones-lista-pedidos">
           <h2>Lista de Pedidos</h2>
           {pedidos.length > 0 ? (
             <ul>
@@ -280,19 +284,18 @@ const fetchPedidos = async () => {
                 .filter((pedido) => pedido.id !== 'hola') // Filtra los pedidos con id 'hola'
                 .map((pedido) => (
                   <li 
-  key={pedido.id} 
-  className={`pedido-item ${pedido.compra ? 'compra' : 'renovacion'}`}>
-  <div>
-    <strong>{pedido.nombre} {pedido.apellido}</strong>
-    <span className={`label ${pedido.compra ? 'compra' : 'renovacion'}`}>
-      {pedido.compra ? 'COMPRA' : 'RENOVACIÓN'}
-    </span>
-  </div>
-  <button onClick={() => handleVerPedido(pedido)} className="ver-pedido-btn">
-    Ver Pedido
-  </button>
-</li>
-
+                    key={pedido.id} 
+                    className={`notificaciones-pedido-item ${pedido.compra ? 'notificaciones-compra' : 'notificaciones-renovacion'}`}>
+                    <div>
+                      <strong>{pedido.nombre} {pedido.apellido}</strong>
+                      <span className={`notificaciones-label ${pedido.compra ? 'notificaciones-compra' : 'notificaciones-renovacion'}`}>
+                        {pedido.compra ? 'COMPRA' : 'RENOVACIÓN'}
+                      </span>
+                    </div>
+                    <button onClick={() => handleVerPedido(pedido)} className="notificaciones-ver-pedido-btn">
+                      Ver Pedido
+                    </button>
+                  </li>
                 ))}
             </ul>
           ) : (
@@ -300,9 +303,9 @@ const fetchPedidos = async () => {
           )}
         </div>
   
-        <div className="pedido-detalles">
+        <div className="notificaciones-pedido-detalles">
           {pedidoSeleccionado && (
-            <div className="pedido-detalle-modal">
+            <div className="notificaciones-pedido-detalle-modal">
               <h3>Detalles del Pedido</h3>
               <p>
                 <strong>ID:</strong>
@@ -311,9 +314,10 @@ const fetchPedidos = async () => {
                   name="id"
                   value={pedidoSeleccionado.id || ''} // Mostrar el ID generado por Firestore
                   onChange={handleChange}
-                  className="detail-input"
+                  className="notificaciones-detail-inputxnon-editable"
                   placeholder="ID"
                   readOnly
+                  disabled
                 />
               </p>
               <p>
@@ -323,8 +327,9 @@ const fetchPedidos = async () => {
                   name="nombre"
                   value={pedidoSeleccionado.nombre || ''}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="notificaciones-detail-inputxnon-editable"
                   placeholder="Nombre"
+                  disabled
                 />
               </p>
               <p>
@@ -334,8 +339,9 @@ const fetchPedidos = async () => {
                   name="apellido"
                   value={pedidoSeleccionado.apellido || ''}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="notificaciones-detail-inputxnon-editable"
                   placeholder="Apellido"
+                  disabled
                 />
               </p>
               <p>
@@ -345,8 +351,9 @@ const fetchPedidos = async () => {
                   name="telefono"
                   value={pedidoSeleccionado.telefono || ''}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="notificaciones-detail-inputxnon-editable"
                   placeholder="Teléfono"
+                  disabled
                 />
               </p>
               <p>
@@ -356,7 +363,8 @@ const fetchPedidos = async () => {
                   name="email"
                   value={pedidoSeleccionado.email || ''}
                   onChange={handleChange}
-                  className="detail-input"
+                  disabled
+                  className="notificaciones-detail-inputxnon-editable"
                   placeholder="Email"
                 />
               </p>
@@ -367,7 +375,7 @@ const fetchPedidos = async () => {
                   name="fechaInicial"
                   value={pedidoSeleccionado.fechaInicial || ''}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="notificaciones-detail-input"
                 />
               </p>
               <p>
@@ -377,22 +385,21 @@ const fetchPedidos = async () => {
                   name="fechaFinal"
                   value={pedidoSeleccionado.fechaFinal || ''}
                   readOnly
-                  className="detail-input"
+                  className="notificaciones-detail-input"
                 />
               </p>
               <p>
-  <strong>Estado:</strong>
-  <input
-    type="text"
-    name="estado"
-    value={pedidoSeleccionado.estado || '✅'}
-    readOnly
-    disabled
-    className="detail-input non-editable"
-    placeholder="Estado"
-  />
-</p>
-
+                <strong>Estado:</strong>
+                <input
+                  type="text"
+                  name="estado"
+                  value={pedidoSeleccionado.estado || '✅'}
+                  readOnly
+                  disabled
+                  className="notificaciones-detail-inputxnon-editable"
+                  placeholder="Estado"
+                />
+              </p>
               <p>
                 <strong>Grupo:</strong>
                 <input
@@ -400,7 +407,7 @@ const fetchPedidos = async () => {
                   name="grupo"
                   value={pedidoSeleccionado.grupo || ''}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="notificaciones-detail-input"
                   placeholder="Grupo"
                 />
               </p>
@@ -411,7 +418,7 @@ const fetchPedidos = async () => {
                   name="servicio"
                   value={pedidoSeleccionado.servicio || ''}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="notificaciones-detail-input"
                   placeholder="Servicio"
                 />
               </p>
@@ -421,7 +428,7 @@ const fetchPedidos = async () => {
                   name="notas"
                   value={pedidoSeleccionado.notas || ''}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="notificaciones-detail-input"
                   placeholder="Notas"
                 />
               </p>
@@ -432,27 +439,35 @@ const fetchPedidos = async () => {
                   name="precio"
                   value={pedidoSeleccionado.precio || ''}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="notificaciones-detail-input"
                   placeholder="Precio"
                 />
               </p>
-              <button onClick={handleActivarCliente} className="activar-btn">Activar Cliente</button>
-              <button onClick={handleCerrarDetalle} className="cerrar-btn">Cerrar</button>
-              <button onClick={handleCancelarPedido} className="cancelar-btn">Cancelar Pedido</button>
+              <div className="notificaciones-botones-container">
+                <button onClick={handleActivarCliente} className="notificaciones-activar-btn">
+                  <FaCheck /> Activar Cliente
+                </button>
+                <button onClick={handleCerrarDetalle} className="notificaciones-cerrar-btn">
+                  <FaTimes /> Cerrar
+                </button>
+                <button onClick={handleCancelarPedido} className="notificaciones-cancelar-btn">
+                  <FaTrashAlt /> Cancelar Pedido
+                </button>
+              </div>
             </div>
           )}
         </div>
   
         {/* Toast Notification */}
         {isToastVisible && (
-          <div className="toast-message">
+          <div className="notificaciones-toast-message">
             {toastMessage}
           </div>
         )}
   
         {/* Botón para cerrar el overlay */}
-        <button onClick={onClose} className="cerrar-overlay-btn">
-          Cerrar Overlay
+        <button onClick={onClose} className="notificaciones-cerrar-overlay-btn">
+          X
         </button>
       </div>
     </div>

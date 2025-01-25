@@ -123,6 +123,12 @@ function RegistroCliente({ onClose }) {
 
   const handleSaveClient = async () => {
     try {
+      // Validar campos obligatorios
+      if (!clientData.nombre || !clientData.apellido || !clientData.telefono || !clientData.email || !clientData.fechaInicial || !clientData.fechaFinal) {
+        toast.error('Por favor, complete todos los campos obligatorios.', { autoClose: 2000 });
+        return;
+      }
+
       // Definir los arrays de grupo, servicio y precio y convertirlos a mayúsculas
       const grupoArray = Array.isArray(clientData.grupo)
         ? clientData.grupo.map(item => item.toUpperCase())
@@ -162,7 +168,11 @@ function RegistroCliente({ onClose }) {
       // Guardar en Firestore
       await addDoc(collection(firestore, 'clientes'), newClient);
 
-      toast('Cliente registrado con éxito');
+      toast('Cliente registrado con éxito', { autoClose: 2000 });
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+
       setClientData({
         ID: '',
         nombre: '',
@@ -179,14 +189,13 @@ function RegistroCliente({ onClose }) {
         precio: ''
       });
       setMaxId(parseInt(clientData.ID, 10)); // Actualiza el ID máximo
-      onClose();
 
       // Generar comprobante
       await handleGenerateComprobante(newClient);
 
     } catch (error) {
       console.error('Error al registrar cliente:', error);
-      alert('Error al registrar cliente: ' + error.message);
+      toast.error('Error al registrar cliente: ' + error.message, { autoClose: 2000 });
     }
   };
 
@@ -262,31 +271,22 @@ function RegistroCliente({ onClose }) {
   
         // Obtener la URL de descarga
         const downloadURL = await getDownloadURL(storageRef);
-  
-        // WhatsApp Web message
-        const mensaje = `_*🎉 ¡Gracias por tu Comprobante de Pago y Renovación Exitosa! 🎉*_
+      });
+    }
+  };
 
-Hemos recibido con éxito tu comprobante de pago y renovación. 🎊 Apreciamos tu confianza en *JadePlatform* y estamos encantados de seguir siendo tu elección.
-
-Si tienes alguna pregunta o necesitas asistencia, estamos aquí para ayudarte. ¡Disfruta al máximo de tu servicio renovado! 😊🙌
-
-Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
-        const whatsappNumber = selectedClient.telefono; // Obtener el número de WhatsApp del cliente
-        const encodedMessage = encodeURIComponent(mensaje);
-        const whatsappUrl = `https://web.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
-  
-        // Abre WhatsApp Web
-        window.open(whatsappUrl, '_blank');
-        });
+  const handleOverlayClick = (event) => {
+    if (event.target.classList.contains('modal-overlay')) {
+      onClose();
     }
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="form-container">
-        <button className="boton-cerrar" onClick={onClose}>X</button>
-        <h2>Registro de Cliente</h2>
-        <div className="form-input">
+    <div className="RegistroCliente modal-overlay" onClick={handleOverlayClick}>
+      <div className="RegistroCliente form-container">
+        <button className="RegistroCliente boton-cerrar" onClick={onClose}>X</button>
+        <h2 className="RegistroCliente">Registro de Cliente</h2>
+        <div className="RegistroCliente form-input">
           <label>ID</label>
           <input
             type="text"
@@ -295,7 +295,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             readOnly
           />
         </div>
-        <div className="form-input">
+        <div className="RegistroCliente form-input">
           <label>Nombre</label>
           <input
             type="text"
@@ -304,7 +304,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             onChange={handleChange}
           />
         </div>
-        <div className="form-input">
+        <div className="RegistroCliente form-input">
           <label>Apellido</label>
           <input
             type="text"
@@ -313,7 +313,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             onChange={handleChange}
           />
         </div>
-        <div className="form-input">
+        <div className="RegistroCliente form-input">
           <label>Teléfono</label>
           <input
             type="text"
@@ -322,7 +322,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             onChange={handleChange}
           />
         </div>
-        <div className="form-input">
+        <div className="RegistroCliente form-input">
           <label>Email</label>
           <input
             type="email"
@@ -331,7 +331,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             onChange={handleChange}
           />
         </div>
-        <div className="form-input">
+        <div className="RegistroCliente form-input">
   <label>Fecha Inicial</label>
   <input
     type="date"
@@ -340,7 +340,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
     onChange={handleDateChange}
   />
 </div>
-<div className="form-input">
+<div className="RegistroCliente form-input">
   <label>Fecha Final</label>
   <input
     type="date"
@@ -350,7 +350,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
   />
 </div>
 
-        <div className="form-input">
+        <div className="RegistroCliente form-input">
           <label>Grupo</label>
           <input
             type="text"
@@ -359,7 +359,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             onChange={handleChange}
           />
         </div>
-        <div className="form-input">
+        <div className="RegistroCliente form-input">
           <label>Servicio</label>
           <input
             type="text"
@@ -368,7 +368,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             onChange={handleChange}
           />
         </div>
-        <div className="form-input">
+        <div className="RegistroCliente form-input">
           <label>Notas</label> {/* Nuevo campo Notas */}
           <input
             type="text"
@@ -377,7 +377,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             onChange={handleChange}
           />
         </div>
-        <div className="form-input">
+        <div className="RegistroCliente form-input">
           <label>Precio</label>
           <input
             type="text"
@@ -386,7 +386,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             onChange={handleChange}
           />
         </div>
-        <button className="submit-button" onClick={handleSaveClient}>
+        <button className="RegistroCliente submit-button" onClick={handleSaveClient}>
           Guardar Cliente
         </button>
       </div>

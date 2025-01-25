@@ -127,4 +127,43 @@ label {
     transform: scale(1); /* Restaura el tamaño original al hacer clic */
     background: linear-gradient(135deg, #222222, #111111); /* Degradado más oscuro al hacer clic */
   }
+  .logout-button:hover {
+    background-color: #555;
+  }
+  .logout-button {
+    background-color: #333;
+    width: 150px;
+    color: white;
+    border: none;
+    padding: 10px 20px; 
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+    display: block; /* Cambiado a block para que los márgenes funcionen */
+    margin: 0 auto; /* Márgenes automáticos para centrar horizontalmente */
+  }
+  .home-button {
+    background-color: #ed1b24;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s, transform 0.2s;
+  }
   
+  .home-button:hover {
+    background-color: #ff3b3f;
+    transform: scale(1.05);
+  }
+  
+  .home-button:focus {
+    outline: none;
+  }
+  .home-container {
+    text-align: center;
+    padding: 20px;
+  }

@@ -1,23 +1,41 @@
-.buscar-cliente-container {
+.BuscarCliente-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  height: 100vh; /* Asegura que ocupa todo el alto de la ventana */
 }
 
-.search-controls {
+.BuscarCliente-search-controls,
+.BuscarCliente-search-controls-modal {
   display: flex;
-  gap: 10px;
+  gap: 10px; /* Espaciado entre elementos */
+  align-items: center; /* Alinea elementos verticalmente */
+  justify-content: center; /* Centra elementos horizontalmente */
   margin-bottom: 20px;
 }
 
-.search-select,
-.search-input,
-.search-button {
+.BuscarCliente-search-select,
+.BuscarCliente-search-input,
+.BuscarCliente-search-button {
   padding: 10px;
   font-size: 16px;
+  height: 40px; /* Asegura que todos los elementos tengan la misma altura */
+  display: flex;
+  align-items: center; /* Alinea el contenido del botón verticalmente */
+  justify-content: center; /* Centra el contenido del botón horizontalmente */
 }
 
-.modal-overlay {
+.BuscarCliente-search-button {
+  padding: 10px;
+  font-size: 16px;
+  height: 40px; /* Asegura que el botón tenga altura fija */
+  display: flex;
+  align-items: center; /* Centra verticalmente el contenido interno */
+  justify-content: center; /* Centra horizontalmente el contenido interno */
+  margin: 0; /* Restablece márgenes si no son necesarios */
+}
+
+.BuscarCliente-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -25,78 +43,149 @@
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: flex-end;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
 }
 
-.modal-content {
+.BuscarCliente-modal-content {
   background: white;
-  padding: 200px;
-  border-radius: 10px 0 0 10px;
-  width: 70%;
-  height: 100%;
-  overflow-y: auto;
+  padding: 20px;
+  border-radius: 10px;
+  width: calc(60% + 200px); /* Aumenta el ancho en 200px */
+  height: calc(80% + 100px); /* Aumenta la altura en 100px */
+  overflow-y: hidden; /* Oculta el desplazamiento vertical del contenedor principal */
   display: flex;
+  position: relative; /* Añadir posición relativa para el botón de cerrar */
 }
 
-
-
-.search-container {
-  width: 50%;
+.BuscarCliente-search-container {
+  width: 40%; /* Reduce el ancho del contenedor de búsqueda */
   padding-right: 20px;
   border-right: 1px solid #ccc;
+  overflow-y: auto; /* Habilita el desplazamiento vertical */
+  max-height: 100%; /* Limita la altura máxima del contenedor */
 }
 
-.details-panel-container {
-  width: 50%;
+.BuscarCliente-details-panel-container {
+  width: 60%; /* Ajusta el ancho del contenedor de detalles */
   padding-left: 20px;
   overflow-y: auto; /* Habilita el desplazamiento vertical */
-  max-height: 100vh; /* Limita la altura máxima del contenedor */
+  max-height: 100%; /* Limita la altura máxima del contenedor */
 }
 
-.details-panel {
+.BuscarCliente-details-panel {
   margin-top: 20px;
   border-top: 1px solid #ccc;
   padding-top: 20px;
   max-height: 80vh; /* Limita la altura del panel de detalles */
   overflow-y: auto; /* Habilita el desplazamiento dentro del panel de detalles */
   display: none;
+  background-color: #f9f9f9; /* Fondo claro para mejor visibilidad */
+  border-radius: 10px; /* Bordes redondeados */
+  padding: 20px; /* Espaciado interno */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
 }
 
-.details-panel.show {
+.BuscarCliente-details-panel.show {
   display: block; /* Asegúrate de que se muestre cuando tenga la clase .show */
 }
 
-
-.search-controls-modal {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+.BuscarCliente-details-panel label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
-.search-results {
+.BuscarCliente-details-panel input,
+.BuscarCliente-details-panel select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.BuscarCliente-details-panel .button-container {
+  display: flex;
+  justify-content: space-between; /* Espacia los botones */
   margin-top: 20px;
 }
 
-.search-result-item {
+.BuscarCliente-details-panel .button-container button {
+  padding: 10px;
+  background-color: #ed1b24;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Transición para el color de fondo y la transformación */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.BuscarCliente-details-panel .button-container button:hover {
+  background-color: #c4161d;
+  transform: scale(1.05); /* Aumenta el tamaño al pasar el ratón */
+}
+
+.BuscarCliente-details-panel .button-container button i {
+  margin-right: 5px; /* Espaciado entre el icono y el texto */
+}
+
+.BuscarCliente-search-results {
+  margin-top: 20px;
+}
+
+.BuscarCliente-search-result-item {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra el contenido horizontalmente */
+  text-align: center; /* Centra el texto */
+  background-color: #f9f9f9; /* Fondo claro para mejor visibilidad */
+  transition: background-color 0.3s ease;
 }
 
-.details-panel {
+.BuscarCliente-search-result-item:hover {
+  background-color: #e9e9e9; /* Fondo más oscuro al pasar el ratón */
+}
+
+.BuscarCliente-search-result-item div {
+  margin-bottom: 5px; /* Espaciado entre las líneas de texto */
+}
+
+.BuscarCliente-search-result-item button {
+  padding: 5px 10px;
+  background-color: #ed1b24;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.BuscarCliente-search-result-item button:hover {
+  background-color: #c4161d;
+}
+
+.BuscarCliente-details-panel {
   margin-top: 20px;
   border-top: 1px solid #ccc;
   padding-top: 20px;
   display: none;
 }
 
-.details-panel.show {
+.BuscarCliente-details-panel.show {
   display: block;
 }
 
-.detail-input,
-.detail-select {
+.BuscarCliente-detail-input,
+.BuscarCliente-detail-select {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
@@ -104,11 +193,43 @@
   border-radius: 5px;
 }
 
-.save-button {
+.BuscarCliente-save-button,
+.BuscarCliente-search-button,
+.BuscarCliente-boton-cerrar {
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #ed1b24;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.BuscarCliente-save-button:hover,
+.BuscarCliente-search-button:hover,
+.BuscarCliente-boton-cerrar:hover {
+  background-color: #c4161d;
+}
+
+.BuscarCliente-boton-cerrar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px;
+  border-radius: 50%;
+  background-color: #ed1b24;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.BuscarCliente-boton-cerrar:hover {
+  background-color: #c4161d;
 }

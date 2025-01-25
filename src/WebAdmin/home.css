@@ -1,173 +1,628 @@
 /* home.css */
 
-/* Estilo general para el contenedor de la página principal */
-.home-container {
-  text-align: center;
+/* Import the colors.css file */
+@import './colors.css';
+
+.admin-home-container {
   padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* Estilo para los botones principales */
-.button-group {
-  margin: 20px 0;
+.admin-home-container h1 {
+  text-align: center;
+  color: #444;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
 }
 
-.home-button {
-  background-color: #ed1b24;
-  color: white;
+.admin-button-groups {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.admin-home-button {
+  background-color: var(--azulspiderman);
+  color: #fff;
   border: none;
   padding: 10px 20px;
-  margin: 5px;
+  font-size: 1rem;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-.home-button:hover {
-  background-color: #ff3b3f;
-  transform: scale(1.05);
-}
-
-.home-button:focus {
-  outline: none;
-}
-
-.logout-button {
-  background-color: #333;
-  width: 150px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
   color: white;
   border: none;
-  padding: 10px 20px; 
+  cursor: pointer;
+  text-align: left;
+}
+
+.admin-home-button:hover {
+  background-color: var(--azulspiderman-hover);
+  transform: translateY(-2px);
+}
+
+.admin-home-button:active {
+  transform: translateY(0);
+  background-color: #003f88;
+}
+
+.admin-logout-button {
+  margin-top: 20px;
+  background-color: #dc3545;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  font-size: 1rem;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s;
-  display: block; /* Cambiado a block para que los márgenes funcionen */
-  margin: 0 auto; /* Márgenes automáticos para centrar horizontalmente */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
 }
 
-
-
-.logout-button:hover {
-  background-color: #555;
-}
-/*/* Agrega esto en src/WebAdmin/home.css */
-
-/* Estilo para el contenedor de plataformas */
-.platforms-container {
-  display: flex; /* Usar flexbox para alinear los elementos */
-  flex-direction: column; /* Coloca los elementos en columna */
-  align-items: center; /* Centra los elementos horizontalmente */
-  margin-top: 20px; /* Margen superior */
+.admin-logout-button:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
 }
 
-.platforms-container {
-  display: flex;               /* Utiliza flexbox para la disposición */
-  flex-wrap: wrap;            /* Permite que los contenedores se envuelvan si es necesario */
-  gap: 20px;                  /* Espacio entre los contenedores */
-}
-
-.container-platform {
-  flex: 1 1 calc(25% - 20px); /* Ocupa el 25% del ancho del contenedor padre, menos el margen */
-  min-width: 200px;           /* Establece un ancho mínimo para los contenedores */
-  background-color: #f0f0f0;  /* Color de fondo para visualizar los contenedores */
-  padding: 15px;              /* Espaciado interno */
-  border-radius: 8px;         /* Bordes redondeados */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
-}
-
-.servicio-title {
-  font-weight: bold;          /* Título en negrita */
-  font-size: 1.2em;           /* Tamaño del texto */
-}
-.loading-screen {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh; /* Ocupa toda la altura de la ventana */
-  font-size: 1.5rem;
-}
-
-/* Add this to your CSS file (e.g., home.css) */
-.modal-overlays {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7); /* Opaque background */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000; /* Ensure it appears above other content */
-}
-
-.modal-contents {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-
-
-
-
-
-
-
-/* home.css */
-
-/* Estilo para el botón de notificaciones */
-.notification-button {
+.admin-notification-button {
   position: relative;
-  background-color: #007bff; /* Color de fondo */
-  color: white; /* Color del texto */
-  padding: 10px 15px; /* Espaciado */
-  border: none; /* Sin borde */
-  border-radius: 5px; /* Bordes redondeados */
-  cursor: pointer; /* Cursor tipo mano al pasar */
-  font-size: 16px; /* Tamaño de fuente */
-  margin-left: 10px; /* Margen a la izquierda para separación */
+  background-color: var(--azulspiderman);
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.notification-button:hover {
-  background-color: #0056b3; /* Efecto hover */
+.admin-notification-button:hover {
+  background-color: var(--azulspiderman-hover);
+}
+
+.admin-notification-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.admin-toast-container {
+  font-size: 1rem;
+}
+
+.admin-component {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+}
+
+.dashboard-base {
+  position: relative; /* Ensure the button is positioned relative to the dashboard base */
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 80%;
+  max-width: 1200px;
+  margin: 0 auto; /* Center the dashboard-base */
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.dashboard-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.dashboard-top .welcome-message {
+  flex: 1;
+  text-align: left;
+  color: #444;
+  font-size: 2rem;
+}
+
+.dashboard-main {
+  display: flex;
+  flex: 1;
+}
+
+.dashboard-left {
+  width: 150px;
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-right: 1px solid #dee2e6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dashboard-right {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.actualizar-button-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.loader-container {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.loader-container.updating .loader {
+  animation: spin 0.5s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.actualizar-button {
+  background-color: var(--azulspiderman);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.actualizar-button.updating {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.actualizar-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+
+.trail {
+  width: 10px;
+  height: 10px;
+  background-color: #007bff;
+  border-radius: 50%;
+  margin: 0 2px;
+  animation: trail 1s infinite ease-in-out;
+}
+
+.trail:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.trail:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes trail {
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+.notification-bell-container {
+  position: relative;
+  display: inline-block;
+  margin-right: 10px;
+  width: 50px; /* Match the loader width */
+  height: 50px; /* Match the loader height */
+  display: flex;
+  align-items: center;
+}
+
+.notification-bell {
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  color: #ed1b24;
+}
+
+.notification-bell:hover {
+  transform: scale(1.1);
+}
+
+.notification-bell:active {
+  transform: scale(0.9);
 }
 
 .notification-count {
   position: absolute;
-  top: -5px; /* Ajustar según sea necesario */
-  right: -5px; /* Ajustar según sea necesario */
-  background-color: red; /* Color del fondo del contador */
-  color: white; /* Color del texto */
-  border-radius: 50%; /* Círculo */
-  padding: 5px 10px; /* Espaciado */
-  font-size: 12px; /* Tamaño de fuente */
-  font-weight: bold; /* Negrita */
+  top: -10px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 4px 8px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 5px;
+  font-size: 12px;
 }
 
+@keyframes bell-ring {
+  0% { transform: rotate(0); }
+  25% { transform: rotate(15deg); }
+  50% { transform: rotate(-15deg); }
+  75% { transform: rotate(15deg); }
+  100% { transform: rotate(0); }
+}
 
-/* home.css */
-.cuentas-disponibles-container {
-  border: 1px solid #ccc;
-  padding: 20px;
-  background-color: #f9f9f9;
+.notification-bell.ringing {
+  animation: bell-ring 0.5s ease-in-out;
+}
+
+.animated-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.animated-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.animated-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.animated-button:active {
+  transform: translateY(0);
+  background-color: #003f88;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 60px;
+  background-color: #007bff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  transition: width 0.3s ease;
+}
+
+.sidebar.open {
+  width: 200px;
+}
+
+.sidebar-icon {
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-icon:hover {
+  transform: scale(1.1);
+}
+
+.sidebar-buttons {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.sidebar-button {
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 5px 0;
+  width: 80%;
+}
+
+.sidebar-button:hover {
+  background-color: #003f88;
+  transform: translateY(-2px);
+}
+
+.sidebar-button:active {
+  transform: translateY(0);
+  background-color: #002f66;
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background: #ccc;
+  margin: 20px 0;
+}
+
+.service-icon:hover, .exit-icon:hover {
+  transform: scale(1.1);
+}
+
+.service-icon:active, .exit-icon:active {
+  transform: scale(0.9);
+}
+
+.service-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+
+.service-button {
+  background-color: var(--azulspiderman);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 5px 0;
+}
+
+.service-button:hover {
+  background-color: var(--azulspiderman-hover);
+  transform: translateY(-2px);
+}
+
+.service-button:active {
+  transform: translateY(0);
+  background-color: #003f88;
+}
+
+.divider-vertical {
+  border-left: 1px solid #ccc;
+  height: calc(100% - 120px); /* Adjust the height to stay within the dashboard-base */
+  position: absolute;
+  left: 60px; /* Adjust the position as needed */
+  top: 120px; /* Adjust the position as needed */
+}
+
+.mostrar-contenido {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 70px; /* Adjust the position to the right */
+  margin-top: 10px;
+}
+
+.icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.service-icon-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.service-icon-container:hover .service-text {
+  display: block;
+}
+
+.service-text {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #007bff;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-top: 5px;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.service-icon, .exit-icon {
+  font-size: 4rem;
+  color: var(--azulspiderman);
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease, background-color 0.3s ease;
+  margin-top: 20px;
+  background-color: #f0f0f0; /* Ensure the icon always has a background color */
+  border-radius: 50%; /* Ensure the background is rounded */
+  padding: 10px;
+}
+
+.service-icon.active {
+  color: #fff;
+  background-color: var(--azulspiderman); /* Change background color to yellow when active */
+}
+
+.exit-icon {
+  color: #dc3545;
+}
+
+.service-icon:hover, .exit-icon:hover {
+  transform: scale(1.1);
+}
+
+.service-icon:active, .exit-icon:active {
+  transform: scale(0.9);
+}
+
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  justify-items: center;
   margin-top: 20px;
 }
 
-.cuentas-disponibles-container h2 {
-  font-size: 24px;
-}
-
-.cuentas-disponibles-container button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px;
-  border: none;
+.icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   cursor: pointer;
+  transition: transform 0.3s ease;
+}
+.icon-item-cupos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
-.cuentas-disponibles-container button:hover {
-  background-color: #0056b3;
+.icon-item:hover {
+  transform: scale(1.1);
 }
+.icon-item-cupos:hover {
+  transform: scale(1.1);
+}
+
+.grid-icon {
+  font-size: 50px; /* Set icon size to 50x50 */
+  color: var(--azulspiderman);
+  margin-bottom: 10px;
+}
+.grid-icon-cupos {
+  font-size: 50px; /* Set icon size to 50x50 */
+  color: var(--azulspiderman);
+  margin-bottom: 1px;
+  padding-top: 5px; /* Añade un pequeño relleno superior */
+  
+}
+
+.icon-item span {
+  font-size: 0.9rem;
+  color: #444;
+  text-align: center;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.spinning-logo {
+  width: 300px;
+  height: 300px;
+  animation: spin 5s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .admin-home-container h1 {
+    font-size: 2rem;
+  }
+
+  .admin-home-button {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
+
+  .admin-logout-button {
+    font-size: 0.9rem;
+    padding: 10px 15px;
+  }
+}
+

@@ -5,6 +5,7 @@ import './buscarCliente.css';
 import html2canvas from 'html2canvas';
 import fondo from '../../fondo.png'; // Asegúrate de que la imagen fondo.png esté en la carpeta correcta
 import { toast } from 'react-toastify'; // Asegúrate de instalar react-toastify
+import { FaSave, FaTimes, FaFileAlt, FaTrash } from 'react-icons/fa'; // Importa los iconos de react-icons
 
 const firestore = getFirestore();
 
@@ -42,6 +43,7 @@ function BuscarCliente({ onClose }) {
     notas: '',
     precio: ''
   });
+  const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
@@ -59,18 +61,25 @@ function BuscarCliente({ onClose }) {
   
 
   const handleDeleteClient = async () => {
-    if (window.confirm('¿Estás seguro de que deseas eliminar a este cliente?')) {
-      try {
-        const clientDocRef = doc(firestore, 'clientes', selectedClient.id);
-        await deleteDoc(clientDocRef);
-        toast.success('Cliente eliminado con éxito');
-        setSelectedClient(null);
-        setSearchResults(prevResults => prevResults.filter(client => client.id !== selectedClient.id));
-      } catch (error) {
-        console.error('Error al eliminar cliente:', error);
-        toast.error('Error al eliminar cliente: ' + error.message);
-      }
+    setShowDeleteConfirmationModal(true);
+  };
+
+  const confirmDeleteClient = async () => {
+    try {
+      const clientDocRef = doc(firestore, 'clientes', selectedClient.id);
+      await deleteDoc(clientDocRef);
+      toast.success('Cliente eliminado con éxito');
+      setSelectedClient(null);
+      setSearchResults(prevResults => prevResults.filter(client => client.id !== selectedClient.id));
+      setShowDeleteConfirmationModal(false);
+    } catch (error) {
+      console.error('Error al eliminar cliente:', error);
+      toast.error('Error al eliminar cliente: ' + error.message);
     }
+  };
+
+  const cancelDeleteClient = () => {
+    setShowDeleteConfirmationModal(false);
   };
   // Función para ejecutar la búsqueda al presionar Enter
 const handleKeyPress = (event) => {
@@ -340,42 +349,39 @@ const handleKeyPress = (event) => {
   
         // WhatsApp Web message
         const mensaje = `_*🎉 ¡Gracias por tu Comprobante de Pago y Renovación Exitosa! 🎉*_
-
+  
 Hemos recibido con éxito tu comprobante de pago y renovación. 🎊 Apreciamos tu confianza en *JadePlatform* y estamos encantados de seguir siendo tu elección.
-
+  
 Si tienes alguna pregunta o necesitas asistencia, estamos aquí para ayudarte. ¡Disfruta al máximo de tu servicio renovado! 😊🙌
-
+  
 Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
         await navigator.clipboard.writeText(mensaje);
-        const whatsappNumber = selectedClient.telefono; // Obtener el número de WhatsApp del cliente
-        const encodedMessage = encodeURIComponent(mensaje);
-        const whatsappUrl = `https://web.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
   
-        // Abre WhatsApp Web
-        window.open(whatsappUrl, '_blank');
-  
-        toast('El comprobante ha sido generado, guardado en Firebase Storage y enviado por WhatsApp.');
+        toast('El comprobante ha sido generado y guardado en Firebase Storage.');
   
         document.body.removeChild(comprobanteContainer);
       });
     }
   };
   
+  const handleCloseDetails = () => {
+    setSelectedClient(null);
+  };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <button className="boton-cerrar" onClick={onClose}>×</button>
-        <div className="search-container">
+    <div className="BuscarCliente-modal-overlay" onClick={onClose}>
+      <div className="BuscarCliente-modal-content" onClick={(e) => e.stopPropagation()}>
+        <button className="BuscarCliente-boton-cerrar" onClick={onClose}>X</button>
+        <div className="BuscarCliente-search-container">
           <h1>Buscar Cliente</h1>
-          <div className="search-controls">
-            <select value={searchType} onChange={handleSearchTypeChange} className="search-select">
+          <div className="BuscarCliente-search-controls">
+            <select value={searchType} onChange={handleSearchTypeChange} className="BuscarCliente-search-select">
               <option value="nombre">Nombre</option>
               <option value="estado">Estado</option>
               <option value="ID">ID</option>
             </select>
             {searchType === 'estado' ? (
-              <select value={searchValue} onChange={handleSearchValueChange} className="search-select">
+              <select value={searchValue} onChange={handleSearchValueChange} className="BuscarCliente-search-select">
                 <option value="⚠️">⚠️</option>
                 <option value="❌">❌</option>
                 <option value="✅">✅</option>
@@ -386,20 +392,20 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                 type="text"
                 value={searchValue}
                 onChange={handleSearchValueChange}
-                className="search-input"
+                className="BuscarCliente-search-input"
                 onKeyPress={handleKeyPress}  /* Captura la tecla presionada */
                 placeholder={`Buscar por ${searchType}`}
               />
 
             )}
-            <button onClick={handleSearch} className="search-button">Buscar</button>
+            <button onClick={handleSearch} className="BuscarCliente-search-button">Buscar</button>
           </div>
   
-          <div className="search-results">
+          <div className="BuscarCliente-search-results">
             {searchResults.length > 0 ? (
               <ul>
                 {searchResults.map((result) => (
-                  <li key={result.id} className="search-result-item">
+                  <li key={result.id} className="BuscarCliente-search-result-item">
                     <div>ID: {result.ID}</div>
                     <div>Nombre: {result.nombre} {result.apellido}</div>
                     <div>Estado: {result.PENDEJOALEJANDRO?.estado || ''}</div>
@@ -412,10 +418,9 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             )}
           </div>
         </div>
-  
         {selectedClient && (
-          <div className="details-panel-container">
-            <div className={`details-panel ${selectedClient ? 'show' : ''}`}>
+          <div className="BuscarCliente-details-panel-container">
+            <div className={`BuscarCliente-details-panel ${selectedClient ? 'show' : ''}`}>
               <h2>Detalles del Cliente</h2>
               <label>
                 ID:
@@ -424,7 +429,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                   name="ID"
                   value={clientData.ID}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="BuscarCliente-detail-input"
                   placeholder="ID"
                 />
               </label>
@@ -435,7 +440,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                   name="nombre"
                   value={clientData.nombre}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="BuscarCliente-detail-input"
                   placeholder="Nombre"
                 />
               </label>
@@ -446,7 +451,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                   name="apellido"
                   value={clientData.apellido}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="BuscarCliente-detail-input"
                   placeholder="Apellido"
                 />
               </label>
@@ -457,7 +462,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                   name="telefono"
                   value={clientData.telefono}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="BuscarCliente-detail-input"
                   placeholder="Teléfono"
                 />
               </label>
@@ -468,7 +473,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                   name="email"
                   value={clientData.email} // Muestra el valor del email
                   onChange={handleChange} // Maneja los cambios en el campo
-                  className="detail-input"
+                  className="BuscarCliente-detail-input"
                   placeholder="Email"
                 />
               </label>
@@ -479,7 +484,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                   name="fechaInicial"
                   value={clientData.fechaInicial}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="BuscarCliente-detail-input"
                   placeholder="Fecha Inicial (dd/mm/yyyy)"
                 />
               </label>
@@ -490,7 +495,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                   name="fechaFinal"
                   value={clientData.fechaFinal}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="BuscarCliente-detail-input"
                   placeholder="Fecha Final (dd/mm/yyyy)"
                 />
               </label>
@@ -501,7 +506,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                   name="pagado"
                   value={clientData.pagado}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="BuscarCliente-detail-input"
                   placeholder="Pagado"
                 />
               </label>
@@ -511,7 +516,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                   name="estado"
                   value={clientData.estado}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="BuscarCliente-detail-input"
                 >
                   <option value="⚠️">⚠️</option>
                   <option value="❌">❌</option>
@@ -525,7 +530,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                   name="grupo"
                   value={clientData.grupo}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="BuscarCliente-detail-input"
                   placeholder="Grupo"
                 />
               </label>
@@ -536,7 +541,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                   name="servicio"
                   value={clientData.servicio}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="BuscarCliente-detail-input"
                   placeholder="Servicio"
                 />
               </label>
@@ -547,7 +552,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                   name="notas"
                   value={clientData.notas}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="BuscarCliente-detail-input"
                   placeholder="notas"
                 />
               </label>
@@ -558,14 +563,35 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                   name="precio"
                   value={clientData.precio}
                   onChange={handleChange}
-                  className="detail-input"
+                  className="BuscarCliente-detail-input"
                   placeholder="Precio"
                 />
               </label>
-              <button onClick={handleSaveChanges} className="save-button">Guardar Cambios</button>
-              <button onClick={onClose} className="saves-button">Cerrar</button>
-              <button onClick={handleGenerateComprobante} className="save-button">Generar Comprobante</button>
-              <button onClick={handleDeleteClient}className="save-button">Eliminar</button>
+              <div className="button-container">
+                <button onClick={handleSaveChanges} className="BuscarCliente-save-button">
+                  <FaSave /> Guardar
+                </button>
+                <button onClick={handleCloseDetails} className="BuscarCliente-save-button">
+                  <FaTimes /> Cerrar
+                </button>
+                <button onClick={handleGenerateComprobante} className="BuscarCliente-save-button">
+                  <FaFileAlt /> Generar Comprobante
+                </button>
+                <button onClick={handleDeleteClient} className="BuscarCliente-save-button">
+                  <FaTrash /> Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {showDeleteConfirmationModal && (
+          <div className="confirmation-modal-overlay">
+            <div className="confirmation-modal-content">
+              <h2>¿Estás seguro de que deseas eliminar a este cliente? 💀</h2>
+              <div className="confirmation-modal-buttons">
+                <button className="no-button" onClick={cancelDeleteClient}>No, Quiero Continuar</button>
+                <button className="yes-button" onClick={confirmDeleteClient}>Sí, Deseo Eliminarlo</button>
+              </div>
             </div>
           </div>
         )}

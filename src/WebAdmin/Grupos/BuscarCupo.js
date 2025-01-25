@@ -3,6 +3,7 @@ import { collection, getDocs, query, where, doc, updateDoc } from 'firebase/fire
 import { db } from '../../firebase';
 import './BuscarCupo.css';
 import { toast } from 'react-toastify'; // Importa toast
+import { FaSearch, FaInfoCircle, FaSave, FaCopy } from 'react-icons/fa'; // Importa iconos
 
 
 // Define la función para obtener colores
@@ -31,6 +32,23 @@ const verFechas = (fecha) => {
   return `${year}-${month}-${day}`;
 };
 
+const formatPrice = (value) => {
+  if (!value) return '';
+  const numberValue = parseFloat(value.replace(/[$,]/g, ''));
+  return `$${numberValue.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+};
+
+const parsePrice = (value) => {
+  return value.replace(/[$,]/g, '');
+};
+
+const packages = [
+  "Premium4K+HDR+2miembrosExtras",
+  "Premium4K+HDR",
+  "Estándar+1miembroextra",
+  "Estándar",
+  "Básico"
+];
 
 function BuscarCupo({ onClose }) {
   const [servicio, setServicio] = useState('');
@@ -46,7 +64,9 @@ function BuscarCupo({ onClose }) {
     fechaPago: '',
     notas: '',
     direccion: '',
-    enlace: ''
+    enlace: '',
+    price: '', // Nuevo campo
+    package: '' // Nuevo campo
   });
     const [infoDocId, setInfoDocId] = useState('');
   const [isResultadosVisible, setIsResultadosVisible] = useState(false);
@@ -65,6 +85,12 @@ function BuscarCupo({ onClose }) {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [onClose]);
+
+  const handleOverlayClick = (event) => {
+    if (event.target.classList.contains('BuscarCupo-overlay')) {
+      onClose();
+    }
+  };
   
 
   // Función para obtener los grupos disponibles del servicio seleccionado
@@ -160,42 +186,44 @@ function BuscarCupo({ onClose }) {
   };
   
 
-  const handleInfoClick = async () => {
-    try {
-      const serviciosRef = collection(db, 'Servicios');
-      const qServicio = query(
-        serviciosRef,
-        where('__name__', '==', servicio.trim().toUpperCase())
-      );
-      const querySnapshotServicio = await getDocs(qServicio);
-  
-      if (!querySnapshotServicio.empty) {
-        const servicioDoc = querySnapshotServicio.docs[0];
-        const servicioData = servicioDoc.data();
-        const grupoInfo = servicioData[grupo];
-  
-        if (grupoInfo) {
-          setInfo({
-            email: grupoInfo.email || '',
-            password: grupoInfo.password || '',
-            fechaComienzo: verFechas(grupoInfo.fechaComienzo) || '',
-            fechaPago: verFechas(grupoInfo.fechaPago) || '',
-            notas: grupoInfo.notas || '',
-            direccion: grupoInfo.direccion || '', // Nuevo campo
-            enlace: grupoInfo.enlace || '' // Nuevo campo
-          });
-          setInfoDocId(servicioDoc.id); // Guarda el ID del documento
-          setIsInfoVisible(true); // Muestra la información del grupo
-        } else {
-          toast('No se encontró información para el grupo especificado.');
-        }
+const handleInfoClick = async () => {
+  try {
+    const serviciosRef = collection(db, 'Servicios');
+    const qServicio = query(
+      serviciosRef,
+      where('__name__', '==', servicio.trim().toUpperCase())
+    );
+    const querySnapshotServicio = await getDocs(qServicio);
+
+    if (!querySnapshotServicio.empty) {
+      const servicioDoc = querySnapshotServicio.docs[0];
+      const servicioData = servicioDoc.data();
+      const grupoInfo = servicioData[grupo];
+
+      if (grupoInfo) {
+        setInfo({
+          email: grupoInfo.email || '',
+          password: grupoInfo.password || '',
+          fechaComienzo: verFechas(grupoInfo.fechaComienzo) || '',
+          fechaPago: verFechas(grupoInfo.fechaPago) || '',
+          notas: grupoInfo.notas || '',
+          direccion: grupoInfo.direccion || '',
+          enlace: grupoInfo.enlace || '',
+          price: grupoInfo.price || '',
+          package: grupoInfo.package || '' // Asegúrate de que el valor del paquete se muestre correctamente
+        });
+        setInfoDocId(servicioDoc.id); // Guarda el ID del documento
+        setIsInfoVisible(true); // Muestra la información del grupo
       } else {
-        toast('No se encontró el servicio especificado.');
+        toast('No se encontró información para el grupo especificado.');
       }
-    } catch (error) {
-      console.error('Error al obtener información del servicio:', error);
+    } else {
+      toast('No se encontró el servicio especificado.');
     }
-  };
+  } catch (error) {
+    console.error('Error al obtener información del servicio:', error);
+  }
+};
   
   
   const handleCopyPaste = () => {
@@ -222,33 +250,42 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
   
   
 
-  const handleSaveChanges = async () => {
-    // Verificar si el campo notas existe en el objeto de servicio
-    const updatedInfo = {
-      email: info.email,
-      password: info.password,
-      fechaComienzo: guardarFechas(info.fechaComienzo),
-      fechaPago: guardarFechas(info.fechaPago),
-      notas: info.notas || '', // Asegúrate de que el campo notas se incluya
-      direccion: info.direccion || '', // Nuevo campo
-      enlace: info.enlace || '' // Nuevo campo
-    };
+const handleSaveChanges = async () => {
+  const updatedFields = {};
   
-    try {
-      const servicioRef = doc(db, 'Servicios', infoDocId);
-      
-      // Actualizar el grupo con la información
-      await updateDoc(servicioRef, {
-        [grupo]: updatedInfo // Actualiza el grupo con toda la información, incluyendo notas, direccion y enlace
-      });
+  if (info.email !== '') updatedFields[`${grupo}.email`] = info.email;
+  if (info.password !== '') updatedFields[`${grupo}.password`] = info.password;
+  if (info.fechaComienzo !== '') updatedFields[`${grupo}.fechaComienzo`] = guardarFechas(info.fechaComienzo);
+  if (info.fechaPago !== '') updatedFields[`${grupo}.fechaPago`] = guardarFechas(info.fechaPago);
+  if (info.notas !== '') updatedFields[`${grupo}.notas`] = info.notas;
+  if (info.price !== '') updatedFields[`${grupo}.price`] = parsePrice(info.price); // Nuevo campo
+  if (info.package !== '') updatedFields[`${grupo}.package`] = info.package.toUpperCase(); // Guardar en mayúsculas
   
-      toast('Cambios guardados con éxito.');
-      setIsInfoVisible(false); // Opcional: cerrar el modal después de guardar
-    } catch (error) {
-      console.error('Error al guardar cambios:', error);
-      alert('Error al guardar cambios. Por favor, intenta nuevamente.');
-    }
-  };
+  if (servicio === 'SPOTIFY') {
+    // Crea siempre los campos, incluso si están vacíos
+    updatedFields[`${grupo}.direccion`] = info?.direccion || '';
+    updatedFields[`${grupo}.enlace`] = info?.enlace || '';
+} else {
+    // Asegúrate de eliminar los campos si no es SPOTIFY
+    delete updatedFields[`${grupo}.direccion`];
+    delete updatedFields[`${grupo}.enlace`];
+}
+
+
+
+  try {
+    const servicioRef = doc(db, 'Servicios', infoDocId);
+    
+    // Actualizar solo los campos modificados
+    await updateDoc(servicioRef, updatedFields);
+
+    toast('Cambios guardados con éxito.');
+    setIsInfoVisible(false); // Opcional: cerrar el modal después de guardar
+  } catch (error) {
+    console.error('Error al guardar cambios:', error);
+    alert('Error al guardar cambios. Por favor, intenta nuevamente.');
+  }
+};
   
   
 
@@ -272,14 +309,14 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
   };
 
   return (
-    <div className="overlay">
-      <div className="buscar-cupo">
+    <div className="BuscarCupo-overlay" onClick={handleOverlayClick}>
+      <div className="BuscarCupo-buscarclientes">
         <h2>Buscar Clientes</h2>
-        <div className="form-group">
+        <div className="BuscarCupo-form-group">
           <label>Servicio:</label>
           <select value={servicio} onChange={handleSelectChange}>
             <option value="">Selecciona un servicio</option>
-            <option value="NETFLIX,NETFLIXTV,NETFLIXME">NETFLIX,NETFLIXTV,NETFLIXME</option>
+            <option value="NETFLIX,NETFLIXTV,NETFLIXME">NETFLIX</option>
             <option value="DISNEY">DISNEY</option>
             <option value="PRIMEVIDEO">PRIMEVIDEO</option>
             <option value="MAX">MAX</option>
@@ -289,7 +326,7 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
             <option value="YOUTUBE">YOUTUBE</option>
           </select>
         </div>
-        <div className="form-group">
+        <div className="BuscarCupo-form-group">
           <label>Grupo:</label>
           <select value={grupo} onChange={handleGrupoChange} disabled={!servicio}>
             <option value="">Selecciona un grupo</option>
@@ -298,16 +335,22 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
             ))}
           </select>
         </div>
-        <button onClick={handleSearch}>Buscar</button>
-        <button onClick={handleInfoClick}>Información</button>
-        <button className="boton-cerrar" onClick={onClose}>x</button>
+        <div className="BuscarCupo-buttons">
+          <button className="BuscarCupo-info-button" onClick={handleInfoClick}>
+            <FaInfoCircle /> Información
+          </button>
+          <button className="BuscarCupo-search-button" onClick={handleSearch}>
+            Buscar <FaSearch />
+          </button>
+        </div>
+        <button className="BuscarCupo-boton-cerrar" onClick={onClose}>x</button>
 
       </div>
 
       {isResultadosVisible && (
-        <div className="resultados-modal">
-          <div className="modal-content1">
-            <button className="close-btn" onClick={() => setIsResultadosVisible(false)}>Cerrar</button>
+        <div className="BuscarCupo-resultadoclientes">
+          <div className="BuscarCupo-modal-content1">
+            <button className="BuscarCupo-boton-cerrar" onClick={() => setIsResultadosVisible(false)}>x</button>
             <h3>Resultados:</h3>
             <ul>
               {clientes.length === 0 ? (
@@ -316,12 +359,12 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
                 clientes.map(cliente => (
                   <li
                     key={cliente.id}
-                    className="cliente-item"
+                    className="BuscarCupo-cliente-item"
                     style={{ backgroundColor: clientesColores[cliente.id] || 'transparent' }}
                   >
                     <input
   type="checkbox"
-  className="custom-checkbox"
+  className="BuscarCupo-custom-checkbox"
   checked={!!selectedClientes[cliente.id]}
   onChange={() => handleCheckboxChange(cliente.id)}
 />
@@ -337,12 +380,12 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
       )}
 
 {isInfoVisible && (
-  <div className="info-modal">
-    <div className="modal-content1">
-      <button className="close-btn" onClick={() => setIsInfoVisible(false)}>Cerrar</button>
+  <div className="BuscarCupo-informacionclientes">
+    <div className="BuscarCupo-modal-content1">
+      <button className="BuscarCupo-boton-cerrar" onClick={() => setIsInfoVisible(false)}>x</button>
       <h3>Información del Grupo:</h3>
       
-      <div className="form-group">
+      <div className="BuscarCupo-form-group">
         <label>Email:</label>
         <input
           type="text"
@@ -351,7 +394,7 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
         />
       </div>
       
-      <div className="form-group">
+      <div className="BuscarCupo-form-group">
         <label>Contraseña:</label>
         <input
           type="text"
@@ -360,7 +403,7 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
         />
       </div>
       
-      <div className="form-group">
+      <div class="BuscarCupo-form-group">
         <label>Fecha de Comienzo:</label>
         <input
           type="date"
@@ -369,7 +412,7 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
         />
       </div>
       
-      <div className="form-group">
+      <div className="BuscarCupo-form-group">
         <label>Fecha de Pago:</label>
         <input
           type="date"
@@ -378,7 +421,7 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
         />
       </div>
       
-      <div className="form-group">
+      <div className="BuscarCupo-form-group">
         <label>Notas:</label>
         <input
           type="text"
@@ -386,27 +429,49 @@ Utiliza esta información para acceder a *${serviceName}*. Si tienes alguna preg
           onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, notas: value })))}
         />
       </div>
-      
-      <div className="form-group">
-        <label>Dirección:</label>
+      {servicio == 'SPOTIFY' && (
+              <>
+                <div className="BuscarCupo-form-group">
+                  <label>Dirección:</label>
+                  <input
+                    type="text"
+                    value={info.direccion}
+                    onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, direccion: value })))}
+                  />
+                </div>
+                <div className="BuscarCupo-form-group">
+                  <label>Enlace:</label>
+                  <input
+                    type="text"
+                    value={info.enlace}
+                    onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, enlace: value })))}
+                  />
+                </div>
+              </>
+            )}
+            <div className="BuscarCupo-form-group">
+        <label>Paquete:</label>
+        <select
+          value={info.package}
+          onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, package: value })))}
+        >
+          <option value="">Selecciona un paquete</option>
+          {packages.map((pkg) => (
+            <option key={pkg} value={pkg}>{pkg}</option>
+          ))}
+        </select>
+      </div>
+      <div className="BuscarCupo-form-group">
+        <label>Precio:</label>
         <input
           type="text"
-          value={info.direccion}
-          onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, direccion: value })))}
+          value={formatPrice(info.price)}
+          onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, price: parsePrice(value) })))}
         />
       </div>
       
-      <div className="form-group">
-        <label>Enlace:</label>
-        <input
-          type="text"
-          value={info.enlace}
-          onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, enlace: value })))}
-        />
-      </div>
-
-      <button onClick={handleSaveChanges}>Guardar Cambios</button>
-      <button onClick={handleCopyPaste}>Copiar Informaciòn</button>
+      <button onClick={handleSaveChanges}><FaSave /> Guardar Cambios</button>
+      <button onClick={handleCopyPaste}><FaCopy /> Copiar Información</button>
     </div>
   </div>
 )}

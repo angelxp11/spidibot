@@ -1,5 +1,5 @@
 /* notificaciones.css */
-.notificaciones-overlay {
+.notificaciones-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,57 +12,67 @@
   z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
 }
 
-.notificaciones-modal {
+.notificaciones-modal-content {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  width: 350px; /* Ajusta el ancho según lo necesites */
-  max-height: 80vh; /* Máxima altura de la ventana modal */
+  width: 80%; /* Ajusta el ancho según lo necesites */
+  height: 80vh; /* Altura fija del modal */
   overflow: hidden;
   display: flex;
-  flex-direction: column;
+  flex-direction: row; /* Distribuir en fila */
+  position: relative; /* Para posicionar el botón de cerrar */
 }
 
-.close-button {
-  margin-top: 15px;
-  padding: 10px 15px;
-  background-color: #007bff;
+.notificaciones-cerrar-overlay-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px;
+  border-radius: 50%;
+  background-color: #ed1b24;
   color: white;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
 }
 
-.close-button:hover {
-  background-color: #0056b3; /* Efecto hover */
+.notificaciones-cerrar-overlay-btn:hover {
+  background-color: #b3121a; /* Efecto hover rojo */
 }
 
-.lista-pedidos {
-  flex: 1; /* Ocupa el espacio restante */
+.notificaciones-lista-pedidos {
+  flex: 0 0 33%; /* Ocupa el 33% del espacio */
   padding: 10px;
   overflow-y: auto;
   border-right: 2px solid #f0f0f0; /* Separador entre las dos secciones */
-  margin-bottom: 10px;
+  margin-right: 10px; /* Espacio entre las dos secciones */
 }
 
-.pedido-detalles {
-  flex: 2; /* Ocupa el doble de espacio que la lista de pedidos */
+.notificaciones-pedido-detalles {
+  flex: 1; /* Ocupa el resto del espacio */
   padding: 20px;
   overflow-y: auto;
   background-color: #f9f9f9; /* Fondo más claro para los detalles */
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative; /* Para centrar el loader */
 }
 
-.lista-pedidos ul {
+.notificaciones-lista-pedidos ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
-.lista-pedidos li {
+.notificaciones-lista-pedidos li {
   margin-bottom: 12px;
   background-color: #fff;
   padding: 15px;
@@ -75,12 +85,12 @@
   word-wrap: break-word;  /* Para evitar que el texto largo desborde */
 }
 
-.lista-pedidos li div {
+.notificaciones-lista-pedidos li div {
   display: flex;
   flex-direction: column; /* Asegura que el nombre y apellido estén en líneas separadas */
 }
 
-.lista-pedidos li .label {
+.notificaciones-lista-pedidos li .notificaciones-label {
   font-weight: bold;
   margin-left: 10px;
   text-transform: uppercase;
@@ -88,19 +98,19 @@
 }
 
 /* Fondo animado para COMPRA */
-.lista-pedidos li.compra {
+.notificaciones-lista-pedidos li.notificaciones-compra {
   background-color: #FFD700; /* Amarillo */
-  animation: animacion-fondo-compra 3s infinite alternate;
+  animation: notificaciones-animacion-fondo-compra 3s infinite alternate;
 }
 
 /* Fondo animado para RENOVACIÓN */
-.lista-pedidos li.renovacion {
+.notificaciones-lista-pedidos li.notificaciones-renovacion {
   background-color: #28a745; /* Verde */
-  animation: animacion-fondo-renovacion 3s infinite alternate;
+  animation: notificaciones-animacion-fondo-renovacion 3s infinite alternate;
 }
 
 /* Animación de fondo para COMPRA */
-@keyframes animacion-fondo-compra {
+@keyframes notificaciones-animacion-fondo-compra {
   0% {
     background-color: #FFD700;
   }
@@ -113,7 +123,7 @@
 }
 
 /* Animación de fondo para RENOVACIÓN */
-@keyframes animacion-fondo-renovacion {
+@keyframes notificaciones-animacion-fondo-renovacion {
   0% {
     background-color: #28a745;
   }
@@ -126,12 +136,12 @@
 }
 
 /* Efecto de elevación al pasar el cursor */
-.lista-pedidos li:hover {
+.notificaciones-lista-pedidos li:hover {
   transform: translateY(-5px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.ver-pedido-btn {
+.notificaciones-ver-pedido-btn {
   background-color: #000000;
   color: white;
   padding: 8px 15px;
@@ -142,59 +152,110 @@
   transition: background-color 0.3s ease;
 }
 
-.ver-pedido-btn:hover {
+.notificaciones-ver-pedido-btn:hover {
   background-color: #303030;
 }
 
-/* Para móviles */
-@media (max-width: 600px) {
-  .notificaciones-modal {
-    width: 90%; /* Modificar el ancho en pantallas pequeñas */
-  }
-  .lista-pedidos li {
-    font-size: 14px; /* Reducir el tamaño de la fuente en pantallas pequeñas */
-    padding: 12px; /* Reducir el padding */
-  }
-}
-
-
-
-.ver-pedido-btn {
-  background-color: #000000;
-  color: white;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
-}
-
-.ver-pedido-btn:hover {
-  background-color: #303030;
-}
-
-.pedido-detalle-modal {
+.notificaciones-pedido-detalle-modal {
   background: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.non-editable {
+.notificaciones-non-editable {
   pointer-events: none; /* Evita clics o selección */
   user-select: none; /* Previene la selección de texto */
-  background-color: #f5f5f5; /* Fondo gris claro */
+  background-color: #ff0000; /* Fondo rojo */
   color: #555; /* Color de texto desactivado */
   border: 1px solid #ddd; /* Estilo de borde deshabilitado */
 }
 
+.notificaciones-detail-input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.notificaciones-activar-btn,
+.notificaciones-cerrar-btn,
+.notificaciones-cancelar-btn {
+  margin-top: 10px;
+  padding: 10px 15px;
+  background-color: #ed1b24; /* Color rojo */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notificaciones-activar-btn:hover,
+.notificaciones-cerrar-btn:hover,
+.notificaciones-cancelar-btn:hover {
+  background-color: #b3121a; /* Efecto hover */
+}
+
+.notificaciones-activar-btn i,
+.notificaciones-cerrar-btn i,
+.notificaciones-cancelar-btn i {
+  margin-right: 8px; /* Espacio entre el icono y el texto */
+}
+
+.notificaciones-toast-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1100; /* Asegúrate de que esté por encima del modal */
+}
+
+.notificaciones-loader {
+  display: none; /* Ocultar el loader */
+}
+
+.notificaciones-botones-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.notificaciones-detail-input {
+  background-color: #ffffff;
+}
+.notificaciones-detail-inputxnon-editable {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.notificaciones-detail-inputxnon-editable {
+  background-color: #e9e9e9;
+}
 /* Para móviles */
 @media (max-width: 600px) {
-  .notificaciones-modal {
+  .notificaciones-modal-content {
     width: 90%; /* Modificar el ancho en pantallas pequeñas */
+    flex-direction: column; /* Cambiar a columna en pantallas pequeñas */
   }
-  .lista-pedidos li {
+  .notificaciones-lista-pedidos,
+  .notificaciones-pedido-detalles {
+    flex: none; /* Eliminar el flex para que ocupen el 100% */
+    width: 100%; /* Ocupan el 100% del ancho */
+    margin-right: 0; /* Eliminar el margen derecho */
+    margin-bottom: 10px; /* Añadir margen inferior */
+  }
+  .notificaciones-lista-pedidos li {
     font-size: 14px; /* Reducir el tamaño de la fuente en pantallas pequeñas */
     padding: 12px; /* Reducir el padding */
   }

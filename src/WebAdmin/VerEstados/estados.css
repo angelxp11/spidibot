@@ -1,4 +1,4 @@
-.modal-overlay {
+.estado-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -6,186 +6,224 @@
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: flex-end;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
 }
 
-.modal-content {
+.estado-modal-content {
   background: white;
   padding: 20px;
-  border-radius: 10px 0 0 10px;
-  width: 70%;
-  height: 100%;
+  border-radius: 10px;
+  width: calc(60% + 200px); /* Increase width by 200px */
+  height: calc(80% + 100px); /* Increase height by 100px */
+  overflow-y: hidden; /* Hide vertical scroll */
   display: flex;
+  position: relative; /* Add relative position for close button */
+  margin: auto; /* Center the modal content */
 }
 
-
-
-.search-container {
-  width: 50%;
+.estado-search-container {
+  width: 40%; /* Reduce search container width */
   padding-right: 20px;
   border-right: 1px solid #ccc;
-  height: 100%;
-  overflow-y: auto; /* Barra de desplazamiento vertical para la sección de búsqueda */
+  overflow-y: auto; /* Enable vertical scroll */
+  max-height: 100%; /* Limit max height */
 }
 
-.details-panel-container {
-  width: 50%;
+.estado-details-panel-container {
+  width: 60%; /* Adjust details panel container width */
   padding-left: 20px;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow-y: auto; /* Barra de desplazamiento vertical para el panel de detalles */
+  overflow-y: auto; /* Enable vertical scroll */
+  max-height: 100%; /* Limit max height */
 }
 
-.details-panel {
-  max-width: 90%; /* Para evitar que el contenido se desborde horizontalmente */
-  text-align: center; /* Alineación del texto */
+.estado-details-panel {
   margin-top: 20px;
   border-top: 1px solid #ccc;
   padding-top: 20px;
+  max-height: 80vh; /* Limit details panel height */
+  overflow-y: auto; /* Enable scroll within details panel */
+  display: none;
+  background-color: #f9f9f9; /* Light background for better visibility */
+  border-radius: 10px; /* Rounded corners */
+  padding: 20px; /* Internal padding */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for depth */
 }
 
-.search-controls {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+.estado-details-panel.show {
+  display: block; /* Ensure it shows when it has the .show class */
 }
 
-.search-select,
-.search-button {
+.estado-details-panel label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.estado-details-panel input,
+.estado-details-panel select {
+  width: 100%;
   padding: 10px;
-  font-size: 16px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-.search-results {
+.estado-details-panel .button-container {
+  display: flex;
+  justify-content: space-between; /* Space buttons apart */
   margin-top: 20px;
 }
 
-.search-result-item {
+.estado-details-panel .button-container button {
   padding: 10px;
-  border: 1px solid #784e4e;
-  border-radius: 5px;
-  margin-bottom: 10px;
-}
-
-.details-panel.show {
-  display: block;
-}
-
-.save-button {
-  padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #ed1b24;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-}
-/* estilo de clientes detalles */
- 
-.client-details {
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-top: 20px;
-  width: 590px;
-  max-width: 600px;
-  text-align: left;
-  font-family: Arial, sans-serif;
-  color: #333;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Transition for background color and transform */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.client-details h2 {
-  text-align: center;
-  font-size: 24px;
+.estado-details-panel .button-container button:hover {
+  background-color: #c4161d;
+  transform: scale(1.05); /* Increase size on hover */
+}
+
+.estado-details-panel .button-container button i {
+  margin-right: 5px; /* Space between icon and text */
+}
+
+.estado-search-controls {
+  display: flex;
+  gap: 10px; /* Space between elements */
+  align-items: center; /* Align elements vertically */
+  justify-content: center; /* Center elements horizontally */
   margin-bottom: 20px;
-  color: #333;
-  border-bottom: 2px solid #ddd;
-  padding-bottom: 10px;
 }
 
-.client-details div {
+.estado-search-select,
+.estado-search-input,
+.estado-search-button {
+  padding: 10px;
+  font-size: 16px;
+  height: 40px; /* Ensure all elements have the same height */
+  display: flex;
+  align-items: center; /* Align button content vertically */
+  justify-content: center; /* Center button content horizontally */
+}
+
+.estado-search-button {
+  padding: 10px;
+  font-size: 16px;
+  height: 40px; /* Ensure button has fixed height */
+  display: flex;
+  align-items: center; /* Center internal content vertically */
+  justify-content: center; /* Center internal content horizontally */
+  margin: 0; /* Reset margins if unnecessary */
+}
+
+.estado-search-results {
+  margin-top: 20px;
+}
+
+.estado-search-result-item {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   margin-bottom: 10px;
-  font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+  text-align: center; /* Center text */
+  background-color: #f9f9f9; /* Light background for better visibility */
+  transition: background-color 0.3s ease;
 }
 
-.client-details div span {
-  font-weight: bold;
-  color: #555;
+.estado-search-result-item:hover {
+  background-color: #e9e9e9; /* Darker background on hover */
 }
 
-.client-details button {
-  display: inline-block;
-  padding: 10px 20px;
-  margin: 10px 5px;
+.estado-search-result-item div {
+  margin-bottom: 5px; /* Space between text lines */
+}
+
+.estado-search-result-item button {
+  padding: 5px 10px;
+  background-color: #ed1b24;
+  color: white;
   border: none;
   border-radius: 5px;
-  background-color: #e53935;
-  color: white;
-  font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.client-details button:hover {
-  background-color: #eb7a78;
+.estado-search-result-item button:hover {
+  background-color: #c4161d;
 }
 
-.client-details button:nth-child(2) {
-  background-color: #f44336;
+.estado-save-button,
+.estado-search-button,
+.estado-boton-cerrar {
+  padding: 10px 20px;
+  background-color: #ed1b24;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.client-details button:nth-child(2):hover {
-  background-color: #eb7a78;
+.estado-save-button:hover,
+.estado-search-button:hover,
+.estado-boton-cerrar:hover {
+  background-color: #c4161d;
 }
 
-.client-details button:nth-child(3) {
-  background-color: #008CBA;
+.estado-boton-cerrar:hover {
+  background-color: #c4161d;
 }
 
-.client-details button:nth-child(3):hover {
-  background-color: #eb7a78;
-}
-/*detalles buscador*/
-
-.search-container {
+.estado-search-container {
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin-bottom: 20px;
   display: flex;
-  flex-direction: column; /* Alineación vertical */
-  align-items: flex-start; /* Alinea los elementos al inicio (izquierda) */
+  flex-direction: column; /* Vertical alignment */
+  align-items: flex-start; /* Align items to the start (left) */
   max-width: 600px;
-  width: 100%;
+  width: 40%;
   font-family: Arial, sans-serif;
 }
 
-.search-container h2 {
+.estado-search-container h2 {
   font-size: 24px;
   margin-bottom: 20px;
   text-align: left;
   color: #333;
 }
 
-.search-container input[type="text"] {
-  width: 100%; /* Hacer que el input ocupe todo el ancho disponible */
+.estado-search-container input[type="text"] {
+  width: 100%; /* Make the input occupy the full available width */
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ddd;
   border-radius: 4px;
   outline: none;
   transition: border-color 0.3s ease;
-  margin-bottom: 20px; /* Añadir margen entre el input y los resultados */
+  margin-bottom: 20px; /* Add margin between the input and the results */
 }
 
-.search-container input[type="text"]:focus {
+.estado-search-container input[type="text"]:focus {
   border-color: #e53935;
 }
 
-.search-container button {
+.estado-search-container button {
   padding: 10px 20px;
   font-size: 16px;
   color: white;
@@ -193,82 +231,251 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-bottom: 20px; /* Añadir margen debajo del botón */
+  transition: background-color 0.3s ease; /* Add margin below the button */
 }
 
-.search-container button:hover {
+.estado-search-container button:hover {
   background-color: #eb7a78;
 }
 
-.search-container button:disabled {
+.estado-search-container button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
 
-.search-results {
-  width: 100%; /* Para que los resultados ocupen todo el ancho disponible */
+.estado-search-results {
+  width: 100%; /* Make the results occupy the full available width */
   margin-top: 20px;
 }
 
-.search-result-item {
+.estado-search-result-item {
   padding: 10px;
-  border: 1px solid #784e4e;
+  border: 1px solid #ccc;
   border-radius: 5px;
   margin-bottom: 10px;
-  width: 100%;
-  
-}
-.boton-cerrar {
-  position: fixed; /* Fijado en la pantalla para estar siempre visible */
-  top: 20px; /* Espacio desde el borde superior */
-  right: 20px; /* Espacio desde el borde derecho */
-  background-color: #f44336; /* Color rojo para llamar la atención */
-  color: white; /* Texto en blanco */
-  border: none; /* Sin borde */
-  width: 40px; /* Tamaño del botón */
-  height: 40px;
-  font-size: 20px; /* Tamaño de la "X" */
-  font-weight: bold; /* Negrita */
-  cursor: pointer; /* Cambiar cursor cuando se pase sobre él */
-  z-index: 9999; /* Sobre expuesto, por encima de todo */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Añadir una sombra para destacar */
-  transition: background-color 0.3s ease; /* Transición suave al pasar sobre el botón */
-  display: flex; /* Activar flexbox */
-  justify-content: center; /* Centrar horizontalmente */
-  align-items: center; /* Centrar verticalmente */
-}
-
-.boton-cerrar:hover {
-  background-color: #eb7a78; /* Color ligeramente más oscuro al hacer hover */
-}
-
-.estatusmod {
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: #fdfdfd;
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  align-items: center; /* Centra los elementos horizontalmente */
+  align-items: center; /* Center content horizontally */
+  text-align: center; /* Center text */
+  background-color: #f9f9f9; /* Light background for better visibility */
+  transition: background-color 0.3s ease;
 }
 
-.estatusmod div {
-  font-size: 14px;
+.estado-search-result-item:hover {
+  background-color: #e9e9e9; /* Darker background on hover */
+}
+
+.estado-search-result-item div {
+  margin-bottom: 5px; /* Space between text lines */
+}
+
+.estado-search-result-item button {
+  padding: 5px 10px;
+  background-color: #ed1b24;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.estado-search-result-item button:hover {
+  background-color: #c4161d;
+}
+
+.estado-boton-cerrar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px;
+  border-radius: 50%;
+  background-color: #ed1b24;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.estado-boton-cerrar:hover {
+  background-color: #c4161d;
+}
+
+.estado-button-cobrar {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.estado-button-cobrar:hover {
+  background-color: #218838;
+}
+
+.estado-estatusmod {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+  text-align: center; /* Center text */
+  background-color: #f9f9f9; /* Light background for better visibility */
+  transition: background-color 0.3s ease;
+}
+
+.estado-estatusmod:hover {
+  background-color: #e9e9e9; /* Darker background on hover */
+}
+
+.estado-estatusmod div {
+  margin-bottom: 5px; /* Space between text lines */
+}
+
+.estado-estatusmod button {
+  padding: 5px 10px;
+  background-color: #ed1b24;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.estado-estatusmod button:hover {
+  background-color: #c4161d;
+}
+
+/* New styles for estado-client-details */
+.estado-client-details {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 600px;
+  width: 100%;
+  font-family: Arial, sans-serif;
+}
+
+.estado-client-details h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: left;
   color: #333;
 }
 
-.estatusmod button {
-  padding: 5px 10px;
-  background-color: #f44336;
+.estado-client-details div {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #555;
+}
+
+.estado-client-details .button-container {
+  display: flex;
+  justify-content: space-between; /* Space buttons apart */
+  width: 100%;
+  margin-top: 20px;
+}
+
+.estado-client-details .button-container button {
+  flex: 1; /* Make buttons take equal space */
+  margin: 0 10px; /* Add space between buttons */
+  padding: 10px;
+  background-color: #e53935;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  position: relative;
-  margin-top: 10px; /* Añade un espacio entre el contenido y el botón */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.estado-client-details .button-container button i {
+  margin-right: 5px; /* Space between icon and text */
+}
+
+.estado-client-details .button-container button:hover {
+  background-color: #eb7a78;
+}
+
+.estado-client-details .button-container button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* New styles for confirmation modal */
+.confirmation-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it is above other elements */
+}
+
+.confirmation-modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.confirmation-modal-content h2 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: #333;
+}
+
+.confirmation-modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.confirmation-modal-buttons button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.confirmation-modal-buttons .yes-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.confirmation-modal-buttons .yes-button:hover {
+  background-color: #218838;
+}
+
+.confirmation-modal-buttons .no-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.confirmation-modal-buttons .no-button:hover {
+  background-color: #c82333;
 }

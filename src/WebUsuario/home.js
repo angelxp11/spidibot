@@ -145,9 +145,6 @@ function Home() {
 };
 
 
-  
-  
-
   const fetchTvSteps = async (servicioNombre) => {
     try {
       // Normalizar el nombre del servicio
@@ -178,9 +175,11 @@ function Home() {
   };
 
   const getUserName = () => {
-    if (providerName ) {
-      return `Hola, ${providerName .charAt(0).toUpperCase() + providerName .slice(1).toLowerCase()}!`; // Personaliza el saludo
-    }
+    if (providerName) {
+      return `Hola, ${providerName.charAt(0).toUpperCase() + providerName.slice(1).toLowerCase()}!`; // Saludo para proveedor
+    } else if (nombreCliente) {
+      return `Hola, ${nombreCliente.charAt(0).toUpperCase() + nombreCliente.slice(1).toLowerCase()}!`; // Saludo para cliente
+    } 
     return 'Hola, Usuario!'; // Saludo por defecto
   };
   const handleLogout = async () => {
