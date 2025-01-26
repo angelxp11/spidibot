@@ -203,10 +203,10 @@
 }
 
 .loader-container.updating .loader {
-  animation: spin 0.5s linear infinite;
+  animation: spin-loader 0.5s linear infinite; /* Change the animation name */
 }
 
-@keyframes spin {
+@keyframes spin-loader { /* Define a new keyframes for the loader */
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
@@ -539,6 +539,30 @@
   transform: scale(0.9);
 }
 
+.finance-icon {
+  font-size: 4rem;
+  color: var(--azulspiderman);
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease, background-color 0.3s ease;
+  margin-top: 20px;
+  background-color: #f0f0f0; /* Ensure the icon always has a background color */
+  border-radius: 50%; /* Ensure the background is rounded */
+  padding: 10px;
+}
+
+.finance-icon.active {
+  color: #fff;
+  background-color: var(--azulspiderman); /* Change background color to yellow when active */
+}
+
+.finance-icon:hover {
+  transform: scale(1.1);
+}
+
+.finance-icon:active {
+  transform: scale(0.9);
+}
+
 .icon-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -598,10 +622,10 @@
 .spinning-logo {
   width: 300px;
   height: 300px;
-  animation: spin 5s linear infinite;
+  animation: spin-logo 5s linear infinite; /* Change the animation name */
 }
 
-@keyframes spin {
+@keyframes spin-logo { /* Define a new keyframes for the logo */
   0% {
     transform: rotateY(0deg);
   }

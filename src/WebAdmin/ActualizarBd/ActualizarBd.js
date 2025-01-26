@@ -121,13 +121,13 @@ const ActualizarBd = ({ onClose }) => {
     const sdf = new Date(year, month - 1, day); // Crear fecha en formato correcto
     const fechaActual = new Date();
     const diferencia = sdf - fechaActual;
-    const diasRestantes = diferencia / (24 * 60 * 60 * 1000);
+    const diasRestantes = Math.floor(diferencia / (24 * 60 * 60 * 1000));
 
     console.log(`Fecha Actual: ${fechaActual}, Fecha Final: ${sdf}, Días Restantes: ${diasRestantes}`);
 
-    if (diasRestantes > 2) {
+    if (diasRestantes >= 3) {
       return '✅';
-    } else if (diasRestantes >= 0) {
+    } else if (diasRestantes >= -1) {
       return '⚠️';
     } else {
       return '❌';

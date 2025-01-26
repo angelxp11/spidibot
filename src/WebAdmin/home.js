@@ -19,9 +19,7 @@ import './home.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { FaBell } from 'react-icons/fa'; // Import the bell icon from react-icons
-import { FaServicestack } from 'react-icons/fa'; // Import the service icon from react-icons
-import { FaSignOutAlt } from 'react-icons/fa'; // Import the exit icon from react-icons
-import { FaUserPlus, FaSearch, FaChartBar, FaUsers, FaLayerGroup, FaEnvelope, FaDatabase, FaExclamationTriangle } from 'react-icons/fa'; // Import icons
+import { FaServicestack, FaSignOutAlt, FaUserPlus, FaSearch, FaChartBar, FaUsers, FaLayerGroup, FaEnvelope, FaDatabase, FaExclamationTriangle, FaMoneyBillWave } from 'react-icons/fa'; // Import icons
 import logo from '../recursos/spidilogo.png'; // Import the logo image
 
 function Home() {
@@ -37,6 +35,7 @@ function Home() {
   const [showPasswordReset, setShowPasswordReset] = useState(false);
   const [showNotificaciones, setShowNotificaciones] = useState(false);
   const [showCuentasDisponibles, setShowCuentasDisponibles] = useState(false); // Estado para mostrar "Cuentas Disponibles"
+  const [showFinance, setShowFinance] = useState(false); // Estado para mostrar "Finance"
   const [notificacionCount, setNotificacionCount] = useState(0);
   const [notificaciones, setNotificaciones] = useState([]); // Estado para almacenar las notificaciones
   const [isUpdating, setIsUpdating] = useState(false);
@@ -139,6 +138,12 @@ function Home() {
 
   const toggleServices = () => {
     setShowServices(!showServices);
+    if (showFinance) setShowFinance(false); // Close Finance if it's open
+  };
+
+  const toggleFinance = () => {
+    setShowFinance(!showFinance);
+    if (showServices) setShowServices(false); // Close Services if it's open
   };
 
   return (
@@ -162,6 +167,11 @@ function Home() {
               className={`service-icon ${showServices ? 'active' : ''}`}
               onClick={toggleServices}
               title="Service" // Add title attribute for tooltip
+            />
+            <FaMoneyBillWave
+              className={`finance-icon ${showFinance ? 'active' : ''}`}
+              onClick={toggleFinance}
+              title="Finance" // Add title attribute for tooltip
             />
             <FaSignOutAlt className="exit-icon" onClick={handleSignOut} />
           </div>
@@ -199,6 +209,11 @@ function Home() {
               </div>
             </div>
           )}
+          {showFinance && (
+            <div className="icon-grid">
+              {/* Add finance-related components here */}
+            </div>
+          )}
           {showBuscarCliente && <BuscarCliente onClose={() => setShowBuscarCliente(false)} />}
           {showEstados && <Estados onClose={() => setShowEstados(false)} />}
           {showActualizarBd && <ActualizarBd onClose={() => setShowActualizarBd(false)} />}
@@ -209,7 +224,7 @@ function Home() {
           {showPasswordReset && <PasswordReset onClose={() => setShowPasswordReset(false)} />}
           {showNotificaciones && <Notificaciones onClose={handleCloseNotificaciones} />}
           {showCuentasDisponibles && <CuentasDisponibles onClose={() => setShowCuentasDisponibles(false)} />}
-          {!showBuscarCliente && !showEstados && !showActualizarBd && !showBuscarCupo && !showRegistrarCliente && !showPruebas && !showAddSeeEstatus && !showPasswordReset && !showNotificaciones && !showCuentasDisponibles && !showServices && (
+          {!showBuscarCliente && !showEstados && !showActualizarBd && !showBuscarCupo && !showRegistrarCliente && !showPruebas && !showAddSeeEstatus && !showPasswordReset && !showNotificaciones && !showCuentasDisponibles && !showServices && !showFinance && (
             <div className="logo-container">
               <img src={logo} alt="Logo" className="spinning-logo" />
             </div>

@@ -78,7 +78,7 @@ const DatosSpotify = ({ onClose, grupo, title }) => {
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
-    toast.success('Texto copiado al portapapeles');
+    toast.success('Dirección copiada al portapapeles');
   };
 
   const handleSave = async () => {
@@ -106,7 +106,7 @@ const DatosSpotify = ({ onClose, grupo, title }) => {
   };
 
   const handleOverlayClick = (e) => {
-    if (e.target.classList.contains('overlay-datos')) {
+    if (e.target.classList.contains('clientesoverlay-datos')) {
       onClose();
     }
   };
@@ -148,52 +148,52 @@ const DatosSpotify = ({ onClose, grupo, title }) => {
       {loading ? (
         <Carga />
       ) : (
-        <div className="overlay-datos" onClick={handleOverlayClick}>
-          <div className="modal">
-            <h2 className="modal-title">Datos de Spotify</h2>
+        <div className="clientesoverlay-datos" onClick={handleOverlayClick}>
+          <div className="clientesmodal">
+            <h2 className="clientesmodal-title">Datos de Spotify</h2>
             <form>
-              <div className="form-group">
-                <label htmlFor="correo" className="form-label">Correo</label>
+              <div className="clientesform-group">
+                <label htmlFor="correo" className="clientesform-label">Correo</label>
                 <input
                   type="email"
                   id="correo"
-                  className="form-input"
+                  className="clientesform-input"
                   placeholder="Ingresa tu correo"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-              <div className="form-group">
-                <label htmlFor="contraseña" className="form-label">Contraseña</label>
-                <div className="password-container">
+              <div className="clientesform-group">
+                <label htmlFor="contraseña" className="clientesform-label">Contraseña</label>
+                <div className="clientespassword-container">
                   <input
                     type={showPassword ? 'text' : 'password'}
                     id="contraseña"
-                    className="form-input"
+                    className="clientesform-input"
                     placeholder="Ingresa tu contraseña"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
-                  <span className="spotify-password-toggle" onClick={() => setShowPassword(!showPassword)}>
+                  <span className="clientesspotify-password-toggle" onClick={() => setShowPassword(!showPassword)}>
                     {showPassword ? '👁️' : '🙈'}
                   </span>
                 </div>
               </div>
-              <div className="form-group">
-                <label htmlFor="direccion" className="form-label">Dirección</label>
-                <div className="info-container">
-                  <p id="direccion" className="info-text">{direccion || 'Cargando dirección...'}</p>
-                  <button type="button" className="copy-botones" onClick={() => copyToClipboard(direccion)}>
-                    <FaCopy className="copy-icon" />
+              <div className="clientesform-group">
+                <label htmlFor="direccion" className="clientesform-label">Dirección</label>
+                <div className="clientesinfo-container">
+                  <p id="direccion" className="clientesinfo-text">{direccion || 'Cargando dirección...'}</p>
+                  <button type="button" className="clientescopy-botones" onClick={() => copyToClipboard(direccion)}>
+                    <FaCopy className="clientescopy-icon" /> Copiar Dirección
                   </button>
                 </div>
               </div>
-              <div className="form-group">
-                <label htmlFor="enlace" className="form-label">Enlace</label>
-                <div className="info-container">
-                  <p id="enlace" className="info-text">
+              <div className="clientesform-group">
+                <label htmlFor="enlace" className="clientesform-label">Enlace</label>
+                <div className="clientesinfo-container">
+                  <p id="enlace" className="clientesinfo-text">
                     {enlace ? (
-                      <a href={enlace} target="_blank" rel="noopener noreferrer" className="enlace-clicable">
+                      <a href={enlace} target="_blank" rel="noopener noreferrer" className="clientesenlace-clicable">
                         {enlace}
                       </a>
                     ) : (
@@ -202,11 +202,11 @@ const DatosSpotify = ({ onClose, grupo, title }) => {
                   </p>
                 </div>
               </div>
-              <div className="button-group">
-                <button type="button" className="save-button" onClick={handleSave}>
+              <div className="clientesbutton-group">
+                <button type="button" className="clientessave-button" onClick={handleSave}>
                   Guardar
                 </button>
-                <button type="button" className="save-button" onClick={onClose}>
+                <button type="button" className="clientessave-button" onClick={onClose}>
                   Cerrar
                 </button>
               </div>

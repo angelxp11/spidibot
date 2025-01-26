@@ -1,6 +1,6 @@
 /* DatosSpotify.css */
 
-.overlay-datos {
+.clientesoverlay-datos {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,159 +13,157 @@
   z-index: 1000;
 }
 
-.modal {
+.clientesmodal {
   background-color: white;
-  padding: 15px;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 600px;
-  max-height: 600px; /* Limitar la altura máxima */
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80%;
   overflow-y: auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.modal-title {
+.clientesmodal-title {
   text-align: center;
-  font-size: 22px;
-  margin-bottom: 15px;
+  font-size: 24px;
+  margin-bottom: 20px;
   color: #333;
 }
 
 form {
-
+  display: flex;
   flex-direction: column;
-  gap: 10px; /* Reducir el espacio entre los elementos */
+  gap: 15px;
 }
 
 /* Estilos de los campos del formulario */
-.form-group {
-  padding-top: 10px; /* Reducir el padding superior */
+.clientesform-group {
   display: flex;
   flex-direction: column;
 }
 
-.form-label {
-  font-size: 14px;
+.clientesform-label {
+  font-size: 16px;
   margin-bottom: 5px;
   color: #333;
 }
 
-.form-input {
-  padding: 8px; /* Reducir el padding */
+.clientesform-input {
+  padding: 10px;
   font-size: 14px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 5px;
   outline: none;
   background-color: #f9f9f9;
+  position: relative;
 }
 
-.form-input:focus {
+.clientesform-input:focus {
   border-color: #1db954;
   background-color: #fff;
 }
 
-.password-container {
+.clientespassword-container {
   position: relative;
 }
 
-.password-container input {
-  padding-right: 30px;
+.clientespassword-container input {
+  padding-right: 40px;
 }
 
-.spotify-password-toggle {
+.clientesspotify-password-toggle {
   position: absolute;
   right: 10px;
-  top: 30%;
+  top: 50%;
   transform: translateY(-50%);
-  font-size: 18px; /* Reducir el tamaño del icono */
+  font-size: 18px;
   cursor: pointer;
 }
 
 /* Estilos del enlace */
-.info-container {
+.clientesinfo-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.info-text {
-  font-size: 13px; /* Reducir el tamaño del texto */
+.clientesinfo-text {
+  font-size: 14px;
   color: #555;
   flex: 1;
 }
 
-.enlace-clicable {
+.clientesenlace-clicable {
   color: #1db954;
   text-decoration: none;
   font-weight: bold;
 }
 
-.enlace-clicable:hover {
+.clientesenlace-clicable:hover {
   text-decoration: underline;
 }
 
-
-
-.copy-botones:hover {
-  background-color: #f0f0f0;
-  border-radius: 8px;
-}
-
-.copy-icon {
-  font-size: 30px; /* Reducir el tamaño del icono */
-  color: #ffffff;
-  transition: color 0.3s;
+.clientescopy-botones {
+  background-color: #1db954;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
   display: flex;
-  justify-content: center; /* Centra el icono horizontalmente */
-  align-items: center; /* Centra el icono verticalmente */
-  height: 100%; /* Asegúrate de que el contenedor tenga una altura */
+  align-items: center;
 }
 
-.copy-button:hover .copy-icon {
-  color: #1db954;
+.clientescopy-botones:hover {
+  background-color: #1aa34a;
+}
+
+.clientescopy-icon {
+  margin-right: 5px;
 }
 
 /* Estilos de los botones de acción */
-.button-group {
+.clientesbutton-group {
   display: flex;
-  justify-content: center; /* Centrar los botones horizontalmente */
-  gap: 10px; /* Reducir el espacio entre los botones */
+  justify-content: space-between;
+  gap: 10px;
   width: 100%;
 }
 
-.save-button,
-.close-button {
-  padding: 8px; /* Reducir el padding */
-  font-size: 15px; /* Reducir el tamaño del texto */
-  border-radius: 4px;
+.clientessave-button,
+.clientesclose-button {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
   cursor: pointer;
   border: none;
   outline: none;
   width: 48%;
 }
 
-.save-button {
+.clientessave-button {
   background-color: #1db954;
   color: white;
 }
 
-.save-button:hover {
+.clientessave-button:hover {
   background-color: #1aa34a;
 }
 
-.close-button {
+.clientesclose-button {
   background-color: #ccc;
   color: #333;
 }
 
-.close-button:hover {
+.clientesclose-button:hover {
   background-color: #bbb;
 }
 
-.copy-button {
+.clientescopy-button {
   margin-top: 10px;
 }
 
-.button-group {
-  flex-direction: row; /* Asegurarse de que los botones estén en fila */
+.clientesbutton-group {
+  flex-direction: row;
 }

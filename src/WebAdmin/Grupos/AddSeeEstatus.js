@@ -108,10 +108,13 @@ function AddSeeEstatus({ onClose }) {
         nuevaFechaComienzo = agregarMes(nuevaFechaComienzo);
         nuevaFechaPago = agregarMes(nuevaFechaPago);
       } else if (selectedCheckbox === 'netflixFamiliar') {
+        nuevaFechaComienzo = agregarDias(nuevaFechaComienzo, 10);
         nuevaFechaPago = agregarDias(nuevaFechaPago, 10); // Sumar 10 días
       } else if (selectedCheckbox === 'netflixDuoExtra') {
+        nuevaFechaComienzo = agregarDias(nuevaFechaComienzo, 16);
         nuevaFechaPago = agregarDias(nuevaFechaPago, 16); // Sumar 16 días
       } else if (selectedCheckbox === 'netflixDuo') {
+        nuevaFechaComienzo = agregarDias(nuevaFechaComienzo, 23);
         nuevaFechaPago = agregarDias(nuevaFechaPago, 23); // Sumar 23 días
       }
   
@@ -168,9 +171,9 @@ const agregarDias = (fecha, dias) => {
     const diferencia = sdf - fechaActual;
     const diasRestantes = diferencia / (24 * 60 * 60 * 1000);
 
-    if (diasRestantes > 2) {
+    if (diasRestantes > 3) {
       return '✅';
-    } else if (diasRestantes >= 0) {
+    } else if (diasRestantes >= -1) {
       return '⚠️';
     } else {
       return '❌';
