@@ -1,6 +1,6 @@
-import React, { useState,useEffect  } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
-import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc, increment, getDoc } from 'firebase/firestore';
 import { app } from '../../firebase';
 import html2canvas from 'html2canvas';
 import fondo from '../../fondo.png';
@@ -16,6 +16,9 @@ function Estados({ onClose }) {
   const [searchResults, setSearchResults] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [showPaymentOverlay, setShowPaymentOverlay] = useState(false); // New state for payment overlay
+  const [paymentMethods, setPaymentMethods] = useState([]); // New state for payment methods
+
   // Agregar un listener para la tecla Esc
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -31,6 +34,19 @@ function Estados({ onClose }) {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [onClose]);
+
+  useEffect(() => {
+    const fetchPaymentMethods = async () => {
+      const financeRef = collection(firestore, 'finance');
+      const financeSnapshot = await getDocs(financeRef);
+      const methods = financeSnapshot.docs
+        .map(doc => doc.id)
+        .filter(id => id !== 'AHORRO'); // Filter out 'AHORRO'
+      setPaymentMethods(methods);
+    };
+
+    fetchPaymentMethods();
+  }, []);
 
 
   
@@ -107,9 +123,87 @@ function Estados({ onClose }) {
     await searchByState(searchValue);
   };
 
-  const handleSelectClient = (client) => {
-    setSelectedClient(client);
+  const serviceDivisions = {
+    YOUTUBE: 6,
+    DISNEY: 7,
+    MAX: 5,
+    PRIMEVIDEO: 6,
+    SPOTIFY: 6,
+    PARAMOUNT: 6,
+    CRUNCHY: 5
   };
+
+  const handleSelectClient = async (client) => {
+    setSelectedClient(client);
+  
+    if (client.servicio.length > 0 && client.grupo.length > 0) {
+      const servicios = client.servicio; // Obtener todos los servicios del cliente
+      let valoresServicios = [];
+      let valoresPorCliente = [];
+  
+      const netflixPackages = {
+        'PREMIUM4K+HDR+2MIEMBROSEXTRAS': 7,
+        'PREMIUM4K+HDR': 5,
+        'ESTÁNDAR+1MIEMBROEXTRA': 3,
+        'ESTÁNDAR': 2
+      };
+  
+      try {
+        for (const servicioId of servicios) {
+          let servicioDocId = servicioId;
+          if (servicioId === 'NETFLIX' || servicioId === 'NETFLIXME' || servicioId === 'NETFLIXTV') {
+            servicioDocId = 'NETFLIX,NETFLIXTV,NETFLIXME';
+          }
+  
+          const servicioRef = doc(firestore, 'Servicios', servicioDocId);
+          const servicioDoc = await getDoc(servicioRef);
+  
+          if (servicioDoc.exists()) {
+            const grupoId = client.grupo[client.servicio.indexOf(servicioId)];
+            const grupoData = servicioDoc.data()[grupoId];
+            if (grupoData && grupoData.price) {
+              let divisionFactor = serviceDivisions[servicioId] || 1;
+              if (servicioId === 'NETFLIX' || servicioId === 'NETFLIXME' || servicioId === 'NETFLIXTV') {
+                const packageType = grupoData.package;
+                divisionFactor = netflixPackages[packageType] || divisionFactor;
+              }
+              let valorPorCliente = grupoData.price / divisionFactor;
+              // Redondear al siguiente múltiplo de 100
+              valorPorCliente = Math.ceil(valorPorCliente / 100) * 100;
+              valoresServicios.push(grupoData.price);
+              valoresPorCliente.push(valorPorCliente);
+            }
+          }
+        }
+  
+        setSelectedClient({
+          ...client,
+          valoresServicios,
+          valoresPorCliente
+        });
+  
+        // Fetch clients in the same group and service position excluding those with state 😶‍🌫️
+        const clientesRef = collection(firestore, 'clientes');
+        const q = query(clientesRef, where('grupo', 'array-contains-any', client.grupo));
+        const querySnapshot = await getDocs(q);
+        const clientsInGroup = querySnapshot.docs
+          .filter(doc => {
+            const data = doc.data();
+            return data.PENDEJOALEJANDRO?.estado !== '😶‍🌫️' && client.grupo.some(grupoId => data.grupo.includes(grupoId));
+          })
+          .map(doc => doc.data().nombre)
+          .join(', ');
+  
+        setSelectedClient(prevState => ({
+          ...prevState,
+          clientsInGroup
+        }));
+      } catch (error) {
+        console.error('Error fetching service value or clients in group:', error);
+      }
+    }
+  };
+  
 
   const calcularEstadoCliente = (fechaFinal) => {
     const [day, month, year] = fechaFinal.split('/').map(Number);
@@ -129,40 +223,66 @@ function Estados({ onClose }) {
 
   const handleRenew = async () => {
     if (selectedClient) {
+      setShowPaymentOverlay(true); // Show payment overlay when renewing
+    }
+  };
+
+  const handlePaymentMethodSelect = async (method) => {
+    if (selectedClient) {
       const [day, month, year] = selectedClient.fechaFinal.split('/').map(Number);
       const fechaActual = new Date(year, month - 1, day);
       fechaActual.setMonth(fechaActual.getMonth() + 1);
       if (fechaActual.getDate() !== day) {
         fechaActual.setDate(0);
       }
-
+  
       const nuevaFechaFinal = fechaActual.toLocaleDateString('es-ES', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric'
       });
-
+  
       const nuevoEstado = calcularEstadoCliente(nuevaFechaFinal);
-
+      const totalAmount = selectedClient.precio.reduce((acc, curr) => acc + Number(curr), 0);
+      const totalPorCliente = selectedClient.valoresPorCliente.reduce((acc, curr) => acc + curr, 0);
+      const valorAhorro = totalAmount - totalPorCliente;
+  
       const clientRef = doc(firestore, 'clientes', selectedClient.id);
       await updateDoc(clientRef, {
         fechaFinal: nuevaFechaFinal,
         'PENDEJOALEJANDRO.estado': nuevoEstado,
-        pagado: "SI"
+        pagado: "SI",
+        metodoPago: method,
+        totalPagado: totalAmount
       });
-
+  
+      const paymentMethodRef = doc(firestore, 'finance', method);
+      await updateDoc(paymentMethodRef, {
+        saldo: increment(totalPorCliente)
+      });
+  
+      const ahorroRef = doc(firestore, 'finance', 'AHORRO');
+      await updateDoc(ahorroRef, {
+        saldo: increment(valorAhorro)
+      });
+  
       setSelectedClient({
         ...selectedClient,
         fechaFinal: nuevaFechaFinal,
-        estado: nuevoEstado
+        estado: nuevoEstado,
+        metodoPago: method,
+        totalPagado: totalAmount
       });
-
+  
       toast.success('La fecha de finalización ha sido renovada y el estado actualizado.', {
         autoClose: 2000
       });
       await handleSearch();
+      setShowPaymentOverlay(false); // Hide payment overlay after selection
     }
   };
+  
+
   // Función para formatear el precio
 const formatPrice = (price) => {
   const priceStr = price.toString();
@@ -305,7 +425,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
     <div className="estado-modal-overlay" onClick={onClose}>
       <div className="estado-modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="estado-boton-cerrar" onClick={onClose}>X</button>
-        <div className="estado-search-container">
+        <div class="estado-search-container">
           <h1>Buscar Cliente por Estado</h1>
           <div className="estado-search-controls">
             <select value={searchValue} onChange={handleSearchValueChange} className="estado-search-select">
@@ -316,7 +436,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             </select>
             <button className="estado-search-button" onClick={handleSearch}>Buscar</button>
           </div>
-          <div className="estado-search-results">
+          <div class="estado-search-results">
             {searchResults.length > 0 ? (
               <ul>
                 {searchResults.map((result) => (
@@ -343,6 +463,8 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
     <div>Estado: {selectedClient.estado}</div>
     <div>Fecha Final: {selectedClient.fechaFinal}</div>
     <div>Servicios a vencer: {Array.isArray(selectedClient.servicio) ? selectedClient.servicio.join(', ') : 'Ninguno'}</div>
+    <div>Valor del servicio: {Array.isArray(selectedClient.valoresServicios) ? selectedClient.valoresServicios.map(formatPrice).join(', ') : 'No disponible'}</div>
+    <div>Valor a pagar por cliente: {Array.isArray(selectedClient.valoresPorCliente) ? selectedClient.valoresPorCliente.map(formatPrice).join(', ') : 'No disponible'}</div>
     <div>Grupos: {Array.isArray(selectedClient.grupo) ? selectedClient.grupo.join(', ') : 'Ninguno'}</div>
     <div>
       Precios: {Array.isArray(selectedClient.precio) ? (
@@ -354,9 +476,12 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
           ))}
           <br />
           <br />
-          <strong>Total: {formatPrice(selectedClient.precio.reduce((acc, curr) => acc + Number(curr), 0))}</strong>
+          <strong>Total a Pagar: {formatPrice(selectedClient.precio.reduce((acc, curr) => acc + Number(curr), 0))}</strong>
         </>
       ) : 'Sin precios'}
+    </div>
+    <div>
+      <strong>Total a Pagar por Cliente: {selectedClient.valoresPorCliente ? formatPrice(selectedClient.valoresPorCliente.reduce((acc, curr) => acc + curr, 0)) : 'No disponible'}</strong>
     </div>
     <div className="button-container">
       <button onClick={handleRenew}><FaSyncAlt /> Renovar</button>
@@ -375,6 +500,19 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
               <button className="no-button" onClick={cancelNoContinuar}>No, Quiero Continuar</button>
               <button className="yes-button" onClick={confirmNoContinuar}>Sí, Deseo Cancelarlo</button>
               
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showPaymentOverlay && (
+        <div className="confirmation-modal-overlay" onClick={() => setShowPaymentOverlay(false)}>
+          <div className="confirmation-modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>Selecciona el método de pago</h2>
+            <div className="confirmation-modal-buttons">
+              {paymentMethods.map((method) => (
+                <button key={method} className="payment-method-button" onClick={() => handlePaymentMethodSelect(method)}>{method}</button>
+              ))}
             </div>
           </div>
         </div>

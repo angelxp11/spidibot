@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, setPersistence, browserLocalPersistence } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 
@@ -60,6 +60,14 @@ onMessage(messaging, (payload) => {
     icon: payload.notification.icon || 'path/to/icon.png', // Asegúrate de tener una imagen para el icono
   });
 });
+
+// Función para obtener documentos de la colección "finance"
+export const getFinanceDocuments = async () => {
+  const financeCollection = collection(db, 'finance');
+  const financeSnapshot = await getDocs(financeCollection);
+  const financeList = financeSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return financeList;
+};
 
 // Exportar variables y funciones
 export { auth, app, db, messaging };

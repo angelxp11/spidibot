@@ -138,8 +138,8 @@ const handleTelefonoChange = (e) => {
   }
   
   // Asegurarse de que el número tiene exactamente 10 dígitos (excluyendo el prefijo +57)
-  if (telefonoValue.length > 13) {
-    telefonoValue = telefonoValue.slice(0, 13);
+  if (telefonoValue.length > 14) {
+    telefonoValue = telefonoValue.slice(0, 14);
   }
 
   setTelefono(telefonoValue);

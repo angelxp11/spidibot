@@ -13,6 +13,7 @@ import AddSeeEstatus from './Grupos/AddSeeEstatus';
 import PasswordReset from './PasswordReset/PasswordReset';
 import Notificaciones from './Notificaciones/Notificaciones';
 import CuentasDisponibles from './CuentasDisponibles.js';  // Importamos el nuevo componente
+import Finance from './Finance/finance'; // Import the new Finance component
 import { getFirestore, collection, onSnapshot } from 'firebase/firestore';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import './home.css';
@@ -211,7 +212,7 @@ function Home() {
           )}
           {showFinance && (
             <div className="icon-grid">
-              {/* Add finance-related components here */}
+              <Finance onClose={() => setShowFinance(false)} /> {/* Add the Finance component */}
             </div>
           )}
           {showBuscarCliente && <BuscarCliente onClose={() => setShowBuscarCliente(false)} />}

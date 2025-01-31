@@ -383,6 +383,15 @@
   color: #555;
 }
 
+.estado-client-details ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.estado-client-details ul li {
+  margin-bottom: 5px;
+}
+
 .estado-client-details .button-container {
   display: flex;
   justify-content: space-between; /* Space buttons apart */
@@ -439,6 +448,17 @@
   width: 400px;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.confirmation-modal-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .confirmation-modal-content h2 {
@@ -478,4 +498,23 @@
 
 .confirmation-modal-buttons .no-button:hover {
   background-color: #c82333;
+}
+
+/* New styles for payment method buttons */
+.payment-method-button {
+  padding: 10px 20px;
+  background-color: #ed1b24;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin: 5px;
+  flex: 1 1 calc(50% - 10px); /* Ensure buttons are responsive and fit within the modal */
+  max-width: calc(50% - 10px);
+}
+
+.payment-method-button:hover {
+  background-color: #c4161d;
+  transform: scale(1.05);
 }
