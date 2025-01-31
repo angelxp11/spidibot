@@ -1,18 +1,23 @@
 {
   "files": {
-    "main.css": "/spidibot/static/css/main.e32350a5.css",
-    "main.js": "/spidibot/static/js/main.abf42288.js",
+    "main.css": "/spidibot/static/css/main.af427826.css",
+    "main.js": "/spidibot/static/js/main.89d535f2.js",
+    "static/media/AHORRO.png": "/spidibot/static/media/AHORRO.b1f0a3a21db3954f4e6e.png",
+    "static/media/NEQUI-JADEPLATFORM.png": "/spidibot/static/media/NEQUI-JADEPLATFORM.30c3bf85247975934c1e.png",
+    "static/media/AHORRO-A-LA-MANO.png": "/spidibot/static/media/AHORRO-A-LA-MANO.07597f298845b9b0cda2.png",
+    "static/media/NEQUI-SPIDIBOT.png": "/spidibot/static/media/NEQUI-SPIDIBOT.4a9aaf523f29dbdfeb3b.png",
     "static/media/spidilogo.png": "/spidibot/static/media/spidilogo.1e6d18f995606fa2b33b.png",
     "static/media/spidi512.png": "/spidibot/static/media/spidi512.5e2520cdc2f6f3955473.png",
+    "static/media/DAVIPLATA.png": "/spidibot/static/media/DAVIPLATA.01f11a9773fd5589b6ed.png",
     "static/media/fondo.png": "/spidibot/static/media/fondo.51558b44d0823d282204.png",
     "static/media/copy.png": "/spidibot/static/media/copy.66cf9419c7bf5cb1b66a.png",
     "static/media/google-logo.svg": "/spidibot/static/media/google-logo.efa560d32653a615a1db742bbf78c815.svg",
     "index.html": "/spidibot/index.html",
-    "main.e32350a5.css.map": "/spidibot/static/css/main.e32350a5.css.map",
-    "main.abf42288.js.map": "/spidibot/static/js/main.abf42288.js.map"
+    "main.af427826.css.map": "/spidibot/static/css/main.af427826.css.map",
+    "main.89d535f2.js.map": "/spidibot/static/js/main.89d535f2.js.map"
   },
   "entrypoints": [
-    "static/css/main.e32350a5.css",
-    "static/js/main.abf42288.js"
+    "static/css/main.af427826.css",
+    "static/js/main.89d535f2.js"
   ]
 }
