@@ -21,12 +21,11 @@ import './home.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { FaBell } from 'react-icons/fa'; // Import the bell icon from react-icons
-import { FaServicestack, FaSignOutAlt, FaUserPlus, FaSearch, FaChartBar, FaUsers, FaLayerGroup, FaEnvelope, FaDatabase, FaExclamationTriangle, FaMoneyBillWave, FaWallet } from 'react-icons/fa'; // Import icons
+import { FaServicestack, FaSignOutAlt, FaUserPlus, FaSearch, FaUsers, FaLayerGroup, FaEnvelope, FaDatabase, FaExclamationTriangle, FaMoneyBillWave, FaWallet } from 'react-icons/fa'; // Import icons
 import logo from '../recursos/spidilogo.png'; // Import the logo image
 
 function Home() {
   const navigate = useNavigate();
-  const user = auth.currentUser;
   const [showBuscarCliente, setShowBuscarCliente] = useState(false);
   const [showEstados, setShowEstados] = useState(false);
   const [showActualizarBd, setShowActualizarBd] = useState(false);

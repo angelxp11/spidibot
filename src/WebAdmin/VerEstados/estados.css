@@ -11,7 +11,7 @@
 }
 
 .estado-modal-content {
-  background: white;
+  background: var(--color-container); /* Updated color */
   padding: 20px;
   border-radius: 10px;
   width: calc(60% + 200px); /* Increase width by 200px */
@@ -20,6 +20,7 @@
   display: flex;
   position: relative; /* Add relative position for close button */
   margin: auto; /* Center the modal content */
+  color: var(--color-text); /* Updated color */
 }
 
 .estado-search-container {
@@ -44,7 +45,7 @@
   max-height: 80vh; /* Limit details panel height */
   overflow-y: auto; /* Enable scroll within details panel */
   display: none;
-  background-color: #f9f9f9; /* Light background for better visibility */
+  background-color: var(--color-container); /* Updated color */
   border-radius: 10px; /* Rounded corners */
   padding: 20px; /* Internal padding */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for depth */
@@ -58,6 +59,7 @@
   display: block;
   margin-bottom: 10px;
   font-weight: bold;
+  color: var(--color-text); /* Updated color */
 }
 
 .estado-details-panel input,
@@ -68,6 +70,7 @@
   margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  color: black; /* Updated color */
 }
 
 .estado-details-panel .button-container {
@@ -78,8 +81,8 @@
 
 .estado-details-panel .button-container button {
   padding: 10px;
-  background-color: #ed1b24;
-  color: white;
+  background-color: var(--color-buttons); /* Updated color */
+  color: var(--color-text); /* Updated color */
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -90,7 +93,7 @@
 }
 
 .estado-details-panel .button-container button:hover {
-  background-color: #c4161d;
+  background-color: var(--color-buttons-hover); /* Updated color */
   transform: scale(1.05); /* Increase size on hover */
 }
 
@@ -125,6 +128,12 @@
   align-items: center; /* Center internal content vertically */
   justify-content: center; /* Center internal content horizontally */
   margin: 0; /* Reset margins if unnecessary */
+  background-color: var(--color-buttons); /* Updated color */
+  color: var(--color-text); /* Updated color */
+}
+
+.estado-search-button:hover {
+  background-color: var(--color-buttons-hover); /* Updated color */
 }
 
 .estado-search-results {
@@ -140,22 +149,24 @@
   flex-direction: column;
   align-items: center; /* Center content horizontally */
   text-align: center; /* Center text */
-  background-color: #f9f9f9; /* Light background for better visibility */
+  background-color: var(--color-container); /* Updated color */
   transition: background-color 0.3s ease;
+  color: var(--color-text); /* Updated color */
 }
 
 .estado-search-result-item:hover {
-  background-color: #e9e9e9; /* Darker background on hover */
+  background-color: var(--color-container-hover); /* Updated color */
 }
 
 .estado-search-result-item div {
   margin-bottom: 5px; /* Space between text lines */
+  color: var(--color-text); /* Updated color */
 }
 
 .estado-search-result-item button {
   padding: 5px 10px;
-  background-color: #ed1b24;
-  color: white;
+  background-color: var(--color-buttons); /* Updated color */
+  color: var(--color-text); /* Updated color */
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -163,15 +174,15 @@
 }
 
 .estado-search-result-item button:hover {
-  background-color: #c4161d;
+  background-color: var(--color-buttons-hover); /* Updated color */
 }
 
 .estado-save-button,
 .estado-search-button,
 .estado-boton-cerrar {
   padding: 10px 20px;
-  background-color: #ed1b24;
-  color: white;
+  background-color: var(--color-buttons); /* Updated color */
+  color: var(--color-text); /* Updated color */
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -180,15 +191,14 @@
 .estado-save-button:hover,
 .estado-search-button:hover,
 .estado-boton-cerrar:hover {
-  background-color: #c4161d;
+  background-color: var(--color-buttons-hover); /* Updated color */
 }
 
 .estado-boton-cerrar:hover {
-  background-color: #c4161d;
+  background-color: var(--color-buttons-hover); /* Updated color */
 }
 
 .estado-search-container {
-  background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -205,7 +215,7 @@
   font-size: 24px;
   margin-bottom: 20px;
   text-align: left;
-  color: #333;
+  color: var(--color-text); /* Updated color */
 }
 
 .estado-search-container input[type="text"] {
@@ -257,22 +267,24 @@
   flex-direction: column;
   align-items: center; /* Center content horizontally */
   text-align: center; /* Center text */
-  background-color: #f9f9f9; /* Light background for better visibility */
+  background-color: var(--color-container); /* Updated color */
   transition: background-color 0.3s ease;
+  color: var(--color-text); /* Updated color */
 }
 
 .estado-search-result-item:hover {
-  background-color: #e9e9e9; /* Darker background on hover */
+  background-color: var(--color-container-hover); /* Updated color */
 }
 
 .estado-search-result-item div {
   margin-bottom: 5px; /* Space between text lines */
+  color: var(--color-text); /* Updated color */
 }
 
 .estado-search-result-item button {
   padding: 5px 10px;
-  background-color: #ed1b24;
-  color: white;
+  background-color: var(--color-buttons); /* Updated color */
+  color: var(--color-text); /* Updated color */
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -280,7 +292,7 @@
 }
 
 .estado-search-result-item button:hover {
-  background-color: #c4161d;
+  background-color: var(--color-buttons-hover); /* Updated color */
 }
 
 .estado-boton-cerrar {
@@ -289,8 +301,8 @@
   right: 10px;
   padding: 10px;
   border-radius: 50%;
-  background-color: #ed1b24;
-  color: white;
+  background-color: var(--color-button-negation); /* Updated color */
+  color: var(--color-text); /* Updated color */
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -303,11 +315,11 @@
 }
 
 .estado-boton-cerrar:hover {
-  background-color: #c4161d;
+  background-color: var(--color-button-negation-hover); /* Updated color */
 }
 
 .estado-button-cobrar {
-  background-color: #28a745;
+  background-color: var(--color-button-confirmation); /* Updated color */
   color: white;
   padding: 10px 20px;
   border: none;
@@ -317,7 +329,7 @@
 }
 
 .estado-button-cobrar:hover {
-  background-color: #218838;
+  background-color: var(--color-button-confirmation-hover); /* Updated color */
 }
 
 .estado-estatusmod {
@@ -329,22 +341,24 @@
   flex-direction: column;
   align-items: center; /* Center content horizontally */
   text-align: center; /* Center text */
-  background-color: #f9f9f9; /* Light background for better visibility */
+  background-color: var(--color-container); /* Updated color */
   transition: background-color 0.3s ease;
+  color: var(--color-text); /* Updated color */
 }
 
 .estado-estatusmod:hover {
-  background-color: #e9e9e9; /* Darker background on hover */
+  background-color: var(--color-container-hover); /* Updated color */
 }
 
 .estado-estatusmod div {
   margin-bottom: 5px; /* Space between text lines */
+  color: var(--color-text); /* Updated color */
 }
 
 .estado-estatusmod button {
   padding: 5px 10px;
-  background-color: #ed1b24;
-  color: white;
+  background-color: var(--color-buttons); /* Updated color */
+  color: var(--color-text); /* Updated color */
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -352,12 +366,12 @@
 }
 
 .estado-estatusmod button:hover {
-  background-color: #c4161d;
+  background-color: var(--color-buttons-hover); /* Updated color */
 }
 
 /* New styles for estado-client-details */
 .estado-client-details {
-  background-color: #ffffff;
+  background-color: var(--color-container); /* Updated color */
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -368,19 +382,20 @@
   max-width: 600px;
   width: 100%;
   font-family: Arial, sans-serif;
+  color: var(--color-text); /* Updated color */
 }
 
 .estado-client-details h2 {
   font-size: 24px;
   margin-bottom: 20px;
   text-align: left;
-  color: #333;
+  color: var(--color-text); /* Updated color */
 }
 
 .estado-client-details div {
   margin-bottom: 10px;
   font-size: 16px;
-  color: #555;
+  color: var(--color-text); /* Updated color */
 }
 
 .estado-client-details ul {
@@ -390,6 +405,7 @@
 
 .estado-client-details ul li {
   margin-bottom: 5px;
+  color: var(--color-text); /* Updated color */
 }
 
 .estado-client-details .button-container {
@@ -403,8 +419,8 @@
   flex: 1; /* Make buttons take equal space */
   margin: 0 10px; /* Add space between buttons */
   padding: 10px;
-  background-color: #e53935;
-  color: white;
+  background-color: var(--color-buttons); /* Updated color */
+  color: var(--color-text); /* Updated color */
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -419,7 +435,7 @@
 }
 
 .estado-client-details .button-container button:hover {
-  background-color: #eb7a78;
+  background-color: var(--color-buttons-hover); /* Updated color */
 }
 
 .estado-client-details .button-container button:disabled {
@@ -464,7 +480,7 @@
 .confirmation-modal-content h2 {
   margin-bottom: 20px;
   font-size: 20px;
-  color: #333;
+  color: var(--color-text);
 }
 
 .confirmation-modal-buttons {
@@ -483,27 +499,27 @@
 }
 
 .confirmation-modal-buttons .yes-button {
-  background-color: #28a745;
+  background-color: var(--color-button-confirmation); /* Updated color */
   color: white;
 }
 
 .confirmation-modal-buttons .yes-button:hover {
-  background-color: #218838;
+  background-color: var(--color-button-confirmation-hover); /* Updated color */
 }
 
 .confirmation-modal-buttons .no-button {
-  background-color: #dc3545;
+  background-color: var(--color-button-negation); /* Updated color */
   color: white;
 }
 
 .confirmation-modal-buttons .no-button:hover {
-  background-color: #c82333;
+  background-color: var(--color-button-negation-hover); /* Updated color */
 }
 
 /* New styles for payment method buttons */
 .payment-method-button {
   padding: 10px 20px;
-  background-color: #ed1b24;
+  background-color: var(--color-buttons); /* Updated color */
   color: white;
   border: none;
   border-radius: 5px;
@@ -515,6 +531,6 @@
 }
 
 .payment-method-button:hover {
-  background-color: #c4161d;
+  background-color: var(--color-buttons-hover); /* Updated color */
   transform: scale(1.05);
 }

@@ -17,9 +17,9 @@ const Notificaciones = ({ onClose }) => {
     try {
       const permission = await Notification.requestPermission();
       if (permission === "granted") {
-        console.log("Permiso para notificaciones concedido.");
+        // ...existing code...
       } else {
-        console.log("Permiso para notificaciones denegado.");
+        // ...existing code...
       }
     } catch (error) {
       console.error("Error al solicitar permiso para notificaciones:", error);
@@ -72,7 +72,6 @@ const Notificaciones = ({ onClose }) => {
 
     // Guardar el ID del documento del pedido en la variable 'pedidoIdDocumento'
     setPedidoIdDocumento(pedido.id); // Aquí guardamos el ID del documento
-    console.log('ID del documento del pedido:', pedido.id); // Imprimir en consola
   };
 
   // Función para cerrar el modal de detalles
@@ -150,14 +149,11 @@ const Notificaciones = ({ onClose }) => {
           ID: id, // Guardar el ID del cliente dentro del documento
         });
 
-        console.log('Cliente activado/actualizado con ID aleatorio:', clienteRef.id);
-
         // Verifica si la ID del pedido es válida antes de intentar eliminarlo
         if (pedidoIdDocumento) {
           // Ahora eliminamos el pedido de la colección 'notificaciones' usando la ID previamente guardada
           const pedidoRef = doc(db, 'notificaciones', pedidoIdDocumento);
           await deleteDoc(pedidoRef);
-          console.log(`Pedido con ID ${pedidoIdDocumento} eliminado de la colección notificaciones`);
         } else {
           console.error('No se pudo obtener la ID del pedido para eliminarlo');
         }
@@ -224,8 +220,6 @@ const Notificaciones = ({ onClose }) => {
   
         // Elimina el documento
         await deleteDoc(pedidoRef);
-  
-        console.log(`Pedido con ID ${pedidoIdDocumento} cancelado (eliminado)`);
   
         // Limpiar el estado del pedido
         setPedidoSeleccionado(null);

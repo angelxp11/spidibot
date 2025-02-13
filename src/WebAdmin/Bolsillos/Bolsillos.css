@@ -11,14 +11,17 @@
   padding-top: 50px;
 }
 
-.modal {
-  background: white;
+.modals {
+  background: var(--color-container); /* Updated color */
   padding: 20px;
   border-radius: 10px;
   width: 80%;
-  max-width: 600px;
+  max-height: 600px;
+  max-width: 700px;
   text-align: center;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  color: var(--color-text); /* Updated color */
+  overflow-y: auto;
 }
 
 .modal h2 {
@@ -42,12 +45,12 @@ li {
 }
 
 .btn-ver-clientes {
-  background: #4CAF50;
+  background: var(--color-button-confirmation); /* Updated color */
   color: white;
 }
 
 .btn-cerrar {
-  background: red;
+  background: var(--color-button-negation); /* Updated color */
   color: white;
   margin-top: 10px;
 }
@@ -65,11 +68,11 @@ th, td {
 }
 
 th {
-  background-color: #f2f2f2;
+  background-color: var(--color-container-hover); /* Updated color */
 }
 
 td {
-  background-color: #fff;
+  background-color: var(--color-background-hover); /* Updated color */
 }
 
 .progress-bar-container {
@@ -93,11 +96,11 @@ td {
 }
 
 .progress-bar.si {
-  background-color: #4CAF50;
+  background-color: var(--color-button-confirmation); /* Updated color */
 }
 
 .progress-bar.no {
-  background-color: red;
+  background-color: var(--color-button-negation); /* Updated color */
   left: auto;
   right: 0;
 }

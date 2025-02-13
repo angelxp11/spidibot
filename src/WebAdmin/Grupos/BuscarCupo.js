@@ -117,7 +117,10 @@ function BuscarCupo({ onClose }) {
           return numeroA - numeroB; // Ordenar en orden ascendente
         });
   
-        setGruposDisponibles(gruposOrdenados);
+        // Filtrar los grupos que no tienen un estado de 😶‍🌫️
+        const gruposFiltrados = gruposOrdenados.filter(grupo => servicioData[grupo]?.estado !== '😶‍🌫️');
+  
+        setGruposDisponibles(gruposFiltrados);
       } else {
         setGruposDisponibles([]);
       }
@@ -225,7 +228,7 @@ const handleInfoClick = async () => {
           notas: grupoInfo.notas || '',
           direccion: grupoInfo.direccion || '',
           enlace: grupoInfo.enlace || '',
-          price: grupoInfo.price || '',
+          price: typeof grupoInfo.price === 'number' && grupoInfo.price !== 0 ? grupoInfo.price : 0, // Ensure price is 0 if it doesn't exist or is 0
           package: grupoInfo.package || '' // Asegúrate de que el valor del paquete se muestre correctamente
         });
         setInfoDocId(servicioDoc.id); // Guarda el ID del documento
@@ -274,7 +277,7 @@ const handleSaveChanges = async () => {
   if (info.fechaComienzo !== '') updatedFields[`${grupo}.fechaComienzo`] = guardarFechas(info.fechaComienzo);
   if (info.fechaPago !== '') updatedFields[`${grupo}.fechaPago`] = guardarFechas(info.fechaPago);
   if (info.notas !== '') updatedFields[`${grupo}.notas`] = info.notas;
-  if (info.price !== '') {
+  if (info.price !== '' || info.price === 0) { // Allow editing if price is zero
     const priceString = info.price.toString(); // Ensure price is a string
     updatedFields[`${grupo}.price`] = parseFloat(priceString.replace(/[$,]/g, '')); // Ensure price is a number
   }
@@ -460,7 +463,7 @@ const handleCheckboxChange = (id, cliente) => {
         </div>
       </div>
       
-      <div class="BuscarCupo-form-group">
+      <div className="BuscarCupo-form-group">
         <label>Fecha de Comienzo:</label>
         <input
           type="date"

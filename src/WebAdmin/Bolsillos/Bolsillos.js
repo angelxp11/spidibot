@@ -86,7 +86,7 @@ const Bolsillos = ({ onClose }) => {
 
   return (
     <div className="overlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+      <div className="modals" onClick={(e) => e.stopPropagation()}>
         <h2>Lista de Clientes</h2>
         <select
           value={selectedService}

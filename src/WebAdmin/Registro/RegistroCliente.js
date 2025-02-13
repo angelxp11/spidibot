@@ -276,17 +276,17 @@ function RegistroCliente({ onClose }) {
   };
 
   const handleOverlayClick = (event) => {
-    if (event.target.classList.contains('modal-overlay')) {
+    if (event.target.classList.contains('registro-modal-overlay')) {
       onClose();
     }
   };
 
   return (
-    <div className="RegistroCliente modal-overlay" onClick={handleOverlayClick}>
-      <div className="RegistroCliente form-container">
-        <button className="RegistroCliente boton-cerrar" onClick={onClose}>X</button>
-        <h2 className="RegistroCliente">Registro de Cliente</h2>
-        <div className="RegistroCliente form-input">
+    <div className="registro-modal-overlay" onClick={handleOverlayClick}>
+      <div className="registro-form-container">
+        <button className="registro-boton-cerrar" onClick={onClose}>X</button>
+        <h2 className="registro-h2">Registro de Cliente</h2>
+        <div className="registro-form-input">
           <label>ID</label>
           <input
             type="text"
@@ -295,7 +295,7 @@ function RegistroCliente({ onClose }) {
             readOnly
           />
         </div>
-        <div className="RegistroCliente form-input">
+        <div className="registro-form-input">
           <label>Nombre</label>
           <input
             type="text"
@@ -304,7 +304,7 @@ function RegistroCliente({ onClose }) {
             onChange={handleChange}
           />
         </div>
-        <div className="RegistroCliente form-input">
+        <div className="registro-form-input">
           <label>Apellido</label>
           <input
             type="text"
@@ -313,7 +313,7 @@ function RegistroCliente({ onClose }) {
             onChange={handleChange}
           />
         </div>
-        <div className="RegistroCliente form-input">
+        <div className="registro-form-input">
           <label>Teléfono</label>
           <input
             type="text"
@@ -322,7 +322,7 @@ function RegistroCliente({ onClose }) {
             onChange={handleChange}
           />
         </div>
-        <div className="RegistroCliente form-input">
+        <div className="registro-form-input">
           <label>Email</label>
           <input
             type="email"
@@ -331,7 +331,7 @@ function RegistroCliente({ onClose }) {
             onChange={handleChange}
           />
         </div>
-        <div className="RegistroCliente form-input">
+        <div className="registro-form-input">
   <label>Fecha Inicial</label>
   <input
     type="date"
@@ -340,7 +340,7 @@ function RegistroCliente({ onClose }) {
     onChange={handleDateChange}
   />
 </div>
-<div className="RegistroCliente form-input">
+<div className="registro-form-input">
   <label>Fecha Final</label>
   <input
     type="date"
@@ -350,7 +350,7 @@ function RegistroCliente({ onClose }) {
   />
 </div>
 
-        <div className="RegistroCliente form-input">
+        <div className="registro-form-input">
           <label>Grupo</label>
           <input
             type="text"
@@ -359,7 +359,7 @@ function RegistroCliente({ onClose }) {
             onChange={handleChange}
           />
         </div>
-        <div className="RegistroCliente form-input">
+        <div className="registro-form-input">
           <label>Servicio</label>
           <input
             type="text"
@@ -368,7 +368,7 @@ function RegistroCliente({ onClose }) {
             onChange={handleChange}
           />
         </div>
-        <div className="RegistroCliente form-input">
+        <div className="registro-form-input">
           <label>Notas</label> {/* Nuevo campo Notas */}
           <input
             type="text"
@@ -377,7 +377,7 @@ function RegistroCliente({ onClose }) {
             onChange={handleChange}
           />
         </div>
-        <div className="RegistroCliente form-input">
+        <div className="registro-form-input">
           <label>Precio</label>
           <input
             type="text"
@@ -386,7 +386,7 @@ function RegistroCliente({ onClose }) {
             onChange={handleChange}
           />
         </div>
-        <button className="RegistroCliente submit-button" onClick={handleSaveClient}>
+        <button className="registro-submit-button" onClick={handleSaveClient}>
           Guardar Cliente
         </button>
       </div>

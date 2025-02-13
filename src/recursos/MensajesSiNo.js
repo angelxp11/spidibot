@@ -8,7 +8,7 @@ const MensajesSiNo = ({ onClose, onConfirm }) => {
     <div className="overlay">
       <div className="mensaje-container">
         <h2 className="encabezado-user">¿Estás seguro que quieres cerrar sesión?</h2>
-        <p>
+        <p style={{ marginTop: '20px' }}>
           Recuerda que cada vez que vuelvas a entrar la sesión se mantendrá abierta. Al cerrar sesión, la próxima vez que vayas a verificar tus contraseñas te pedirá correo y contraseña.
         </p>
         <div className="button-group">
@@ -21,7 +21,7 @@ const MensajesSiNo = ({ onClose, onConfirm }) => {
         </div>
       </div>
     </div>
-);
+  );
 
 };
 

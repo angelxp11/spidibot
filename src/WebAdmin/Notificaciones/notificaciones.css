@@ -13,7 +13,7 @@
 }
 
 .notificaciones-modal-content {
-  background-color: white;
+  background-color: var(--color-container); /* Updated color */
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -23,6 +23,7 @@
   display: flex;
   flex-direction: row; /* Distribuir en fila */
   position: relative; /* Para posicionar el botón de cerrar */
+  color: var(--color-text); /* Updated color */
 }
 
 .notificaciones-cerrar-overlay-btn {
@@ -31,7 +32,7 @@
   right: 10px;
   padding: 10px;
   border-radius: 50%;
-  background-color: #ed1b24;
+  background-color: var(--color-buttons);
   color: white;
   border: none;
   cursor: pointer;
@@ -45,7 +46,7 @@
 }
 
 .notificaciones-cerrar-overlay-btn:hover {
-  background-color: #b3121a; /* Efecto hover rojo */
+  background-color: var(--color-buttons-hover); /* Efecto hover rojo */
 }
 
 .notificaciones-lista-pedidos {
@@ -60,10 +61,11 @@
   flex: 1; /* Ocupa el resto del espacio */
   padding: 20px;
   overflow-y: auto;
-  background-color: #f9f9f9; /* Fondo más claro para los detalles */
+  background-color: var(--color-container); /* Updated color */
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: relative; /* Para centrar el loader */
+  color: var(--color-text); /* Updated color */
 }
 
 .notificaciones-lista-pedidos ul {
@@ -74,7 +76,7 @@
 
 .notificaciones-lista-pedidos li {
   margin-bottom: 12px;
-  background-color: #fff;
+  background-color: var(--color-container); /* Updated color */
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -83,6 +85,7 @@
   align-items: center;
   transition: transform 0.3s, box-shadow 0.3s, background-color 0.5s ease;
   word-wrap: break-word;  /* Para evitar que el texto largo desborde */
+  color: var(--color-text); /* Updated color */
 }
 
 .notificaciones-lista-pedidos li div {
@@ -99,26 +102,26 @@
 
 /* Fondo animado para COMPRA */
 .notificaciones-lista-pedidos li.notificaciones-compra {
-  background-color: #FFD700; /* Amarillo */
+  background-color: var(--color-button-confirmation); /* Azul */
   animation: notificaciones-animacion-fondo-compra 3s infinite alternate;
 }
 
 /* Fondo animado para RENOVACIÓN */
 .notificaciones-lista-pedidos li.notificaciones-renovacion {
-  background-color: #28a745; /* Verde */
+  background-color: var(--color-button-confirmation); /* Verde */
   animation: notificaciones-animacion-fondo-renovacion 3s infinite alternate;
 }
 
 /* Animación de fondo para COMPRA */
 @keyframes notificaciones-animacion-fondo-compra {
   0% {
-    background-color: #FFD700;
+    background-color: #1e90ff; /* Azul */
   }
   50% {
-    background-color: #ffed5b; /* Amarillo más claro */
+    background-color: #87cefa; /* Azul claro */
   }
   100% {
-    background-color: #FFD700;
+    background-color: #1e90ff; /* Azul */
   }
 }
 
@@ -142,7 +145,7 @@
 }
 
 .notificaciones-ver-pedido-btn {
-  background-color: #000000;
+  background-color: var(--color-buttons); /* Updated color */
   color: white;
   padding: 8px 15px;
   border: none;
@@ -153,20 +156,21 @@
 }
 
 .notificaciones-ver-pedido-btn:hover {
-  background-color: #303030;
+  background-color: var(--color-buttons-hover); /* Updated color */
 }
 
 .notificaciones-pedido-detalle-modal {
-  background: white;
+  background: var(--color-container); /* Updated color */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: var(--color-text); /* Updated color */
 }
 
 .notificaciones-non-editable {
   pointer-events: none; /* Evita clics o selección */
   user-select: none; /* Previene la selección de texto */
-  background-color: #ff0000; /* Fondo rojo */
+  background-color: var(--color-button-negation); /* Updated color */
   color: #555; /* Color de texto desactivado */
   border: 1px solid #ddd; /* Estilo de borde deshabilitado */
 }
@@ -177,6 +181,7 @@
   margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  background-color: var(--color-background-); /* Updated color */
 }
 
 .notificaciones-activar-btn,
@@ -184,7 +189,7 @@
 .notificaciones-cancelar-btn {
   margin-top: 10px;
   padding: 10px 15px;
-  background-color: #ed1b24; /* Color rojo */
+  background-color: var(--color-buttons); /* Color rojo */
   color: white;
   border: none;
   border-radius: 5px;
@@ -198,7 +203,7 @@
 .notificaciones-activar-btn:hover,
 .notificaciones-cerrar-btn:hover,
 .notificaciones-cancelar-btn:hover {
-  background-color: #b3121a; /* Efecto hover */
+  background-color: var(--color-buttons-hover); /* Efecto hover */
 }
 
 .notificaciones-activar-btn i,
@@ -211,7 +216,7 @@
   position: fixed;
   top: 20px;
   right: 20px;
-  background-color: #333;
+  background-color: var(--color-container); /* Updated color */
   color: white;
   padding: 10px 20px;
   border-radius: 5px;

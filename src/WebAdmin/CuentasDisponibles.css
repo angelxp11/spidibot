@@ -1,3 +1,4 @@
+
 .cuentasdisponibles-overlay {
     position: fixed;
     top: 0;
@@ -13,7 +14,7 @@
   
   .cuentasdisponibles-cuentas-disponibles-container {
     position: relative; /* Necesario para posicionar el botón dentro del contenedor */
-    background: white;
+    background: var(--color-container); /* Updated color */
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -22,13 +23,14 @@
     text-align: center;
     max-height: 80%;
     overflow-y: auto;
+    color: var(--color-text); /* Updated color */
   }
   
   .cuentasdisponibles-close-button {
     position: absolute; /* Permite posicionarlo dentro del contenedor */
     top: 10px;
     right: 10px; /* Mueve el botón a la esquina superior derecha */
-    background: #ed1b24;
+    background: var(--color-button-negation); /* Updated color */
     color: white;
     border: none;
     border-radius: 50%;
@@ -41,7 +43,7 @@
   }
   
   .cuentasdisponibles-close-button:hover {
-    background: #c4161a;
+    background: var(--color-button-negation-hover); /* Updated color */
   }
   
   .cuentasdisponibles-clientes-agrupados {
@@ -59,22 +61,28 @@
   .cuentasdisponibles-table {
     width: 100%;
     border-collapse: collapse;
+    background-color: var(--color-container); /* Updated color */
+    color: var(--color-text); /* Updated color */
   }
   
   .cuentasdisponibles-table th,
   .cuentasdisponibles-table td {
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-text); /* Updated color */
     padding: 8px;
   }
   
   .cuentasdisponibles-table th {
-    background-color: #f2f2f2;
+    background-color: var(--color-container-hover); /* Updated color */
     text-align: left;
   }
 
+.cuentasdisponibles-table td {
+  background-color: var(--color-background-hover); /* Updated color */
+}
+
 .loaderdisponible {
-  border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #3498db; /* Blue */
+  border: 16px solid var(--color-container); /* Updated color */
+  border-top: 16px solid var(--color-buttons); /* Updated color */
   border-radius: 50%;
   width: 120px;
   height: 120px;

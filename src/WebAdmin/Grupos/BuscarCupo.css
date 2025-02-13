@@ -11,19 +11,21 @@
 }
 
 .BuscarCupo-buscarclientes, .BuscarCupo-modal-wrapper {
-  background: #fff;
+  background: var(--color-container); /* Updated color */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: relative;
+  color: var(--color-text); /* Updated color */
 }
 
 .BuscarCupo-buscarclientes {
-  background: #fff;
+  background: var(--color-container); /* Updated color */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: relative;
+  color: var(--color-text); /* Updated color */
 }
 
 .BuscarCupo-modal-wrapper {
@@ -39,6 +41,7 @@
 .BuscarCupo-form-group label {
   display: block;
   margin-bottom: 5px;
+  color: var(--color-text); /* Updated color */
 }
 
 .BuscarCupo-form-group input,
@@ -47,6 +50,7 @@
   padding: 8px;
   box-sizing: border-box;
   font-size: 16px; /* Asegura que el tamaño de la fuente sea consistente */
+  color: black; /* Updated color */
 }
 
 .BuscarCupo-form-group select {
@@ -59,7 +63,7 @@
 }
 
 .BuscarCupo-buttons button {
-  background-color: #ed1b24;
+  background-color: var(--color-buttons); /* Updated color */
   color: white;
   padding: 10px 20px;
   border: none;
@@ -75,7 +79,7 @@
 }
 
 .BuscarCupo-buttons button:hover {
-  background-color: #b3121a;
+  background-color: var(--color-buttons-hover); /* Updated color */
 }
 
 .BuscarCupo-cliente-item {
@@ -96,16 +100,17 @@
   border-radius: 8px;
   max-width: 600px;
   margin-left: 20%;
-  background: #fff; /* Contenedor blanco */
+  background: var(--color-container); /* Updated color */
   overflow-y: auto; /* Barra de desplazamiento vertical */
   max-height: 80vh; /* Ajusta según sea necesario */
   padding: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: relative;
+  color: var(--color-text); /* Updated color */
 }
 
 .BuscarCupo-close-btn {
-  background-color: #ed1b24;
+  background-color: var(--color-button-negation); /* Updated color */
   color: white;
   border: none;
   border-radius: 4px;
@@ -119,7 +124,7 @@
 }
 
 .BuscarCupo-close-btn:hover {
-  background-color: #b3121a;
+  background-color: var(--color-button-negation-hover); /* Updated color */
 }
 
 .BuscarCupo-informacionclientes .BuscarCupo-modal-content1 {
@@ -128,9 +133,10 @@
   padding: 20px;
   width: 100%;
   margin-left: 150px;
-  background: #fff; /* Contenedor blanco */
+  background: var(--color-container); /* Updated color */
   overflow-y: auto; /* Barra de desplazamiento vertical */
   position: relative;
+  color: var(--color-text); /* Updated color */
 }
 
 .BuscarCupo-informacionclientes .BuscarCupo-form-group {
@@ -141,16 +147,18 @@
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
+  color: var(--color-text); /* Updated color */
 }
 
 .BuscarCupo-informacionclientes input[type="text"] {
   width: 100%;
   padding: 8px;
   box-sizing: border-box;
+  color: black; /* Updated color */
 }
 
 .BuscarCupo-informacionclientes button {
-  background-color: #ed1b24;
+  background-color: var(--color-buttons); /* Updated color */
   color: white;
   margin-top: 10px;
   padding: 10px;
@@ -160,7 +168,7 @@
 }
 
 .BuscarCupo-informacionclientes button:hover {
-  background-color: #b3121a;
+  background-color: var(--color-buttons-hover); /* Updated color */
 }
 
 .BuscarCupo-resultadoclientes .BuscarCupo-modal-content1 {
@@ -171,8 +179,9 @@
   max-width: 310px;
   overflow-y: auto; /* Para permitir el desplazamiento si hay muchos resultados */
   width: 100%;
-  background: #fff; /* Contenedor blanco */
+  background: var(--color-container); /* Updated color */
   position: relative;
+  color: var(--color-text); /* Updated color */
 }
 
 .BuscarCupo-resultadoclientes h3 {
@@ -192,6 +201,7 @@
   border-radius: 4px;
   display: flex;
   align-items: center;
+  color: var(--color-text); /* Updated color */
 }
 
 .BuscarCupo-resultadoclientes input[type="checkbox"] {
@@ -199,7 +209,7 @@
 }
 
 .BuscarCupo-resultadoclientes button {
-  background-color: #ed1b24;
+  background-color: var(--color-buttons); /* Updated color */
   color: white;
   margin-top: 10px;
   padding: 10px;
@@ -209,11 +219,11 @@
 }
 
 .BuscarCupo-resultadoclientes button:hover {
-  background-color: #b3121a;
+  background-color: var(--color-buttons-hover); /* Updated color */
 }
 
 .BuscarCupo-boton-cerrar {
-  background: #ed1b24;
+  background: var(--color-button-negation); /* Updated color */
   border: none;
   cursor: pointer;
   color: white;
@@ -231,14 +241,14 @@
 }
 
 .BuscarCupo-boton-cerrar:hover {
-  background-color: #b3121a;
+  background-color: var(--color-button-negation-hover); /* Updated color */
 }
 
 .BuscarCupo-custom-checkbox {
   appearance: none;
   width: 20px;
   height: 20px;
-  border: 2px solid #ed1b24;
+  border: 2px solid var(--color-buttons); /* Updated color */
   border-radius: 4px;
   outline: none;
   cursor: pointer;
@@ -256,17 +266,18 @@
 }
 
 .BuscarCupo-custom-checkbox:checked {
-  background-color: #ed1b24;
-  border-color: #ed1b24;
+  background-color: var(--color-buttons); /* Updated color */
+  border-color: var(--color-buttons); /* Updated color */
 }
 
 .BuscarCupo-info-container {
-  background: #fff;
+  background: var(--color-container); /* Updated color */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
   max-width: 400px;
+  color: var(--color-text); /* Updated color */
 }
 
 .BuscarCupo-info-container h3 {
@@ -278,7 +289,7 @@
 }
 
 .BuscarCupo-info-container button {
-  background-color: #ed1b24;
+  background-color: var(--color-buttons); /* Updated color */
   color: white;
   padding: 10px;
   border: none;
@@ -289,7 +300,7 @@
 }
 
 .BuscarCupo-info-container button:hover {
-  background-color: #b3121a;
+  background-color: var(--color-buttons-hover); /* Updated color */
 }
 
 .BuscarCupo-info-modal {
@@ -306,13 +317,14 @@
 }
 
 .BuscarCupo-info-modal .BuscarCupo-modal-content1 {
-  background: #fff;
+  background: var(--color-container); /* Updated color */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: relative;
   max-width: 400px;
   width: 100%;
+  color: var(--color-text); /* Updated color */
 }
 
 .BuscarCupo-info-modal h3 {
@@ -324,7 +336,7 @@
 }
 
 .BuscarCupo-info-modal button {
-  background-color: #ed1b24;
+  background-color: var(--color-buttons); /* Updated color */
   color: white;
   padding: 10px;
   border: none;
@@ -335,7 +347,7 @@
 }
 
 .BuscarCupo-info-modal button:hover {
-  background-color: #b3121a;
+  background-color: var(--color-buttons-hover); /* Updated color */
 }
 
 .copy-icon {
@@ -361,13 +373,14 @@
 }
 
 .BuscarCupo-info-modal .BuscarCupo-informacionclientes {
-  background: #fff;
+  background: var(--color-container); /* Updated color */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: relative;
   max-width: 400px;
   width: 100%;
+  color: var(--color-text); /* Updated color */
 }
 
 .BuscarCupo-info-modal .BuscarCupo-info-item {

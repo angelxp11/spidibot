@@ -1,6 +1,6 @@
 /* Archivo: RegistroCliente.css */
 
-.modal-overlay {
+.registro-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,8 +13,8 @@
   z-index: 1000;
 }
 
-.form-container {
-  background-color: #fff;
+.registro-form-container {
+  background-color: var(--color-container); /* Updated color */
   max-height: 100vh; /* Ajusta el alto máximo para que la barra de desplazamiento se active si es necesario */
   padding: 20px;
   border-radius: 10px;
@@ -27,17 +27,17 @@
   transform: translateY(-50%); /* Ajuste adicional para centrarlo correctamente */
   text-align: center;
   overflow-y: auto; /* Habilita la barra de desplazamiento vertical */
+  color: var(--color-text); /* Updated color */
 }
 
-
-h2 {
-  color: black;
+.registro-h2 {
+  color: var(--color-text); /* Updated color */
   margin-bottom: 20px;
   font-family: 'Arial', sans-serif;
 }
 
-.h2titleblanco {
-  color: white; /* Cambia el color del texto a blanco */
+.registro-h2titleblanco {
+  color: var(--color-text); /* Updated color */
   font-size: 24px; /* Tamaño de fuente ajustable */
   font-weight: bold; /* Texto en negrita */
   text-align: center; /* Centra el texto */
@@ -45,31 +45,36 @@ h2 {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para resaltar el texto */
 }
 
-
-.form-input {
+.registro-form-input {
   margin-bottom: 15px;
   text-align: left;
+  margin: 10px;
+  padding: 0;
+  box-sizing: border-box;
+  border-radius: 4px;
+  outline: none;
 }
 
-.form-input label {
+.registro-form-input label {
   display: block;
   font-weight: bold;
   margin-bottom: 5px;
-  color: #333;
+  color: var(--color-text); /* Updated color */
   font-family: 'Arial', sans-serif;
 }
 
-.form-input input,
-.form-input select {
+.registro-form-input input,
+.registro-form-input select {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-family: 'Arial', sans-serif;
+  color: black; /* Updated color */
 }
 
-.form-button {
-  background-color: #ed1b24; /* Cambiado a #ed1b24 */
+.registro-form-button {
+  background-color: var(--color-buttons); /* Updated color */
   color: white;
   padding: 10px 15px;
   border: none;
@@ -80,18 +85,18 @@ h2 {
   transition: background-color 0.3s, transform 0.3s;
 }
 
-.form-button:hover {
-  background-color: #ff0000;
+.registro-form-button:hover {
+  background-color: var(--color-buttons-hover); /* Updated color */
   transform: scale(1.05);
 }
 
-.boton-cerrar {
+.registro-boton-cerrar {
   position: absolute;
   top: 10px;
   right: 10px;
   padding: 10px;
   border-radius: 50%;
-  background-color: #ed1b24;
+  background-color: var(--color-button-negation); /* Updated color */
   color: white;
   border: none;
   cursor: pointer;
@@ -104,13 +109,13 @@ h2 {
   font-size: 18px;
 }
 
-.boton-cerrar:hover {
-  background-color: #ff0000;
+.registro-boton-cerrar:hover {
+  background-color: var(--color-button-negation-hover); /* Updated color */
   transform: scale(1.05);
 }
 
-.submit-button {
-  background-color: #ed1b24; /* Cambiado a #ed1b24 */
+.registro-submit-button {
+  background-color: var(--color-buttons); /* Updated color */
   color: white;
   padding: 10px 15px;
   border: none;
@@ -121,8 +126,8 @@ h2 {
   transition: background-color 0.3s, transform 0.3s;
 }
 
-.submit-button:hover {
-  background-color: #ff0000;
+.registro-submit-button:hover {
+  background-color: var(--color-buttons-hover); /* Updated color */
   transform: scale(1.05);
 }
 
