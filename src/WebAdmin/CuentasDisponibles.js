@@ -332,9 +332,7 @@ const CuentasDisponibles = ({ onClose }) => {
                           }
                           return (
                             <tr key={`${servicio}-${grupo}`}>
-                              <td>{servicio}</td>
-                              <td>{grupo}</td>
-                              <td>{displayDisponibilidad}</td> {/* Display the message or count */}
+                              <td>{servicio}</td><td>{grupo}</td><td>{displayDisponibilidad}</td> {/* Display the message or count */}
                             </tr>
                           );
                         })

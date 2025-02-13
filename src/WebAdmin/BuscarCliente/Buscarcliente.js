@@ -1,11 +1,12 @@
-import React, { useState,useEffect } from 'react';
-import { getFirestore, collection, query, where, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage"; // Asegúrate de importar estas funciones
+import React, { useState, useEffect } from 'react';
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc, deleteDoc, getDoc } from 'firebase/firestore';
+import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
+import { toast, ToastContainer } from 'react-toastify'; // Import ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
 import './buscarCliente.css';
 import html2canvas from 'html2canvas';
-import fondo from '../../fondo.png'; // Asegúrate de que la imagen fondo.png esté en la carpeta correcta
-import { toast } from 'react-toastify'; // Asegúrate de instalar react-toastify
-import { FaSave, FaTimes, FaFileAlt, FaTrash } from 'react-icons/fa'; // Importa los iconos de react-icons
+import fondo from '../../fondo.png';
+import { FaSave, FaTimes, FaFileAlt, FaTrash } from 'react-icons/fa';
 
 const firestore = getFirestore();
 
@@ -41,24 +42,29 @@ function BuscarCliente({ onClose }) {
     grupo: '',
     servicio: '',
     notas: '',
-    precio: ''
+    precio: '',
+    SPOTIFY: {
+      email: '',
+      password: ''
+    }
   });
   const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
+  const [showSpotifyInfo, setShowSpotifyInfo] = useState(false);
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
         onClose(); // Cierra el modal
       }
     };
-  
+
     window.addEventListener('keydown', handleKeyDown);
-  
+
     // Limpiar el listener cuando el componente se desmonta
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [onClose]);
-  
 
   const handleDeleteClient = async () => {
     setShowDeleteConfirmationModal(true);
@@ -81,13 +87,12 @@ function BuscarCliente({ onClose }) {
   const cancelDeleteClient = () => {
     setShowDeleteConfirmationModal(false);
   };
-  // Función para ejecutar la búsqueda al presionar Enter
-const handleKeyPress = (event) => {
-  if (event.key === 'Enter') {
-    handleSearch();  // Ejecuta la función handleSearch cuando se presiona Enter
-  }
-};
 
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   const handleSearchTypeChange = (event) => {
     setSearchType(event.target.value);
@@ -102,27 +107,22 @@ const handleKeyPress = (event) => {
     try {
       const clientesRef = collection(firestore, 'clientes');
       const searchValueUpper = normalizarTexto(searchValue).toUpperCase();
-  
-      // Realizar búsqueda tanto por nombre como por apellido
+
       const nombreQuery = query(clientesRef, where('nombre', '>=', searchValueUpper), where('nombre', '<=', searchValueUpper + '\uf8ff'));
       const apellidoQuery = query(clientesRef, where('apellido', '>=', searchValueUpper), where('apellido', '<=', searchValueUpper + '\uf8ff'));
-  
-      // Ejecutar ambas consultas de forma paralela
+
       const [nombreSnapshot, apellidoSnapshot] = await Promise.all([
         getDocs(nombreQuery),
         getDocs(apellidoQuery)
       ]);
-  
-      // Combinar los resultados de ambas consultas y eliminar duplicados
+
       const results = [
         ...nombreSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })),
         ...apellidoSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
       ];
-  
-      // Filtrar duplicados en caso de que el mismo documento tenga coincidencias en nombre y apellido
+
       const uniqueResults = Array.from(new Map(results.map(item => [item.id, item])).values());
-  
-      // Procesar los datos finales para mostrar
+
       const formattedResults = uniqueResults.map(data => ({
         id: data.id,
         nombre: data.nombre,
@@ -131,14 +131,12 @@ const handleKeyPress = (event) => {
         ID: data.ID,
         ...data
       }));
-  
-      // Actualizar los resultados en el estado
+
       setSearchResults(formattedResults);
     } catch (error) {
       console.error('Error al buscar clientes por nombre o apellido:', error);
     }
   };
-  
 
   const searchByField = async (field, searchValue) => {
     try {
@@ -195,16 +193,37 @@ const handleKeyPress = (event) => {
       grupo: client.grupo,
       servicio: client.servicio,
       notas: client.notas,
-      precio: client.precio
+      precio: client.precio,
+      SPOTIFY: {
+        email: client.SPOTIFY?.email[0] || '',
+        password: client.SPOTIFY?.password[0] || '',
+        principal: client.SPOTIFY?.principal || [true]
+      }
     });
   };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setClientData((prevData) => ({
-      ...prevData,
-      [name]: value
-    }));
+    const [field, subfield] = name.split('.');
+
+    if (subfield) {
+      setClientData((prevData) => ({
+        ...prevData,
+        [field]: {
+          ...prevData[field],
+          [subfield]: value
+        }
+      }));
+    } else {
+      setClientData((prevData) => ({
+        ...prevData,
+        [name]: value
+      }));
+    }
+  };
+
+  const handleSpotifyCheckboxChange = (event) => {
+    setShowSpotifyInfo(event.target.checked);
   };
 
   const handleSaveChanges = async () => {
@@ -219,13 +238,17 @@ const handleKeyPress = (event) => {
         ? clientData.servicio.map(item => item.toUpperCase())
         : (clientData.servicio ? clientData.servicio.split(',').map(item => item.trim().toUpperCase()) : []);
 
-        const notasArray = Array.isArray(clientData.notas)
+      const notasArray = Array.isArray(clientData.notas)
         ? clientData.notas.map(item => item.toUpperCase())
-        : (clientData.notas ? clientData.notas.split(',').map(item => item.trim().toUpperCase()) : []);  
+        : (clientData.notas ? clientData.notas.split(',').map(item => item.trim().toUpperCase()) : []);
 
       const precioArray = Array.isArray(clientData.precio)
         ? clientData.precio.map(item => item.toUpperCase())
         : (clientData.precio ? clientData.precio.split(',').map(item => item.trim().toUpperCase()) : []);
+
+      const pagadoMap = typeof clientData.pagado === 'object' && clientData.pagado !== null
+        ? clientData.pagado
+        : {};
 
       const fechaInicial = clientData.fechaInicial ? convertirFechaInvertida(clientData.fechaInicial) : '';
       const fechaFinal = clientData.fechaFinal ? convertirFechaInvertida(clientData.fechaFinal) : '';
@@ -249,8 +272,8 @@ const handleKeyPress = (event) => {
       if (fechaFinal) {
         updates['fechaFinal'] = fechaFinal;
       }
-      if (clientData.pagado) {
-        updates['pagado'] = clientData.pagado.toUpperCase();
+      if (Object.keys(pagadoMap).length > 0) {
+        updates['pagado'] = pagadoMap;
       }
       if (clientData.estado !== '') {
         updates['PENDEJOALEJANDRO.estado'] = clientData.estado;
@@ -268,30 +291,37 @@ const handleKeyPress = (event) => {
         updates['precio'] = precioArray;
       }
 
+      const clienteDoc = await getDoc(clientDocRef);
+      const clienteData = clienteDoc.data();
+      const updatedSpotify = {
+        email: [clientData.SPOTIFY.email],
+        password: [clientData.SPOTIFY.password],
+        principal: [clientData.SPOTIFY.principal[0] === 'true']
+      };
+
+      updates['SPOTIFY'] = updatedSpotify;
+
       await updateDoc(clientDocRef, updates);
+      toast.success('Datos guardados con éxito');
       handleSearch(null);
       setSelectedClient(null);
     } catch (error) {
       console.error('Error al guardar cambios:', error);
-      alert('Error al guardar cambios: ' + error.message);
+      toast.error('Error al guardar cambios: ' + error.message);
     }
   };
 
   const handleGenerateComprobante = async () => {
     if (selectedClient) {
-      // Verificar que las propiedades necesarias existan y sean arrays
       const servicios = Array.isArray(selectedClient.servicio) ? selectedClient.servicio : [];
       const grupo = Array.isArray(selectedClient.grupo) ? selectedClient.grupo : [];
-  
-      // Asegurarse de que los precios sean números
+
       const precios = Array.isArray(selectedClient.precio)
-        ? selectedClient.precio.map(Number) // Convertir todos los precios a números
+        ? selectedClient.precio.map(Number)
         : [];
-  
-      // Sumar los precios
+
       const precioTotal = precios.reduce((acc, curr) => acc + curr, 0).toLocaleString('es-ES');
-  
-      // Crear el contenedor del comprobante
+
       const comprobanteContainer = document.createElement('div');
       comprobanteContainer.className = 'comprobante-container';
       comprobanteContainer.style.backgroundImage = `url(${fondo})`;
@@ -306,18 +336,17 @@ const handleKeyPress = (event) => {
       comprobanteContainer.style.position = 'absolute';
       comprobanteContainer.style.left = '-9999px';
       comprobanteContainer.style.top = '-9999px';
-  
+
       const date = new Date();
       const fechaGenerada = date.toLocaleDateString('es-ES', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric'
       });
-  
-      // Convertir servicio y grupo en cadenas de texto unidas por comas
+
       const serviciosTexto = servicios.length > 0 ? servicios.join(', ') : 'Ninguno';
       const grupoTexto = grupo.length > 0 ? grupo.join(', ') : 'Ninguno';
-  
+
       comprobanteContainer.innerHTML = `
         <p>Comprobante generado (${fechaGenerada})</p>
         <p>⭐ID: ${selectedClient.ID}</p>
@@ -328,42 +357,37 @@ const handleKeyPress = (event) => {
         <p>⭐FECHA FINAL: ${selectedClient.fechaFinal}</p>
         <p>⭐ESTADO: ${selectedClient.estado}</p>
       `;
-  
+
       document.body.appendChild(comprobanteContainer);
-  
+
       html2canvas(comprobanteContainer).then(async (canvas) => {
-        // Generar un nombre de archivo único de 16 caracteres
         const uniqueFileName = `comprobante_${selectedClient.ID}_${Date.now()}.png`;
-        const clientFolder = selectedClient.ID; // Usamos el ID del cliente como nombre de la carpeta
-  
-        // Obtener el URL del archivo como base64
+        const clientFolder = selectedClient.ID;
+
         const dataUrl = canvas.toDataURL('image/png');
-  
-        // Subir a Firebase Storage
-        const storage = getStorage(); // Inicializa Firebase Storage
+
+        const storage = getStorage();
         const storageRef = ref(storage, `comprobantes/${clientFolder}/${uniqueFileName}`);
         await uploadString(storageRef, dataUrl, 'data_url');
-  
-        // Obtener la URL de descarga
+
         const downloadURL = await getDownloadURL(storageRef);
-  
-        // WhatsApp Web message
+
         const mensaje = `_*🎉 ¡Gracias por tu Comprobante de Pago y Renovación Exitosa! 🎉*_
-  
+
 Hemos recibido con éxito tu comprobante de pago y renovación. 🎊 Apreciamos tu confianza en *JadePlatform* y estamos encantados de seguir siendo tu elección.
-  
+
 Si tienes alguna pregunta o necesitas asistencia, estamos aquí para ayudarte. ¡Disfruta al máximo de tu servicio renovado! 😊🙌
-  
+
 Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
         await navigator.clipboard.writeText(mensaje);
-  
+
         toast('El comprobante ha sido generado y guardado en Firebase Storage.');
-  
+
         document.body.removeChild(comprobanteContainer);
       });
     }
   };
-  
+
   const handleCloseDetails = () => {
     setSelectedClient(null);
   };
@@ -393,14 +417,13 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                 value={searchValue}
                 onChange={handleSearchValueChange}
                 className="BuscarCliente-search-input"
-                onKeyPress={handleKeyPress}  /* Captura la tecla presionada */
+                onKeyPress={handleKeyPress}
                 placeholder={`Buscar por ${searchType}`}
               />
-
             )}
             <button onClick={handleSearch} className="BuscarCliente-search-button">Buscar</button>
           </div>
-  
+
           <div className="BuscarCliente-search-results">
             {searchResults.length > 0 ? (
               <ul>
@@ -471,8 +494,8 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                 <input
                   type="text"
                   name="email"
-                  value={clientData.email} // Muestra el valor del email
-                  onChange={handleChange} // Maneja los cambios en el campo
+                  value={clientData.email}
+                  onChange={handleChange}
                   className="BuscarCliente-detail-input"
                   placeholder="Email"
                 />
@@ -567,6 +590,53 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                   placeholder="Precio"
                 />
               </label>
+              <div className="BuscarCliente-checkbox-container">
+                <input
+                  type="checkbox"
+                  id="spotify-checkbox"
+                  checked={showSpotifyInfo}
+                  onChange={handleSpotifyCheckboxChange}
+                />
+                <label htmlFor="spotify-checkbox">¿Deseas ingresar Spotify information?</label>
+              </div>
+              {showSpotifyInfo && (
+                <>
+                  <label>
+                    SPOTIFY Email:
+                    <input
+                      type="text"
+                      name="SPOTIFY.email"
+                      value={clientData.SPOTIFY.email}
+                      onChange={handleChange}
+                      className="BuscarCliente-detail-input"
+                      placeholder="SPOTIFY Email"
+                    />
+                  </label>
+                  <label>
+                    SPOTIFY Password:
+                    <input
+                      type="text"
+                      name="SPOTIFY.password"
+                      value={clientData.SPOTIFY.password}
+                      onChange={handleChange}
+                      className="BuscarCliente-detail-input"
+                      placeholder="SPOTIFY Password"
+                    />
+                  </label>
+                  <label>
+                    Principal:
+                    <select
+                      name="SPOTIFY.principal"
+                      value={clientData.SPOTIFY.principal[0]}
+                      onChange={(e) => handleChange({ target: { name: 'SPOTIFY.principal', value: [e.target.value === 'true'] } })}
+                      className="BuscarCliente-detail-input"
+                    >
+                      <option value="true">True</option>
+                      <option value="false">False</option>
+                    </select>
+                  </label>
+                </>
+              )}
               <div className="button-container">
                 <button onClick={handleSaveChanges} className="BuscarCliente-save-button">
                   <FaSave /> Guardar
@@ -585,7 +655,8 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
           </div>
         )}
         {showDeleteConfirmationModal && (
-          <div className="confirmation-modal-overlay">
+          <>
+            <div className="confirmation-modal-overlay"></div>
             <div className="confirmation-modal-content">
               <h2>¿Estás seguro de que deseas eliminar a este cliente? 💀</h2>
               <div className="confirmation-modal-buttons">
@@ -593,9 +664,10 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
                 <button className="yes-button" onClick={confirmDeleteClient}>Sí, Deseo Eliminarlo</button>
               </div>
             </div>
-          </div>
+          </>
         )}
       </div>
+      <ToastContainer /> {/* Add ToastContainer here */}
     </div>
   );
 }

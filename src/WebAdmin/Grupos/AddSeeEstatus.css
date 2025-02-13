@@ -142,6 +142,8 @@
   margin-bottom: 10px;
   font-size: 1rem;
   color: #555;
+  display: flex; /* Align items on the same line */
+  align-items: center; /* Center items vertically */
 }
 
 .addseeestatus-details-content strong {
@@ -267,4 +269,19 @@
 /* New class for select with width of 50px */
 .addseeestatus-select-small {
   width: 50px;
+}
+
+/* Styles for the copy icon */
+.copy-icon {
+  margin-left: 10px;
+  cursor: pointer;
+  color: white; /* Set icon color to white */
+  background-color: #ed1b24; /* Set background color to red */
+  padding: 5px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.copy-icon:hover {
+  background-color: #b3121a;
 }

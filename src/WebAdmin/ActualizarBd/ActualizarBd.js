@@ -13,8 +13,6 @@ const ActualizarBd = ({ onClose }) => {
       if (hasUpdated) return; // Si ya se ha actualizado, no hacemos nada
 
       try {
-        console.log("Iniciando actualización de clientes y grupos...");
-      
         const clientesRef = collection(db, 'clientes');
         const serviciosRef = collection(db, 'Servicios');
       
@@ -23,7 +21,6 @@ const ActualizarBd = ({ onClose }) => {
         
         // Muestra solo un toast al final
         toast.success('Clientes y grupos actualizados', { autoClose: 1000 });
-        console.log("Actualización de clientes y grupos completada.");
         setLoading(false);
         setHasUpdated(true); // Marcamos que ya se ha actualizado
         onClose();
@@ -49,7 +46,6 @@ const ActualizarBd = ({ onClose }) => {
 
       if (fechaFinal) {
         const estado = calcularEstadoCliente(fechaFinal);
-        console.log(`Cliente: ${doc.id}, Fecha Final: ${fechaFinal}, Estado Calculado: ${estado}`);
 
         // Actualiza el campo estado dentro del mapa PENDEJOALEJANDRO
         batch.update(doc.ref, {
@@ -73,7 +69,6 @@ const ActualizarBd = ({ onClose }) => {
 
           if (fechaPago) {
             const estado = calcularEstadoGrupo(fechaPago);
-            console.log(`Grupo: ${groupName}, Fecha Pago: ${fechaPago}, Estado Calculado: ${estado}`);
 
             // Actualiza el campo estado o lo crea si no existe
             batch.set(doc.ref, {
@@ -101,8 +96,6 @@ const ActualizarBd = ({ onClose }) => {
     const diferencia = sdf - fechaActual;
     const diasRestantes = diferencia / (24 * 60 * 60 * 1000);
 
-    console.log(`Fecha Actual: ${fechaActual}, Fecha Final: ${sdf}, Días Restantes: ${diasRestantes}`);
-
     if (diasRestantes > 2) {
       return '✅';
     } else if (diasRestantes > -1) {
@@ -122,8 +115,6 @@ const ActualizarBd = ({ onClose }) => {
     const fechaActual = new Date();
     const diferencia = sdf - fechaActual;
     const diasRestantes = Math.floor(diferencia / (24 * 60 * 60 * 1000));
-
-    console.log(`Fecha Actual: ${fechaActual}, Fecha Final: ${sdf}, Días Restantes: ${diasRestantes}`);
 
     if (diasRestantes >= 3) {
       return '✅';

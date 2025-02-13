@@ -1,0 +1,14 @@
+:root {
+    --color-buttons: #ed1b24; /* rojo oscuro para botones comunes */
+    --color-buttons-hover: #c4161d; /* rojo más oscuro en hover */
+    --color-container: #1e1e1e; /* gris oscuro para contenedores */
+    --color-container-hover: #2a2a2a; /* gris más claro en hover */
+    --color-button-confirmation: #1ed760; /* verde neón para botones de confirmación */
+    --color-button-confirmation-hover: #39de74; /* verde más brillante en hover */
+    --color-button-negation: #ff000d; /* rojo intenso para botones de negación */
+    --color-button-negation-hover: #8d0007; /* rojo más oscuro en hover */
+    --color-background-: #121212; /* negro suave para el fondo */
+    --color-background-hover: #1a1a1a; /* gris oscuro para el hover del fondo */
+    --color-iconos: #64b5f6; /* azul claro para iconos */
+  }
+  

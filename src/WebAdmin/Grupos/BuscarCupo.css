@@ -259,3 +259,121 @@
   background-color: #ed1b24;
   border-color: #ed1b24;
 }
+
+.BuscarCupo-info-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  max-width: 400px;
+}
+
+.BuscarCupo-info-container h3 {
+  margin-top: 0;
+}
+
+.BuscarCupo-info-container p {
+  margin: 10px 0;
+}
+
+.BuscarCupo-info-container button {
+  background-color: #ed1b24;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.BuscarCupo-info-container button:hover {
+  background-color: #b3121a;
+}
+
+.BuscarCupo-info-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.BuscarCupo-info-modal .BuscarCupo-modal-content1 {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  max-width: 400px;
+  width: 100%;
+}
+
+.BuscarCupo-info-modal h3 {
+  margin-top: 0;
+}
+
+.BuscarCupo-info-modal p {
+  margin: 10px 0;
+}
+
+.BuscarCupo-info-modal button {
+  background-color: #ed1b24;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.BuscarCupo-info-modal button:hover {
+  background-color: #b3121a;
+}
+
+.copy-icon {
+  margin-left: 10px;
+  cursor: pointer;
+  color: white; /* Set icon color to white */
+  background-color: #ed1b24; /* Set background color to red */
+  padding: 5px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.copy-icon:hover {
+  background-color: #b3121a;
+}
+
+.BuscarCupo-info-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.BuscarCupo-info-modal .BuscarCupo-informacionclientes {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  max-width: 400px;
+  width: 100%;
+}
+
+.BuscarCupo-info-modal .BuscarCupo-info-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}

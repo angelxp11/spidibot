@@ -233,3 +233,41 @@
 .BuscarCliente-boton-cerrar:hover {
   background-color: #c4161d;
 }
+
+.BuscarCliente-checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.BuscarCliente-checkbox-container input[type="checkbox"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ed1b24;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.BuscarCliente-checkbox-container input[type="checkbox"]:checked::before {
+  content: '✔';
+  color: white;
+  font-size: 14px;
+  position: absolute;
+}
+
+.BuscarCliente-checkbox-container input[type="checkbox"]:checked {
+  background-color: #ed1b24;
+  border-color: #ed1b24;
+}
+
+.BuscarCliente-checkbox-container label {
+  font-weight: bold;
+  cursor: pointer;
+}

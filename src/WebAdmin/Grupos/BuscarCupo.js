@@ -33,8 +33,9 @@ const verFechas = (fecha) => {
 };
 
 const formatPrice = (value) => {
-  if (!value) return '';
-  const numberValue = parseFloat(value.replace(/[$,]/g, ''));
+  if (value === null || value === undefined) return '';
+  const stringValue = value.toString(); // Ensure value is a string
+  const numberValue = parseFloat(stringValue.replace(/[$,]/g, ''));
   return `$${numberValue.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
 };
 
@@ -71,6 +72,8 @@ function BuscarCupo({ onClose }) {
     const [infoDocId, setInfoDocId] = useState('');
   const [isResultadosVisible, setIsResultadosVisible] = useState(false);
   const [isInfoVisible, setIsInfoVisible] = useState(false);
+  const [selectedClientInfo, setSelectedClientInfo] = useState({ email: '', password: '' });
+  const [isClientInfoVisible, setIsClientInfoVisible] = useState(false);
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
@@ -129,6 +132,18 @@ function BuscarCupo({ onClose }) {
     }
   }, [servicio]);
 
+  useEffect(() => {
+    if (grupo && isInfoVisible) {
+      handleInfoClick();
+    }
+  }, [grupo, isInfoVisible]);
+
+  useEffect(() => {
+    if (grupo && isResultadosVisible) {
+      handleSearch();
+    }
+  }, [grupo, isResultadosVisible]);
+
   const handleSearch = async () => {
     try {
       const clientesRef = collection(db, 'clientes');
@@ -150,6 +165,7 @@ function BuscarCupo({ onClose }) {
           nombre: doc.data().nombre,
           apellido: doc.data().apellido,
           PENDEJOALEJANDRO: doc.data().PENDEJOALEJANDRO,
+          SPOTIFY: doc.data().SPOTIFY,
           ...doc.data()
         }));
   
@@ -202,8 +218,8 @@ const handleInfoClick = async () => {
 
       if (grupoInfo) {
         setInfo({
-          email: grupoInfo.email || '',
-          password: grupoInfo.password || '',
+          email: Array.isArray(grupoInfo.email) ? grupoInfo.email[0] : grupoInfo.email || '',
+          password: Array.isArray(grupoInfo.password) ? grupoInfo.password[0] : grupoInfo.password || '',
           fechaComienzo: verFechas(grupoInfo.fechaComienzo) || '',
           fechaPago: verFechas(grupoInfo.fechaPago) || '',
           notas: grupoInfo.notas || '',
@@ -258,20 +274,21 @@ const handleSaveChanges = async () => {
   if (info.fechaComienzo !== '') updatedFields[`${grupo}.fechaComienzo`] = guardarFechas(info.fechaComienzo);
   if (info.fechaPago !== '') updatedFields[`${grupo}.fechaPago`] = guardarFechas(info.fechaPago);
   if (info.notas !== '') updatedFields[`${grupo}.notas`] = info.notas;
-  if (info.price !== '') updatedFields[`${grupo}.price`] = parsePrice(info.price); // Nuevo campo
+  if (info.price !== '') {
+    const priceString = info.price.toString(); // Ensure price is a string
+    updatedFields[`${grupo}.price`] = parseFloat(priceString.replace(/[$,]/g, '')); // Ensure price is a number
+  }
   if (info.package !== '') updatedFields[`${grupo}.package`] = info.package.toUpperCase(); // Guardar en mayúsculas
   
   if (servicio === 'SPOTIFY') {
     // Crea siempre los campos, incluso si están vacíos
     updatedFields[`${grupo}.direccion`] = info?.direccion || '';
     updatedFields[`${grupo}.enlace`] = info?.enlace || '';
-} else {
+  } else {
     // Asegúrate de eliminar los campos si no es SPOTIFY
     delete updatedFields[`${grupo}.direccion`];
     delete updatedFields[`${grupo}.enlace`];
-}
-
-
+  }
 
   try {
     const servicioRef = doc(db, 'Servicios', infoDocId);
@@ -295,17 +312,47 @@ const handleSaveChanges = async () => {
 
   const handleSelectChange = (e) => {
     setServicio(e.target.value);
+    setGrupo(''); // Reset the group when the service changes
+    setIsInfoVisible(false); // Hide the info modal when the service changes
+    setIsResultadosVisible(false); // Hide the results modal when the service changes
   };
 
   const handleGrupoChange = (e) => {
     setGrupo(e.target.value);
   };
 
-  const handleCheckboxChange = (id) => {
-    setSelectedClientes((prevSelected) => ({
-      ...prevSelected,
-      [id]: !prevSelected[id]
-    }));
+const handleCheckboxChange = (id, cliente) => {
+  const newSelectedClientes = { [id]: !selectedClientes[id] }; // Ensure only one checkbox is selected at a time
+
+  setSelectedClientes(newSelectedClientes);
+
+  if (servicio === 'SPOTIFY' && newSelectedClientes[id]) {
+    const index = cliente.servicio?.findIndex((serv, idx) => serv === servicio && cliente.grupo[idx] === grupo);
+    if (index !== -1) {
+      setSelectedClientInfo({
+        email: cliente.SPOTIFY?.email[index] || '',
+        password: cliente.SPOTIFY?.password[index] || ''
+      });
+      setIsClientInfoVisible(true);
+    }
+  } else {
+    setSelectedClientInfo({ email: '', password: '' });
+    setIsClientInfoVisible(false);
+  }
+};
+
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast('Información copiada al portapapeles.');
+    }).catch(err => {
+      console.error('Error al copiar al portapapeles: ', err);
+    });
+  };
+
+  const handleClientInfoOverlayClick = (event) => {
+    if (event.target.classList.contains('BuscarCupo-info-modal')) {
+      setIsClientInfoVisible(false);
+    }
   };
 
   return (
@@ -356,23 +403,27 @@ const handleSaveChanges = async () => {
               {clientes.length === 0 ? (
                 <li>No se encontraron clientes.</li>
               ) : (
-                clientes.map(cliente => (
-                  <li
-                    key={cliente.id}
-                    className="BuscarCupo-cliente-item"
-                    style={{ backgroundColor: clientesColores[cliente.id] || 'transparent' }}
-                  >
-                    <input
-  type="checkbox"
-  className="BuscarCupo-custom-checkbox"
-  checked={!!selectedClientes[cliente.id]}
-  onChange={() => handleCheckboxChange(cliente.id)}
-/>
-
-                    <span>{cliente.id}🔛{cliente.pagado === 'SI' ? '✔️' : '✖️'}</span> {/* Mostrar ✔️ o ✖️ basado en el valor de "pagado" */}
-                    <span>{cliente.nombre} {cliente.apellido}</span>
-                  </li>
-                ))
+                clientes.map(cliente => {
+                  const isPrincipal = cliente.SPOTIFY?.principal?.some((isPrincipal, index) => 
+                    isPrincipal && cliente.servicio[index] === servicio && cliente.grupo[index] === grupo
+                  );
+                  return (
+                    <li
+                      key={cliente.id}
+                      className="BuscarCupo-cliente-item"
+                      style={{ backgroundColor: isPrincipal ? 'green' : (clientesColores[cliente.id] || 'transparent') }}
+                    >
+                      <input
+                        type="checkbox"
+                        className="BuscarCupo-custom-checkbox"
+                        checked={!!selectedClientes[cliente.id]}
+                        onChange={() => handleCheckboxChange(cliente.id, cliente)}
+                      />
+                      <span>{cliente.id}🔛{cliente.pagado === 'SI' ? '✔️' : '✖️'}</span> {/* Mostrar ✔️ o ✖️ basado en el valor de "pagado" */}
+                      <span>{cliente.nombre} {cliente.apellido}</span>
+                    </li>
+                  );
+                })
               )}
             </ul>
           </div>
@@ -387,20 +438,26 @@ const handleSaveChanges = async () => {
       
       <div className="BuscarCupo-form-group">
         <label>Email:</label>
-        <input
-          type="text"
-          value={info.email}
-          onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, email: value })))}
-        />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <input
+            type="text"
+            value={info.email}
+            onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, email: value })))}
+          />
+          <FaCopy className="copy-icon" onClick={() => handleCopy(info.email)} />
+        </div>
       </div>
       
       <div className="BuscarCupo-form-group">
         <label>Contraseña:</label>
-        <input
-          type="text"
-          value={info.password}
-          onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, password: value })))}
-        />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <input
+            type="text"
+            value={info.password}
+            onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, password: value })))}
+          />
+          <FaCopy className="copy-icon" onClick={() => handleCopy(info.password)} />
+        </div>
       </div>
       
       <div class="BuscarCupo-form-group">
@@ -441,11 +498,14 @@ const handleSaveChanges = async () => {
                 </div>
                 <div className="BuscarCupo-form-group">
                   <label>Enlace:</label>
-                  <input
-                    type="text"
-                    value={info.enlace}
-                    onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, enlace: value })))}
-                  />
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <input
+                      type="text"
+                      value={info.enlace}
+                      onChange={(e) => handleInputChange(e, (value) => setInfo(prev => ({ ...prev, enlace: value })))}
+                    />
+                    <FaCopy className="copy-icon" onClick={() => handleCopy(info.enlace)} />
+                  </div>
                 </div>
               </>
             )}
@@ -472,6 +532,22 @@ const handleSaveChanges = async () => {
       
       <button onClick={handleSaveChanges}><FaSave /> Guardar Cambios</button>
       <button onClick={handleCopyPaste}><FaCopy /> Copiar Información</button>
+    </div>
+  </div>
+)}
+
+{isClientInfoVisible && (
+  <div className="BuscarCupo-info-modal" onClick={handleClientInfoOverlayClick}>
+    <div className="BuscarCupo-informacionclientes">
+      <h3>Información del Cliente:</h3>
+      <div className="BuscarCupo-info-item">
+        <span>Email: {selectedClientInfo.email}</span>
+        <FaCopy className="copy-icon" onClick={() => handleCopy(selectedClientInfo.email)} />
+      </div>
+      <div className="BuscarCupo-info-item">
+        <span>Password: {selectedClientInfo.password}</span>
+        <FaCopy className="copy-icon" onClick={() => handleCopy(selectedClientInfo.password)} />
+      </div>
     </div>
   </div>
 )}

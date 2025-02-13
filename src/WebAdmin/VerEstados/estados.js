@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
-import { getFirestore, collection, query, where, getDocs, doc, updateDoc, increment, getDoc } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc, increment, getDoc, writeBatch } from 'firebase/firestore';
 import { app } from '../../firebase';
 import html2canvas from 'html2canvas';
 import fondo from '../../fondo.png';
@@ -96,7 +96,7 @@ function Estados({ onClose }) {
       const clientesRef = collection(firestore, 'clientes');
       const q = query(clientesRef, where('PENDEJOALEJANDRO.estado', '==', searchValue));
       const querySnapshot = await getDocs(q);
-      const results = querySnapshot.docs.map(doc => {
+      let results = querySnapshot.docs.map(doc => {
         const data = doc.data();
         return {
           id: doc.id,
@@ -112,6 +112,36 @@ function Estados({ onClose }) {
           ...data
         };
       });
+
+      if (searchValue === '❌') {
+        results = results.sort((a, b) => {
+          const [dayA, monthA, yearA] = a.fechaFinal.split('/').map(Number);
+          const [dayB, monthB, yearB] = b.fechaFinal.split('/').map(Number);
+          const dateA = new Date(yearA, monthA - 1, dayA);
+          const dateB = new Date(yearB, monthB - 1, dayB);
+          return dateB - dateA;
+        });
+      } else if (searchValue === '⚠️') {
+        results = results.sort((a, b) => {
+          const [dayA, monthA, yearA] = a.fechaFinal.split('/').map(Number);
+          const [dayB, monthB, yearB] = b.fechaFinal.split('/').map(Number);
+          const dateA = new Date(yearA, monthA - 1, dayA);
+          const dateB = new Date(yearB, monthB - 1, dayB);
+          const diffA = Math.ceil((dateA - new Date()) / (1000 * 60 * 60 * 24));
+          const diffB = Math.ceil((dateB - new Date()) / (1000 * 60 * 60 * 24));
+          return diffA - diffB;
+        });
+      } else if (searchValue === '✅') {
+        results = results.sort((a, b) => {
+          const [dayA, monthA, yearA] = a.fechaFinal.split('/').map(Number);
+          const [dayB, monthB, yearB] = b.fechaFinal.split('/').map(Number);
+          const dateA = new Date(yearA, monthA - 1, dayA);
+          const dateB = new Date(yearB, monthB - 1, dayB);
+          const diffA = Math.abs(Math.ceil((dateA - new Date()) / (1000 * 60 * 60 * 24)) - 2);
+          const diffB = Math.abs(Math.ceil((dateB - new Date()) / (1000 * 60 * 60 * 24)) - 2);
+          return diffA - diffB;
+        });
+      }
 
       setSearchResults(results);
     } catch (error) {
@@ -251,7 +281,6 @@ function Estados({ onClose }) {
       await updateDoc(clientRef, {
         fechaFinal: nuevaFechaFinal,
         'PENDEJOALEJANDRO.estado': nuevoEstado,
-        pagado: "SI",
         metodoPago: method,
         totalPagado: totalAmount
       });
@@ -265,6 +294,9 @@ function Estados({ onClose }) {
       await updateDoc(ahorroRef, {
         saldo: increment(valorAhorro)
       });
+  
+      // Cambiar el valor del campo pagado de NO a SI para el cliente seleccionado
+      await actualizarClientePagado(selectedClient.id);
   
       setSelectedClient({
         ...selectedClient,
@@ -280,6 +312,17 @@ function Estados({ onClose }) {
       await handleSearch();
       setShowPaymentOverlay(false); // Hide payment overlay after selection
     }
+  };
+  
+  const actualizarClientePagado = async (clienteId) => {
+    const clienteRef = doc(firestore, 'clientes', clienteId);
+    const clienteDoc = await getDoc(clienteRef);
+    const data = clienteDoc.data();
+    const pagado = data.pagado || [];
+  
+    const updatedPagado = pagado.map(() => 'SI');
+  
+    await updateDoc(clienteRef, { pagado: updatedPagado });
   };
   
 
@@ -425,8 +468,8 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
     <div className="estado-modal-overlay" onClick={onClose}>
       <div className="estado-modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="estado-boton-cerrar" onClick={onClose}>X</button>
-        <div class="estado-search-container">
-          <h1>Buscar Cliente por Estado</h1>
+        <div className="estado-search-container">
+          <h1>Ver Estados</h1>
           <div className="estado-search-controls">
             <select value={searchValue} onChange={handleSearchValueChange} className="estado-search-select">
               <option value="⚠️">⚠️</option>
@@ -436,7 +479,7 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             </select>
             <button className="estado-search-button" onClick={handleSearch}>Buscar</button>
           </div>
-          <div class="estado-search-results">
+          <div className="estado-search-results">
             {searchResults.length > 0 ? (
               <ul>
                 {searchResults.map((result) => (

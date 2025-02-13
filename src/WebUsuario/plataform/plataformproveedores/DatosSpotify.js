@@ -36,8 +36,11 @@ const DatosSpotify = ({ onClose, grupo, title, nombreCliente }) => {
           if (clienteDocs.length === 1) {
             // Si solo se obtiene un documento
             setDocId(clienteDocs[0].id);
-            setEmail(clienteDocs[0].SPOTIFY?.email || ''); // Mostrar el email del cliente si existe
-            setPassword(clienteDocs[0].SPOTIFY?.password || ''); // Mostrar la contraseña si existe
+            const index = clienteDocs[0].servicio?.findIndex((serv, idx) => serv === title && clienteDocs[0].grupo[idx] === grupo);
+            if (index !== -1) {
+              setEmail(clienteDocs[0].SPOTIFY?.email[index] || ''); // Mostrar el email del cliente si existe
+              setPassword(clienteDocs[0].SPOTIFY?.password[index] || ''); // Mostrar la contraseña si existe
+            }
             setDireccion(clienteDocs[0].direccion || 'Dirección no disponible');
             setEnlace(clienteDocs[0].enlace || 'Enlace no disponible');
           } else if (clienteDocs.length > 1) {
@@ -52,8 +55,11 @@ const DatosSpotify = ({ onClose, grupo, title, nombreCliente }) => {
                 if (doc.grupo && doc.grupo.includes(grupo)) {  // Aquí cambiamos la comparación a `includes`
                   // Si el grupo también coincide, es el documento correcto
                   setDocId(doc.id); // Guardamos el ID del documento
-                  setEmail(doc.SPOTIFY?.email || ''); // Mostrar el email del cliente si existe
-                  setPassword(doc.SPOTIFY?.password || ''); // Mostrar la contraseña si existe
+                  const index = doc.servicio?.findIndex((serv, idx) => serv === title && doc.grupo[idx] === grupo);
+                  if (index !== -1) {
+                    setEmail(doc.SPOTIFY?.email[index] || ''); // Mostrar el email del cliente si existe
+                    setPassword(doc.SPOTIFY?.password[index] || ''); // Mostrar la contraseña si existe
+                  }
                   setDireccion(doc.direccion || 'Dirección no disponible');
                   setEnlace(doc.enlace || 'Enlace no disponible');
                   break; // Detenemos el ciclo cuando encontramos el documento correcto
@@ -124,14 +130,24 @@ El equipo de Jadeplatform 🎧`;
       const clienteRef = doc(db, 'clientes', docId); // Referencia al documento del cliente
 
       // Actualizamos el campo SPOTIFY con los datos de email y password
-      await updateDoc(clienteRef, {
-        SPOTIFY: {
-          email: email,
-          password: password,
-        }
-      });
+      const clienteDoc = await getDoc(clienteRef);
+      const clienteData = clienteDoc.data();
+      const index = clienteData.servicio?.findIndex((serv, idx) => serv === title && clienteData.grupo[idx] === grupo);
+      if (index !== -1) {
+        const updatedEmail = Array.isArray(clienteData.SPOTIFY.email) ? [...clienteData.SPOTIFY.email] : [];
+        const updatedPassword = Array.isArray(clienteData.SPOTIFY.password) ? [...clienteData.SPOTIFY.password] : [];
+        updatedEmail[index] = email;
+        updatedPassword[index] = password;
 
-      toast.success('Datos guardados con éxito');
+        await updateDoc(clienteRef, {
+          'SPOTIFY.email': updatedEmail,
+          'SPOTIFY.password': updatedPassword,
+        });
+
+        toast.success('Datos guardados con éxito');
+      } else {
+        toast.error('No se encontró el servicio y grupo en el documento del cliente.');
+      }
     } catch (error) {
       toast.error('Error al guardar los datos: ' + error.message);
     }

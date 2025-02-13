@@ -1,23 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import './finance.css';
+import { getFirestore, collection, onSnapshot } from 'firebase/firestore';
 import nequiImage from "../../recursos/background/NEQUI-SPIDIBOT.png";
 import daviplataImage from "../../recursos/background/DAVIPLATA.png";
 import jadePlatformImage from "../../recursos/background/NEQUI-JADEPLATFORM.png";
 import ahorroalamanoImage from "../../recursos/background/AHORRO-A-LA-MANO.png";
 import ahorroImage from "../../recursos/background/AHORRO.png";
-import { getFinanceDocuments } from '../../firebase';
+import { app } from '../../firebase'; // Asegúrate de importar tu configuración de Firebase
 
 const Finance = () => {
   const [cards, setCards] = useState([]);
+  const db = getFirestore(app);
 
   useEffect(() => {
-    const fetchFinanceData = async () => {
-      const financeData = await getFinanceDocuments();
-      setCards(financeData);
-    };
+    // Referencia a la colección 'finance'
+    const financeCollection = collection(db, 'finance');
 
-    fetchFinanceData();
-  }, []);
+    // Escuchar cambios en tiempo real
+    const unsubscribe = onSnapshot(financeCollection, (snapshot) => {
+      const financeData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        saldo: doc.data().saldo,
+      }));
+      setCards(financeData);
+    });
+
+    // Limpiar suscripción cuando el componente se desmonta
+    return () => unsubscribe();
+  }, [db]);
 
   const handleCardClick = () => {
     setCards((prevCards) => {
@@ -60,18 +70,15 @@ const Finance = () => {
             onClick={handleCardClick}
             style={getCardStyle(card, index)}
           >
-            {/* No text content */}
             <div className="card-balance">{formatCurrency(card.saldo)}</div>
           </div>
         ))}
       </div>
       <div className="finance-analiticas">
         <h3>Analiticas</h3>
-        {/* Add content for Analiticas here */}
       </div>
       <div className="finance-movimientos">
         <h3>Movimientos</h3>
-        {/* Add content for Movimientos here */}
       </div>
     </div>
   );

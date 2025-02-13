@@ -1,0 +1,13 @@
+:root {
+  --color-buttons: #ed1b24;/*usado para botones comunes*/
+  --color-buttons-hover: #c4161d;/*usado para botones comunes hover*/
+  --color-container: #f9f9f9;/*usado para contenedores*/
+  --color-container-hover: #e9e9e9;/*usado para contenedores hover*/
+  --color-button-confirmation: #1ed760;/*usado para botones de confirmacion*/
+  --color-button-confirmation-hover: #;/*usado para botones de confirmacion*/
+  --color-button-negation: #ff000d;/*usado para botones de negacion*/
+  --color-button-negation-hover: #8d0007;/*usado para botones de negaacion*/
+  --color-background-: #f9f9f9;/*usado para backgropund*/
+  --color-background-hover: #f1f1f1;/*usado para backgropund hover*/
+  --color-iconos: #205080;/*usado para los iconos*/
+}

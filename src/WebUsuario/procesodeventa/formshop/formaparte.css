@@ -214,7 +214,7 @@ button:hover {
 .Toastify__toast {
     position: fixed !important;  /* Asegura que el toast esté fijo en la pantalla */
     top: 20px;  /* Ajusta la distancia desde la parte superior */
-    z-index: 9999;  /* Asegura que esté por encima de otros elementos */
+    z-index: 999999;  /* Asegura que esté por encima de otros elementos */
     transition: transform 0.3s ease-in-out;  /* Transición para suavizar el movimiento */
     max-width: 90%;  /* Asegura que el toast se vea bien en pantallas pequeñas */
     box-sizing: border-box;  /* Evita que el padding y el borde desajusten el tamaño */
