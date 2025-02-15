@@ -39,21 +39,22 @@ const ActualizarBd = ({ onClose }) => {
   const actualizarClientes = async (clientesRef) => {
     const querySnapshot = await getDocs(clientesRef);
     const batch = writeBatch(db);
-
+  
     querySnapshot.forEach((doc) => {
       const data = doc.data();
       const fechaFinal = data.fechaFinal;
-
+      const servicios = data.servicio || [];
+  
       if (fechaFinal) {
         const estado = calcularEstadoCliente(fechaFinal);
-
-        // Actualiza el campo estado dentro del mapa PENDEJOALEJANDRO
+  
         batch.update(doc.ref, {
-          'PENDEJOALEJANDRO.estado': estado
+          'PENDEJOALEJANDRO.estado': estado,
+          // Removed code that changes the pagado field
         });
       }
     });
-
+  
     await batch.commit();
   };
 

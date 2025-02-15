@@ -162,7 +162,7 @@ function RegistroCliente({ onClose }) {
         PENDEJOALEJANDRO: { // Campo de tipo mapa
           estado: clientData.estado
         },
-        pagado: clientData.pagado.toUpperCase()
+        pagado: ["SI"], // Initialize pagado as an array with "SI"
       };
 
       // Guardar en Firestore

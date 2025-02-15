@@ -246,9 +246,9 @@ function BuscarCliente({ onClose }) {
         ? clientData.precio.map(item => item.toUpperCase())
         : (clientData.precio ? clientData.precio.split(',').map(item => item.trim().toUpperCase()) : []);
 
-      const pagadoMap = typeof clientData.pagado === 'object' && clientData.pagado !== null
+      const pagadoArray = Array.isArray(clientData.pagado)
         ? clientData.pagado
-        : {};
+        : (clientData.pagado ? clientData.pagado.split(',').map(item => item.trim()) : []);
 
       const fechaInicial = clientData.fechaInicial ? convertirFechaInvertida(clientData.fechaInicial) : '';
       const fechaFinal = clientData.fechaFinal ? convertirFechaInvertida(clientData.fechaFinal) : '';
@@ -272,8 +272,8 @@ function BuscarCliente({ onClose }) {
       if (fechaFinal) {
         updates['fechaFinal'] = fechaFinal;
       }
-      if (Object.keys(pagadoMap).length > 0) {
-        updates['pagado'] = pagadoMap;
+      if (pagadoArray.length > 0) {
+        updates['pagado'] = pagadoArray;
       }
       if (clientData.estado !== '') {
         updates['PENDEJOALEJANDRO.estado'] = clientData.estado;
@@ -654,18 +654,19 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             </div>
           </div>
         )}
-        {showDeleteConfirmationModal && (
-          <>
-            <div className="confirmation-modal-overlay"></div>
-            <div className="confirmation-modal-content">
-              <h2>¿Estás seguro de que deseas eliminar a este cliente? 💀</h2>
-              <div className="confirmation-modal-buttons">
-                <button className="no-button" onClick={cancelDeleteClient}>No, Quiero Continuar</button>
-                <button className="yes-button" onClick={confirmDeleteClient}>Sí, Deseo Eliminarlo</button>
-              </div>
-            </div>
-          </>
-        )}
+        ...
+{showDeleteConfirmationModal && (
+  <div className="confirmation-modal-overlay">
+    <div className="confirmation-modal-content">
+      <h2>¿Estás seguro de que deseas eliminar a este cliente? 💀</h2>
+      <div className="confirmation-modal-buttons">
+        <button className="no-button" onClick={cancelDeleteClient}>No, Quiero Continuar</button>
+        <button className="yes-button" onClick={confirmDeleteClient}>Sí, Deseo Eliminarlo</button>
+      </div>
+    </div>
+  </div>
+)}
+...
       </div>
       <ToastContainer /> {/* Add ToastContainer here */}
     </div>

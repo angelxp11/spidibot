@@ -138,7 +138,7 @@ const Notificaciones = ({ onClose }) => {
           email: email || '',
           fechaInicial: fechaInicialFormateada || '', // Fecha inicial formateada
           fechaFinal: fechaFinalFormateada || '', // Fecha final formateada
-          pagado: 'SI', // Campo pagado con valor fijo 'SI'
+          pagado: ['SI'], // Campo pagado como array con "SI" como elemento inicial
           grupo: Array.isArray(grupo) ? grupo.map(g => g.toUpperCase()) : [grupo.toUpperCase()] || [], // Convertir a mayúsculas
           servicio: Array.isArray(servicio) ? servicio.map(s => String(s)) : [String(servicio)] || [], // Aseguramos que 'servicio' sea un array de strings
           notas: Array.isArray(notas) ? notas.map(nota => nota.toUpperCase()) : [notas.toUpperCase()] || [], // Aseguramos que 'notas' sea un array y en mayúsculas
