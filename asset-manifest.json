@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/spidibot/static/css/main.0ad3001c.css",
-    "main.js": "/spidibot/static/js/main.0fd19be6.js",
+    "main.js": "/spidibot/static/js/main.0684bf71.js",
     "static/media/AHORRO.png": "/spidibot/static/media/AHORRO.b1f0a3a21db3954f4e6e.png",
     "static/media/NEQUI-JADEPLATFORM.png": "/spidibot/static/media/NEQUI-JADEPLATFORM.30c3bf85247975934c1e.png",
     "static/media/AHORRO-A-LA-MANO.png": "/spidibot/static/media/AHORRO-A-LA-MANO.07597f298845b9b0cda2.png",
@@ -14,10 +14,10 @@
     "static/media/google-logo.svg": "/spidibot/static/media/google-logo.efa560d32653a615a1db742bbf78c815.svg",
     "index.html": "/spidibot/index.html",
     "main.0ad3001c.css.map": "/spidibot/static/css/main.0ad3001c.css.map",
-    "main.0fd19be6.js.map": "/spidibot/static/js/main.0fd19be6.js.map"
+    "main.0684bf71.js.map": "/spidibot/static/js/main.0684bf71.js.map"
   },
   "entrypoints": [
     "static/css/main.0ad3001c.css",
-    "static/js/main.0fd19be6.js"
+    "static/js/main.0684bf71.js"
   ]
 }
