@@ -4,20 +4,20 @@ import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 
-// Configuración de Firebase desde variables de entorno
+// Configuración de Firebase
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_FIREBASE_APP_ID,
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
+  apiKey: "AIzaSyD9trSuw-JqhT70wND-apjE8H6UvAYU8Q0",
+  authDomain: "spidijade.firebaseapp.com",
+  databaseURL: "https://spidijade-default-rtdb.firebaseio.com",
+  projectId: "spidijade",
+  storageBucket: "spidijade.appspot.com",
+  messagingSenderId: "1004590831928",
+  appId: "1:1004590831928:web:d1b037cb0b71082d4409cd",
+  measurementId: "G-5F3JLQFPCN"
 };
 
-// Clave pública VAPID desde variables de entorno
-const vapidKey = process.env.REACT_APP_VAPID_KEY;
+// Clave pública VAPID
+const vapidKey = 'BOo6VG4uksfoYr1GN-1X8FxGPNEe8MiNyCU5wCqG1TvNgO_H4K90b_IJ_QIXpDIySj3bxf3bEhvHWzCZBI32810';
 
 // Inicializa la aplicación Firebase
 const app = initializeApp(firebaseConfig);
