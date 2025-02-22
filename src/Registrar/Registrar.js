@@ -10,7 +10,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Carga from '../Loada/Carga';
 import Login from '../IniciarSesion/Login.js';
 
-function Registrar() {
+function Registrar({ toggleVisibility }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -91,7 +91,7 @@ function Registrar() {
   };
 
   const handleLoginToggle = () => {
-    setShowLogin(true);
+    toggleVisibility();
   };
 
   return (

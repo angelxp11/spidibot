@@ -20,7 +20,6 @@ const ActualizarBd = ({ onClose }) => {
         await actualizarGrupos(serviciosRef);
         
         // Muestra solo un toast al final
-        toast.success('Clientes y grupos actualizados', { autoClose: 1000 });
         setLoading(false);
         setHasUpdated(true); // Marcamos que ya se ha actualizado
         onClose();

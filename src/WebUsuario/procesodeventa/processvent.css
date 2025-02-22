@@ -1,5 +1,5 @@
 /* Fondo oscuro semitransparente que cubre toda la pantalla */
-.venta-overlay {
+.venta-overlay-unique {
     position: fixed;
     top: 0;
     left: 0;
@@ -13,17 +13,16 @@
 }
 
 /* Estilo del modal (formulario de venta) */
-.venta-modal {
-    background-color: white;
+.venta-modal-unique {
+    background-color: var(--color-container);
     padding: 20px;
     border-radius: 8px;
     text-align: center; /* Centra el texto */
     width: 300px; /* Ancho del formulario */
-    z-index: 901; /* Asegura que el modal esté encima del overlay */
 }
 
 /* Estilo de los botones, uno debajo del otro */
-.venta-button-group {
+.venta-button-group-unique {
     display: flex;
     flex-direction: column; /* Hace que los botones estén en columna */
     gap: 10px; /* Espacio entre los botones */
@@ -41,21 +40,66 @@ button {
 
 /* Hover para los botones generales */
 button:hover {
-    background-color: #131c42; /* Fondo más oscuro al pasar el mouse */
+    background-color: var(--color-buttons-hover); /* Fondo más oscuro al pasar el mouse */
 }
 
 /* Estilo del botón "Cerrar" */
-.cerrarventabutton {
-    background-color: #ff4d4d; /* Fondo rojo para el botón cerrar */
+.cerrarventabutton-unique {
+    background-color: var(--color-button-negation); /* Fondo rojo para el botón cerrar */
     color: white; /* Texto blanco */
     font-weight: bold;
 }
 
-.cerrarventabutton:hover {
-    background-color: #ff1a1a; /* Cambio de fondo al pasar el mouse */
+.cerrarventabutton-unique:hover {
+    background-color: var(--color-button-negation-hover); /* Cambio de fondo al pasar el mouse */
 }
 
 /* Estilo para la clase p-venta */
-.p-venta {
-    color: black; /* Cambia el color del texto a negro */
+.p-venta-unique {
+    color: var(--color-text); /* Cambia el color del texto a blanco */
+}
+
+/* Estilo del overlay del formulario aparte */
+.formaparte-overlay-unique {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    z-index: 900; /* Asegura que el overlay esté encima de otros elementos */
+}
+
+/* Estilo del modal del formulario aparte */
+.formaparte-modal-unique {
+    background-color: var(--color-container);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center; /* Centra el texto */
+    width: 300px; /* Ancho del formulario */
+    z-index: 901; /* Asegura que el modal esté encima del overlay */
+}
+
+/* Estilo del botón cerrar del formulario aparte */
+.formaparte-close-btn-unique {
+    background-color: var(--color-button-negation); /* Fondo rojo para el botón cerrar */
+    color: white; /* Texto blanco */
+    font-weight: bold;
+}
+
+.formaparte-close-btn-unique:hover {
+    background-color: var(--color-button-negation-hover); /* Cambio de fondo al pasar el mouse */
+}
+
+/* Clase para ocultar el botón */
+.hidden {
+    display: none;
+}
+
+/* Estilo del botón "FACTURA APARTE" */
+.factura-aparte-button {
+    font-weight: bold;
+    font-size: 20px;
 }

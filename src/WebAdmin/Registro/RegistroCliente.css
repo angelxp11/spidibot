@@ -70,7 +70,11 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   font-family: 'Arial', sans-serif;
-  color: black; /* Updated color */
+  color: var(--color-text); /* Updated color */
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* Makes the calendar icon white */
 }
 
 .registro-form-button {

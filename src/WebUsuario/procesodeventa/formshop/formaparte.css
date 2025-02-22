@@ -5,7 +5,6 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,7 +14,7 @@
 
 /* Estilo del modal */
 .formaparte-modal {
-    background-color: white;
+    background-color: var(--color-container);
     padding: 20px;
     border-radius: 8px;
     width: 400px;
@@ -24,6 +23,7 @@
     flex-direction: column;
     max-height: 90vh; /* Limita la altura del modal */
     overflow-y: auto; /* Agrega barra de desplazamiento vertical */
+    z-index: 902;
 }
 
 /* Botón de cerrar específico para este modal */
@@ -33,7 +33,7 @@
     right: 10px;
     width: 30px;
     height: 30px;
-    background-color: red;
+    background-color: var(--color-button-negation);
     color: white;
     border: none;
     border-radius: 50%;
@@ -45,13 +45,14 @@
 }
 
 .formaparte-modal .formaparte-close-btn:hover {
-    background-color: darkred;
+    background-color: var(--color-button-negation-hover);
 }
 
 /* Encabezado del modal */
 h2 {
     text-align: center;
     margin-top: 10px;
+    color: var(--color-text);
 }
 
 /* Estilo de los campos de entrada y labels */
@@ -60,7 +61,7 @@ h2 {
 }
 
 .labelform {
-    color: black;
+    color: var(--color-text);
     font-weight: bold;
     margin-bottom: 5px;
     display: block;
@@ -73,12 +74,32 @@ select {
     font-size: 16px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    background-color: var(--color-container);
+    color: var(--color-text);
 }
 
 /* Agregar barra de desplazamiento vertical al select */
 select {
     overflow-y: auto;
-    max-height: 150px; /* Limita la altura del select */
+}
+
+/* Estilo de la barra de desplazamiento */
+::-webkit-scrollbar {
+    width: 12px; /* Ancho de la barra de desplazamiento */
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-container-hover); /* Color del fondo de la barra de desplazamiento */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--color-buttons); /* Color de la barra de desplazamiento */
+    border-radius: 10px; /* Redondear los bordes de la barra de desplazamiento */
+    border: 3px solid var(--color-container-hover); /* Espacio alrededor de la barra de desplazamiento */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-buttons-hover); /* Color de la barra de desplazamiento al pasar el mouse */
 }
 
 /* Botón de envío */
@@ -87,22 +108,15 @@ button {
     font-size: 16px;
     border: none;
     border-radius: 5px;
-    background-color: #4caf50;
+    background-color: var(--color-button-confirmation);
     color: white;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: var(--color-button-confirmation-hover);
 }
 
-/* Estilo para los labels de los campos en el formulario */
-.labelform {
-    color: black;
-    font-weight: bold;
-    margin-bottom: 5px;
-    display: block;
-}
 /* Contenedor principal de la pregunta con radio buttons */
 .checkformspoti-group {
     display: flex; /* Usamos flexbox para organizar el contenido */
@@ -112,7 +126,7 @@ button:hover {
 
 /* Estilo para cada opción de radio button */
 .checkformspoti {
-    color: rgb(0, 0, 0); /* Texto en negro */
+    color: var(--color-text); /* Texto en blanco */
     margin-bottom: 10px; /* Separación entre opciones */
     display: flex; /* Usamos flexbox para el alineado del radio button y el texto */
     align-items: center; /* Alinear verticalmente */
@@ -126,50 +140,50 @@ button:hover {
 
 /* Estilo para el input radio */
 .spotify-radio {
-    accent-color: #4caf50; /* Cambia el color del radio button a verde */
+    accent-color: var(--color-button-confirmation); /* Cambia el color del radio button a verde */
     width: 20px; /* Tamaño personalizado del radio button */
     height: 20px; /* Tamaño personalizado del radio button */
     cursor: pointer; /* Cambio de cursor cuando pasas sobre el radio button */
     margin-right: 10px; /* Espacio entre el radio button y el texto */
     transition: all 0.3s ease; /* Animación suave al interactuar */
-  }
-  
-  .spotify-radio:hover {
+}
+
+.spotify-radio:hover {
     transform: scale(1.2); /* Aumenta el tamaño del radio button al pasar el mouse */
-  }
-  
-  .spotify-radio:checked {
-    background-color: #4caf50; /* Fondo verde cuando está seleccionado */
-    border-color: #4caf50; /* Borde verde cuando está seleccionado */
-  }
-  
+}
+
+.spotify-radio:checked {
+    background-color: var(--color-button-confirmation); /* Fondo verde cuando está seleccionado */
+    border-color: var(--color-button-confirmation); /* Borde verde cuando está seleccionado */
+}
+
 /* Estilo para el checkbox */
 .checkboxinformation {
     margin-right: 10px; /* Espacio entre el checkbox y el texto */
     cursor: pointer; /* Cursor al pasar sobre el checkbox */
     transform: scale(1.1); /* Un pequeño aumento en el tamaño del checkbox */
     transition: all 0.3s ease; /* Suavizado de la transición al interactuar */
-  }
-  
-  /* Aumentar el tamaño del checkbox al pasar el mouse */
-  .checkboxinformation:hover {
+}
+
+/* Aumentar el tamaño del checkbox al pasar el mouse */
+.checkboxinformation:hover {
     transform: scale(1.2); /* Aumenta el tamaño al pasar el mouse */
-  }
-  
-  /* Estilo para el texto junto al checkbox */
-  .checkboxinformation + span {
+}
+
+/* Estilo para el texto junto al checkbox */
+.checkboxinformation + span {
     font-weight: bold; /* Hace el texto en negrita */
-    color: #333; /* Color oscuro para el texto */
+    color: var(--color-text); /* Color blanco para el texto */
     cursor: pointer; /* Cambio de cursor al pasar sobre el texto */
     font-size: 16px; /* Tamaño de fuente */
-  }
-  
-  /* Cambia el color del texto a verde cuando el checkbox está seleccionado */
-  .checkboxinformation:checked + span {
-    color: #4caf50; /* Cambia el color del texto a verde cuando el checkbox está seleccionado */
-  }
-  
-  /* Contenedor principal del checkbox */
+}
+
+/* Cambia el color del texto a verde cuando el checkbox está seleccionado */
+.checkboxinformation:checked + span {
+    color: var(--color-button-confirmation); /* Cambia el color del texto a verde cuando el checkbox está seleccionado */
+}
+
+/* Contenedor principal del checkbox */
 .checkformcheckbox-group {
     display: flex; /* Usamos flexbox para organizar el contenido */
     flex-direction: column; /* Alinear los elementos verticalmente */
@@ -178,7 +192,7 @@ button:hover {
 
 /* Estilo para el label del checkbox */
 .checkformcheckbox {
-    color: rgb(0, 0, 0); /* Texto en negro */
+    color: var(--color-text); /* Texto en blanco */
     font-weight: bold; /* Texto en negrita */
     margin-bottom: 10px; /* Separación entre opciones */
     display: flex; /* Usamos flexbox para el alineado del checkbox y el texto */
@@ -193,24 +207,41 @@ button:hover {
 
 /* Estilo para el input checkbox */
 .checkbox-input {
-    accent-color: #4caf50; /* Cambia el color del checkbox a verde */
-    width: 20px; /* Tamaño personalizado del checkbox */
-    height: 20px; /* Tamaño personalizado del checkbox */
-    cursor: pointer; /* Cambio de cursor cuando pasas sobre el checkbox */
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-buttons); /* Use variable for border color */
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-right: 10px; /* Espacio entre el checkbox y el texto */
     transition: all 0.3s ease; /* Animación suave al interactuar */
 }
 
-/* Efecto al pasar el mouse sobre el checkbox */
-.checkbox-input:hover {
-    transform: scale(1.2); /* Aumenta el tamaño del checkbox al pasar el mouse */
+.checkbox-input:checked::before {
+    content: '✔';
+    color: white;
+    font-size: 14px;
+    position: absolute;
 }
 
-/* Estilo cuando el checkbox está marcado */
 .checkbox-input:checked {
-    background-color: #4caf50; /* Fondo verde cuando está seleccionado */
-    border-color: #4caf50; /* Borde verde cuando está seleccionado */
+    background-color: var(--color-buttons); /* Use variable for background color */
+    border-color: var(--color-buttons); /* Use variable for border color */
 }
+
+.checkbox-input:hover {
+    transform: scale(1.2); /* Aumenta el tamaño al pasar el mouse */
+}
+
+.checkbox-input:checked + span {
+    color: var(--color-buttons); /* Use variable for text color */
+}
+
 .Toastify__toast {
     position: fixed !important;  /* Asegura que el toast esté fijo en la pantalla */
     top: 20px;  /* Ajusta la distancia desde la parte superior */

@@ -66,7 +66,7 @@ function Login() {
   };
 
   const toggleVisibility = () => {
-    setIsLoginVisible(false); // Cambia la visibilidad a false para mostrar el registro
+    setIsLoginVisible(!isLoginVisible); // Cambia la visibilidad
   };
 
   // Función para manejar el inicio de sesión con Google
@@ -98,16 +98,11 @@ function Login() {
   };
 
   return (
-    <div className={`login-container ${!isLoginVisible ? 'hidden' : ''}`}>
-      {/* Componente de Toast para mensajes (fuera de .login-xbox) */}
+    <div className="login-container">
       <ToastContainer autoClose={3000} hideProgressBar />
-
-      {/* Mostrar la pantalla de carga si loading es true */}
       {loading && <Carga />}
-
       {!loading && isLoginVisible && (
         <div className="login-xbox">
-          {/* Contenedor de login */}
           <h1>Iniciar Sesión</h1>
           <form className="login-form" onSubmit={handleSubmit}>
             <div className="input-group">
@@ -135,22 +130,16 @@ function Login() {
             </div>
             <button type="submit" className="login-buttons">Iniciar Sesión</button>
           </form>
-
-          {/* Botón de inicio de sesión con Google */}
           <button onClick={handleGoogleSignIn} className="google-signin-button">
-  <img src={require('../recursos/google-logo.svg').default} alt="Google" className="google-icon" />
-  <span>Iniciar sesión con Google</span>
-</button>
-
-
-          {/* Texto que invita a registrarse, dentro del login-box */}
+            <img src={require('../recursos/google-logo.svg').default} alt="Google" className="google-icon" />
+            <span>Iniciar sesión con Google</span>
+          </button>
           <br />
-          <p className="reegister-link">
+          <p className="login-link">
             ¿No tienes cuenta? <span onClick={toggleVisibility}>Regístrate</span>
           </p>
         </div>
       )}
-
       {!isLoginVisible && <Registro toggleVisibility={toggleVisibility} />}
     </div>
   );

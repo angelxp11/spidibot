@@ -55,6 +55,10 @@ li {
   margin-top: 10px;
 }
 
+.btn-cerrar:hover {
+  background: var(--color-button-negation-hover);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

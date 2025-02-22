@@ -112,7 +112,7 @@
   margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  color: black; /* Updated color */
+  color: var(--color-text); /* Updated color */
 }
 
 .BuscarCliente-details-panel .button-container {

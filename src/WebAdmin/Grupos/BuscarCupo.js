@@ -147,102 +147,101 @@ function BuscarCupo({ onClose }) {
     }
   }, [grupo, isResultadosVisible]);
 
-  const handleSearch = async () => {
-    try {
-      const clientesRef = collection(db, 'clientes');
-      const serviciosArray = servicio.split(',').map(s => s.trim().toUpperCase());
-      const clientesFiltrados = [];
-      const coloresClientes = {};
-  
-      for (let i = 0; i < serviciosArray.length; i++) {
-        const servActual = serviciosArray[i];
+const handleSearch = async () => {
+  try {
+    const clientesRef = collection(db, 'clientes');
+    const serviciosArray = servicio.split(',').map(s => s.trim().toUpperCase());
+    const clientesFiltrados = [];
+    const coloresClientes = {};
+
+    for (let i = 0; i < serviciosArray.length; i++) {
+      const servActual = serviciosArray[i];
+      
+      const qServicio = query(
+        clientesRef,
+        where('servicio', 'array-contains', servActual)
+      );
+      const querySnapshot = await getDocs(qServicio);
+      
+      const clientesServicio = querySnapshot.docs.map(doc => ({
+        id: doc.data().ID,
+        nombre: doc.data().nombre,
+        apellido: doc.data().apellido,
+        PENDEJOALEJANDRO: doc.data().PENDEJOALEJANDRO,
+        SPOTIFY: doc.data().SPOTIFY,
+        ...doc.data()
+      }));
+
+      clientesServicio.forEach(cliente => {
+        const servicios = cliente.servicio || [];
+        const grupos = cliente.grupo || [];
         
-        const qServicio = query(
-          clientesRef,
-          where('servicio', 'array-contains', servActual)
+        // Verificar si el grupo y servicio coinciden
+        const coincide = servicios.some((serv, index) => 
+          serv === servActual && grupos[index] === grupo
         );
-        const querySnapshot = await getDocs(qServicio);
         
-        const clientesServicio = querySnapshot.docs.map(doc => ({
-          id: doc.data().ID,
-          nombre: doc.data().nombre,
-          apellido: doc.data().apellido,
-          PENDEJOALEJANDRO: doc.data().PENDEJOALEJANDRO,
-          SPOTIFY: doc.data().SPOTIFY,
-          ...doc.data()
-        }));
-  
-        clientesServicio.forEach(cliente => {
-          const servicios = cliente.servicio || [];
-          const grupos = cliente.grupo || [];
-          
-          // Verificar si el grupo y servicio coinciden
-          const coincide = servicios.some((serv, index) => 
-            serv === servActual && grupos[index] === grupo
-          );
-          
-          // Verificar el estado en el campo PENDEJOALEJANDRO
-          const estadoCliente = cliente.PENDEJOALEJANDRO?.estado;
-          
-          // Mostrar cliente si su estado es diferente de 😶‍🌫️
-          if (coincide && estadoCliente !== '😶‍🌫️') {
-            if (!clientesFiltrados.some(c => c.id === cliente.id)) {
-              clientesFiltrados.push(cliente);
-              if (serviciosArray.length > 1) {
-                coloresClientes[cliente.id] = getColorForIndex(i);
-              }
+        // Verificar el estado en el campo PENDEJOALEJANDRO
+        const estadoCliente = cliente.PENDEJOALEJANDRO?.estado;
+        
+        // Mostrar cliente si su estado es diferente de 😶‍🌫️
+        if (coincide && estadoCliente !== '😶‍🌫️') {
+          if (!clientesFiltrados.some(c => c.id === cliente.id)) {
+            clientesFiltrados.push(cliente);
+            if (serviciosArray.length > 1) {
+              coloresClientes[cliente.id] = getColorForIndex(i);
             }
           }
-        });
-      }
-  
-      setClientes(clientesFiltrados);
-      setClientesColores(serviciosArray.length > 1 ? coloresClientes : {});
-      setIsResultadosVisible(true);
-    } catch (error) {
-      console.error('Error en la búsqueda:', error);
+        }
+      });
     }
-  };
-  
 
-const handleInfoClick = async () => {
-  try {
-    const serviciosRef = collection(db, 'Servicios');
-    const qServicio = query(
-      serviciosRef,
-      where('__name__', '==', servicio.trim().toUpperCase())
-    );
-    const querySnapshotServicio = await getDocs(qServicio);
-
-    if (!querySnapshotServicio.empty) {
-      const servicioDoc = querySnapshotServicio.docs[0];
-      const servicioData = servicioDoc.data();
-      const grupoInfo = servicioData[grupo];
-
-      if (grupoInfo) {
-        setInfo({
-          email: Array.isArray(grupoInfo.email) ? grupoInfo.email[0] : grupoInfo.email || '',
-          password: Array.isArray(grupoInfo.password) ? grupoInfo.password[0] : grupoInfo.password || '',
-          fechaComienzo: verFechas(grupoInfo.fechaComienzo) || '',
-          fechaPago: verFechas(grupoInfo.fechaPago) || '',
-          notas: grupoInfo.notas || '',
-          direccion: grupoInfo.direccion || '',
-          enlace: grupoInfo.enlace || '',
-          price: typeof grupoInfo.price === 'number' && grupoInfo.price !== 0 ? grupoInfo.price : 0, // Ensure price is 0 if it doesn't exist or is 0
-          package: grupoInfo.package || '' // Asegúrate de que el valor del paquete se muestre correctamente
-        });
-        setInfoDocId(servicioDoc.id); // Guarda el ID del documento
-        setIsInfoVisible(true); // Muestra la información del grupo
-      } else {
-        toast('No se encontró información para el grupo especificado.');
-      }
-    } else {
-      toast('No se encontró el servicio especificado.');
-    }
+    setClientes(clientesFiltrados);
+    setClientesColores(serviciosArray.length > 1 ? coloresClientes : {});
+    setIsResultadosVisible(true);
   } catch (error) {
-    console.error('Error al obtener información del servicio:', error);
+    console.error('Error en la búsqueda:', error);
   }
 };
+
+  const handleInfoClick = async () => {
+    try {
+      const serviciosRef = collection(db, 'Servicios');
+      const qServicio = query(
+        serviciosRef,
+        where('__name__', '==', servicio.trim().toUpperCase())
+      );
+      const querySnapshotServicio = await getDocs(qServicio);
+
+      if (!querySnapshotServicio.empty) {
+        const servicioDoc = querySnapshotServicio.docs[0];
+        const servicioData = servicioDoc.data();
+        const grupoInfo = servicioData[grupo];
+
+        if (grupoInfo) {
+          setInfo({
+            email: Array.isArray(grupoInfo.email) ? grupoInfo.email[0] : grupoInfo.email || '',
+            password: Array.isArray(grupoInfo.password) ? grupoInfo.password[0] : grupoInfo.password || '',
+            fechaComienzo: verFechas(grupoInfo.fechaComienzo) || '',
+            fechaPago: verFechas(grupoInfo.fechaPago) || '',
+            notas: grupoInfo.notas || '',
+            direccion: grupoInfo.direccion || '',
+            enlace: grupoInfo.enlace || '',
+            price: typeof grupoInfo.price === 'number' && grupoInfo.price !== 0 ? grupoInfo.price : 0, // Ensure price is 0 if it doesn't exist or is 0
+            package: grupoInfo.package || '' // Asegúrate de que el valor del paquete se muestre correctamente
+          });
+          setInfoDocId(servicioDoc.id); // Guarda el ID del documento
+          setIsInfoVisible(true); // Muestra la información del grupo
+        } else {
+          toast('No se encontró información para el grupo especificado.');
+        }
+      } else {
+        toast('No se encontró el servicio especificado.');
+      }
+    } catch (error) {
+      console.error('Error al obtener información del servicio:', error);
+    }
+  };
   
   
   const handleCopyPaste = () => {
@@ -398,40 +397,64 @@ const handleCheckboxChange = (id, cliente) => {
       </div>
 
       {isResultadosVisible && (
-        <div className="BuscarCupo-resultadoclientes">
-          <div className="BuscarCupo-modal-content1">
-            <button className="BuscarCupo-boton-cerrar" onClick={() => setIsResultadosVisible(false)}>x</button>
-            <h3>Resultados:</h3>
-            <ul>
-              {clientes.length === 0 ? (
-                <li>No se encontraron clientes.</li>
-              ) : (
-                clientes.map(cliente => {
-                  const isPrincipal = cliente.SPOTIFY?.principal?.some((isPrincipal, index) => 
-                    isPrincipal && cliente.servicio[index] === servicio && cliente.grupo[index] === grupo
-                  );
-                  return (
-                    <li
-                      key={cliente.id}
-                      className="BuscarCupo-cliente-item"
-                      style={{ backgroundColor: isPrincipal ? 'green' : (clientesColores[cliente.id] || 'transparent') }}
-                    >
-                      <input
-                        type="checkbox"
-                        className="BuscarCupo-custom-checkbox"
-                        checked={!!selectedClientes[cliente.id]}
-                        onChange={() => handleCheckboxChange(cliente.id, cliente)}
-                      />
-                      <span>{cliente.id}🔛{cliente.pagado === 'SI' ? '✔️' : '✖️'}</span> {/* Mostrar ✔️ o ✖️ basado en el valor de "pagado" */}
-                      <span>{cliente.nombre} {cliente.apellido}</span>
-                    </li>
-                  );
-                })
-              )}
-            </ul>
-          </div>
-        </div>
-      )}
+  <div className="BuscarCupo-resultadoclientes">
+    <div className="BuscarCupo-modal-content1">
+      <button className="BuscarCupo-boton-cerrar" onClick={() => setIsResultadosVisible(false)}>x</button>
+      <h3>Resultados:</h3>
+      <ul>
+        {clientes.length === 0 ? (
+          <li>No se encontraron clientes.</li>
+        ) : (
+          clientes.map(cliente => {
+            // Encontrar el índice donde coinciden servicio y grupo
+            const servicioIndex = cliente.servicio.findIndex((s, i) => 
+              servicio.split(',').map(serv => serv.trim().toUpperCase()).includes(s) && cliente.grupo[i] === grupo
+            );
+
+
+            // Determinar el estado de pago
+            let pagadoStatus = '❓';
+            if (servicioIndex !== -1) {
+              const pagado = cliente.pagado[servicioIndex];
+              if (pagado === 'SI') {
+                pagadoStatus = '✔️';
+              } else if (pagado === 'NO') {
+                pagadoStatus = '✖️';
+              }
+            }
+
+            // Verificar si es principal en este servicio y grupo
+            const isPrincipal = servicioIndex !== -1 && cliente.SPOTIFY?.principal?.[servicioIndex];
+
+            // Obtener el estado de PENDEJOALEJANDRO
+            const estadoPendejoAlejandro = cliente.PENDEJOALEJANDRO?.estado || 'Desconocido';
+
+            return (
+              <li
+                key={cliente.id}
+                className="BuscarCupo-cliente-item"
+                style={{ backgroundColor: isPrincipal ? 'green' : (clientesColores[cliente.id] || 'transparent') }}
+              >
+                <input
+                  type="checkbox"
+                  className="BuscarCupo-custom-checkbox"
+                  checked={!!selectedClientes[cliente.id]}
+                  onChange={() => handleCheckboxChange(cliente.id, cliente)}
+                />
+                <div className="BuscarCupo-cliente-info">
+                  <span>{cliente.id}{estadoPendejoAlejandro}{pagadoStatus}</span>
+                </div>
+                <div className="BuscarCupo-cliente-nombre">
+                  <span>{cliente.nombre} {cliente.apellido}</span>
+                </div>
+              </li>
+            );
+          })
+        )}
+      </ul>
+    </div>
+  </div>
+)}
 
 {isInfoVisible && (
   <div className="BuscarCupo-informacionclientes">

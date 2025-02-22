@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from './firebase'; 
 import Login from './IniciarSesion/Login';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import AdminHome from './WebAdmin/home'; 
 import UserHome from './WebUsuario/home'; 
 import Carga from './Loada/Carga'; 

@@ -1,4 +1,5 @@
 /* src/recursos/MensajesSiNo.css */
+@import url('./colors-dark.css');
 
 .overlay {
   position: fixed;
@@ -14,15 +15,17 @@
 }
 
 .mensaje-container {
-  background: white;
+  background: var(--color-container);
+  color: var(--color-text);
   padding: 20px;
   border-radius: 8px;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
 }
 
 .encabezado-user {
-  color: black; /* Cambia el color del texto del encabezado a negro */
+  color: var(--color-text); /* Cambia el color del texto del encabezado a negro */
 }
 
 .button-group {
@@ -30,11 +33,13 @@
   justify-content: space-between;
   margin-top: 20px;
   font: bold;
+  gap: 10px; /* Add space between buttons */
 }
 
-.no-button {
-  background-color: rgb(5, 126, 50);
-  color: white;
+.no-button, .yes-button {
+  flex: 1; /* Ensure buttons have the same size */
+  background-color: var(--color-button-confirmation);
+  color: var(--color-text);
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
@@ -44,27 +49,20 @@
 }
 
 .yes-button {
-  background-color: red;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
+  background-color: var(--color-button-negation);
 }
 
 .no-button:hover {
-  background-color: rgb(8, 197, 74);
+  background-color: var(--color-button-confirmation-hover);
 }
 
 .yes-button:hover {
-  background-color: darkred;
+  background-color: var(--color-button-negation-hover);
 }
 
-
 .cerrabutton {
-  background-color: red; /* Fondo rojo */
-  color: white; /* Texto blanco */
+  background-color: var(--color-button-negation); /* Fondo rojo */
+  color: var(--color-text); /* Texto blanco */
   border: none; /* Sin borde */
   padding: 10px 20px; /* Espaciado interno */
   border-radius: 5px; /* Bordes redondeados */
@@ -74,10 +72,11 @@
 }
 
 .cerrabutton:hover {
-  background-color: darkred; /* Fondo más oscuro al pasar el cursor */
+  background-color: var(--color-button-negation-hover); /* Fondo más oscuro al pasar el cursor */
 }
 
 ul {
   list-style-type: none; /* Elimina las viñetas */
   padding-left: 0; /* Elimina el margen izquierdo */
+  color: var(--color-text);
 }

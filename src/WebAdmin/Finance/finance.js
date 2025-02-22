@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './finance.css';
 import { getFirestore, collection, onSnapshot } from 'firebase/firestore';
-import nequiImage from "../../recursos/background/NEQUI-SPIDIBOT.png";
-import daviplataImage from "../../recursos/background/DAVIPLATA.png";
-import jadePlatformImage from "../../recursos/background/NEQUI-JADEPLATFORM.png";
-import ahorroalamanoImage from "../../recursos/background/AHORRO-A-LA-MANO.png";
-import ahorroImage from "../../recursos/background/AHORRO.png";
+import nequiImage from "../../recursos/svg/NEQUI-SPIDIBOT.png";
+import daviplataImage from "../../recursos/svg/DAVIPLATA.png";
+import jadePlatformImage from "../../recursos/svg/NEQUI-JADEPLATFORM.png";
+import ahorroalamanoImage from "../../recursos/svg/AHORRO-A-LA-MANO.png";
+import ahorroImage from "../../recursos/svg/AHORRO.png";
 import { app } from '../../firebase'; // Asegúrate de importar tu configuración de Firebase
 
 const Finance = () => {

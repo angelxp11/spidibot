@@ -15,24 +15,27 @@ body, html {
 
 body {
   font-family: 'Roboto', sans-serif;
-  background: linear-gradient(135deg, #ff3b3f , #000000, #ff3b3f);
+  background: linear-gradient(135deg, #ccc, #000000, #ff3b3f);
   background-size: 300% 300%;
   background-attachment: fixed;
-  animation: gradientAnimation 10s ease infinite;
-}
-
-/* Estilo para el body cuando es "Iniciar Sesión" */
-body.iniciar-sesion {
-  background: linear-gradient(135deg, #ed1b24, #000000);
-  background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
-  animation: gradientAnimation 15s ease infinite;
+  animation: moveBackground 50s linear infinite;
 }
 
 /* Estilo para el body cuando es "Registrar" */
 body.registrar {
-  background: linear-gradient(135deg, #58bd57, #000000);
-  background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
-  animation: gradientAnimation 15s ease infinite;
+  background-color: var(--color-background-); /* Use variable for background color */
+  background-image: url('../recursos/fondogreen.png'); /* Ruta a la imagen de fondo */
+  background-repeat: repeat; /* Repetir la imagen */
+  background-size: 250px 250px; /* Tamaño de la imagen */
+}
+
+@keyframes moveBackground {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 0%;
+  }
 }
 
 /* Contenedor de registro */
@@ -79,7 +82,7 @@ body.registrar {
 }
 
 .input-group input {
-  width: 100%;
+  width: 100%; 
   padding: 12px;
   border-radius: 5px;
   border: none;
@@ -95,17 +98,18 @@ body.registrar {
 
 .password-toggle {
   position: absolute;
-  top: 45px;
+  top: 48px;
   font-size: 20px;
   right: 5%;
   transform: translateY(-50%);
   cursor: pointer;
+  color: var(--color-buttons);
 }
 
 /* Botón de registro */
 .register-buttons {
   width: 100%;
-  background-color: #58bd57;
+  background-color: var(--color-button-confirmation);
   color: white;
   border: none;
   padding: 12px 20px;
@@ -117,18 +121,18 @@ body.registrar {
   font-weight: bold;
 }
 
-.login-buttons:hover {
-  background-color: #ff3b3f;
+.register-buttons:hover {
+  background-color: var(--color-button-confirmation-hover);
 }
 
-/* Estilo para el enlace de inicio de sesión */
+/* Estilo para el enlace de iniciar sesión */
 .reegister-link {
   margin-top: 20px;
   text-align: center;
   font-size: 18px;
   color: white;
-  display: inline-block;
-  width: 100%;
+  display: inline-block;  /* Cambio a inline-block para ajustarse al contenedor */
+  width: 100%; 
 }
 
 .reegister-link span {
@@ -139,20 +143,7 @@ body.registrar {
 }
 
 .reegister-link span:hover {
-  color: #f3666d;
-}
-
-/* Animación de fondo */
-@keyframes gradientAnimation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  color: var(--color-buttons);
 }
 
 /* Animación de zoom-in */
@@ -172,7 +163,7 @@ body.registrar {
   align-items: center;
   justify-content: center; /* Centra el contenido horizontalmente */
   background-color: #eeeeee; /* Color de fondo de Google */
-  color: #58bd57;
+  color: var(--color-button-confirmation);
   padding: 10px;
   border: none;
   font-weight: bold;

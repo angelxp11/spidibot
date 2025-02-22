@@ -126,7 +126,7 @@ const ContainerPlatformService = ({ id, precio, info, onBuy }) => {
   const titleClass = (id === 'NETFLIXTV' || id === 'NETFLIXSINTV') ? 'netflix-title' : '';
 
   return (
-    <div className="container-platform-service" style={{ backgroundColor, color }}>
+    <div className="con-container-platform-service" style={{ backgroundColor, color }}>
       <h2 className={`servicio-title ${titleClass}`} style={{ color: titleColor }}>
         <strong></strong> {formatId(id)}
       </h2>
@@ -135,12 +135,12 @@ const ContainerPlatformService = ({ id, precio, info, onBuy }) => {
       </p>
   
       {/* Botón para más información */}
-      <button className="masinfo" onClick={toggleModal}>
+      <button className="con-masinfo" onClick={toggleModal}>
         Más Información
       </button>
   
       {/* Botón para comprar */}
-      <button className="buy-button" onClick={handleBuyClick}>
+      <button className="con-buy-button" onClick={handleBuyClick}>
         Comprar
       </button>
   

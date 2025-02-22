@@ -412,52 +412,49 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
   }
 };
 
-  const handleCobrar = async () => {
-    if (selectedClient) {
-      // Capitalizar la primera letra del nombre del cliente
-      const nombreCliente = selectedClient.nombre.charAt(0).toUpperCase() + selectedClient.nombre.slice(1).toLowerCase();
-      
-      // Reemplazar netflix y netflixMe por las versiones en mayúsculas
-      let servicios = selectedClient.servicio.map(servicio => {
-        if (servicio === 'NETFLIXME') {
-          return 'NETFLIXTV';
-        } else if (servicio === 'NETFLIX') {
-          return 'NETFLIXSINTV';
-        }
-        return servicio;
-      }).join(', ') || 'Ninguno';
-      
-      const [day, month, year] = selectedClient.fechaFinal.split('/');
-      const fechaFinal = new Date(year, month - 1, day);
-      const fechaActual = new Date();
-      const diasRestantes = Math.ceil((fechaFinal - fechaActual) / (1000 * 60 * 60 * 24));
-  
-      let mensaje = `*¡Hola, ${nombreCliente}!* 😊\n\n¿Cómo estás? Espero que todo vaya genial y que estés teniendo un excelente día. 💪🌟\n\n`;
-  
-      // Condiciones de mensaje según los días restantes
-      if (diasRestantes > 1) {
-        mensaje += `Te quedan *${diasRestantes} días* de tus servicios de *${servicios}*. 🕒✨ No olvides realizar el pago para seguir disfrutando de tus servicios. 🎥🎶`;
-      } else if (diasRestantes === 1) {
-        mensaje += `Te queda *1 día* de tu servicio de *${servicios}*. 🕒✨ No olvides realizar el pago para seguir disfrutando de tus servicios. 🎥🎶`;
-      } else if (diasRestantes === 0) {
-        mensaje += `Hoy se vencen tus servicios de *${servicios}*. 🕒⚠️ ¡Recuerda realizar el pago para evitar interrupciones! 🎥🎶`;
-      } else {
-        mensaje += `*Los servicios de ${servicios} ya se han vencido*. 🕒⚠️ Por favor, realiza el pago lo antes posible. 🎥🎶`;
+const handleCobrar = async () => {
+  if (selectedClient) {
+    const nombreCliente = selectedClient.nombre.charAt(0).toUpperCase() + selectedClient.nombre.slice(1).toLowerCase();
+    let servicios = selectedClient.servicio.map(servicio => {
+      if (servicio === 'NETFLIXME') {
+        return 'NETFLIXTV';
+      } else if (servicio === 'NETFLIX') {
+        return 'NETFLIXSINTV';
       }
-  
-      mensaje += `\n\nSi necesitas ayuda con algo, no dudes en decirme. ¡Que tengas un día increíble! 😊❤️`;
-  
-      try {
-        await navigator.clipboard.writeText(mensaje);
-        toast('Cobro copiado al portapapeles', { autoClose: 2000 });
-      } catch (error) {
-        console.error('Error al copiar el mensaje al portapapeles:', error);
-        toast.error('Hubo un error al copiar el mensaje');
-      }
+      return servicio;
+    }).join(', ') || 'Ninguno';
+    
+    const [day, month, year] = selectedClient.fechaFinal.split('/');
+    const fechaFinal = new Date(year, month - 1, day);
+    const fechaActual = new Date();
+    const diasRestantes = Math.ceil((fechaFinal - fechaActual) / (1000 * 60 * 60 * 24));
+    const totalAPagar = formatPrice(selectedClient.precio.reduce((acc, curr) => acc + Number(curr), 0));
+
+    let mensaje = `*¡Hola, ${nombreCliente}!* 😊\n\n¿Cómo estás? Espero que todo vaya genial y que estés teniendo un excelente día. 💪🌟\n\n`;
+
+    if (diasRestantes > 1) {
+      mensaje += `Te quedan *${diasRestantes} días* de tus servicios de *${servicios}*. 🕒✨ No olvides realizar el pago para seguir disfrutando de tus servicios. 🎥🎶`;
+    } else if (diasRestantes === 1) {
+      mensaje += `Te queda *1 día* de tu servicio de *${servicios}*. 🕒✨ No olvides realizar el pago para seguir disfrutando de tus servicios. 🎥🎶`;
+    } else if (diasRestantes === 0) {
+      mensaje += `Hoy se vencen tus servicios de *${servicios}*. 🕒⚠️ ¡Recuerda realizar el pago para evitar interrupciones! 🎥🎶`;
     } else {
-      toast.warning('Por favor, selecciona un cliente');
+      mensaje += `*Los servicios de ${servicios} ya se han vencido*. 🕒⚠️ Por favor, realiza el pago lo antes posible. 🎥🎶`;
     }
-  };
+
+    mensaje += `\n\nEl total a pagar es: *${totalAPagar}*.\n\nSi necesitas ayuda con algo, no dudes en decirme. ¡Que tengas un día increíble! 😊❤️`;
+
+    try {
+      await navigator.clipboard.writeText(mensaje);
+      toast('Cobro copiado al portapapeles', { autoClose: 2000 });
+    } catch (error) {
+      console.error('Error al copiar el mensaje al portapapeles:', error);
+      toast.error('Hubo un error al copiar el mensaje');
+    }
+  } else {
+    toast.warning('Por favor, selecciona un cliente');
+  }
+};
   
   
   

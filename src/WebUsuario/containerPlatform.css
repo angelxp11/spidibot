@@ -1,7 +1,7 @@
 /* src/WebAdmin/containerPlatform.css */
 
 /* Estilo para cada contenedor de plataforma */
-.container-platform {
+.con-container-platform {
     width: 250px;
     background-color: #aeacac; /* Color de fondo blanco */
     border: 1px solid #ddd; /* Borde gris claro */
@@ -10,12 +10,13 @@
     margin: 10px 0; /* Margen superior e inferior */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave */
     margin: 10px auto 10px auto; /* Margen superior, inferior y centrado horizontal */
+    color: var(--color-background-);
   }
   
   /* Título de la plataforma */
-  .container-platform h2 {
+  .con-container-platforms h2 {
     font-size: 1.5rem; /* Tamaño de fuente */
-    color: #333; /* Color del texto */
+    color: var(--color-text); /* Color del texto */
     margin: 0; /* Sin margen */
   }
   
@@ -23,11 +24,11 @@
   /* src/WebAdmin/containerPlatform.css */
 
 /* Estilo para cada item del grupo */
-.grupo-content {
+.con-container-platform-grupo-content {
     margin-top: 10px;
   }
   
-  .grupo-item {
+  .con-container-platform-grupo-item {
     margin: 5px 0;
     color: #555; /* Color del texto */
   }
@@ -37,7 +38,7 @@
 
 /* Estilo para el botón de adquirir servicio */
 /* Contenedor principal de los elementos */
-.available-services {
+.con-container-platform-available-services {
   display: flex;
   flex-direction: column; /* Para mantener los elementos en una columna */
   align-items: center; /* Centra los elementos horizontalmente */
@@ -45,7 +46,7 @@
 }
 
 /* Estilo para cada contenedor de plataforma */
-.container-platform-service { 
+.con-container-platform-service { 
   background-color: #aeacac; /* Color de fondo gris claro */
   border: 1px solid #ddd; /* Borde gris claro */
   height: auto;
@@ -61,12 +62,12 @@
 
 
 /* Título de la plataforma */
-.container-platform-service h2 {
+.con-container-platform-service h2 {
     font-size: 1.5rem; /* Tamaño de fuente */
-    color: #333; /* Color del texto */
+    color: var(--color-text); /* Color del texto */
     margin: 0; /* Sin margen */
 }
-.container-platform-service button {
+.con-container-platform-service button {
   width: 100%; /* Hace que los botones ocupen todo el ancho del contenedor */
   padding: 10px; /* Aumenta el espacio interno para que los botones sean más grandes */
   margin: 5px 0; /* Añade un espacio entre los botones */
@@ -76,19 +77,19 @@
 }
 
 /* Estilo para cada item del grupo */
-.grupo-content-service{ 
+.con-container-platform-service .con-grupo-content-service{ 
     margin-top: 10px;
 }
 
-.grupo-item-service {
+.con-container-platform-service .con-grupo-item-service {
     margin: 5px 0;
     color: #555; /* Color del texto */
 }
 
 
 /* Botón de Más Información */
-.masinfo {
-  background-color: #ed1b24; /* Rojo principal */
+.con-container-platform-masinfo {
+  background-color: var(--color-buttons); /* Rojo oscuro */
   color: white;
   border: none;
   padding: 10px 20px;
@@ -99,18 +100,18 @@
   transition: background-color 0.3s, transform 0.2s;
 }
 
-.masinfo:hover {
-  background-color: #ff3b3f; /* Rojo más claro en hover */
+.con-container-platform-masinfo:hover {
+  background-color: var(--color-buttons-hover); /* Rojo más oscuro en hover */
   transform: scale(1.05); /* Efecto de zoom al hacer hover */
 }
 
-.masinfo:focus {
+.con-container-platform-masinfo:focus {
   outline: none; /* Elimina el borde de enfoque predeterminado */
 }
 
 /* Botón de Comprar */
-.buy-button {
-  background-color: #2ecc71; /* Verde principal */
+.con-container-platform-buy-button {
+  background-color: var(--color-button-confirmation); /* Verde neón */
   color: white;
   border: none;
   padding: 10px 20px;
@@ -121,16 +122,16 @@
   transition: background-color 0.3s, transform 0.2s;
 }
 
-.buy-button:hover {
-  background-color: #27ae60; /* Verde más oscuro en hover */
+.con-container-platform-buy-button:hover {
+  background-color: var(--color-button-confirmation-hover); /* Verde más brillante en hover */
   transform: scale(1.05); /* Efecto de zoom al hacer hover */
 }
 
-.buy-button:focus {
+.con-container-platform-buy-button:focus {
   outline: none; /* Elimina el borde de enfoque predeterminado */
 }
 
-.welcome-message {
+.con-container-platform-welcome-message {
   color: #ffffff; /* Color del texto (gris oscuro) */
   margin: 10px 0; /* Margen superior e inferior para separar del contenido */
 }
@@ -138,38 +139,34 @@
 /*////////////////////////////////*/
 /* Estilos adicionales para DISNEY+ si se requiere */
 /* Estilo adicional para el título y el precio cuando el servicio sea DISNEY+ */
-.container-platform-service.disney-plus h2,
-.container-platform-service.disney-plus .precio-text {
+.con-container-platform-service.disney-plus h2,
+.con-container-platform-service.disney-plus .precio-text {
   color: white; /* Establece el color blanco para el título y el precio */
 }
 
 /* Estilos específicos para el título en servicios NETFLIX TV y NETFLIX SIN TV */
-.container-platform-service.netflix-title {
+.con-container-platform-service.netflix-title {
   color: red; /* Color rojo para el título */
 }
 /* Estilo para el fondo de CRUNCHYROLL */
-.container-platform-service.crunchyroll-title {
+.con-container-platform-service.crunchyroll-title {
   background-color: #ff6308; /* Fondo naranja */
   color: white; /* Texto y título blanco */
 }
 /* Estilo para el fondo de YOUTUBE PREMIUM y YOUTUBE + GOOGLE */
-.container-platform-service.youtube-premium-title,
-.container-platform-service.youtube-google-title {
+.con-container-platform-service.youtube-premium-title,
+.con-container-platform-service.youtube-google-title {
   background-color: #ff08088a; /* Fondo rojo */
   color: white; /* Texto blanco */
 }
 
-/* Estilo para los elementos de lista */
-li {
-  color: black; /* Color de texto negro */
-}
-.button-group {
+.con-container-platform-button-group {
   display: flex;
   flex-direction: column; /* Organiza los botones en una columna */
   gap: 10px; /* Espaciado entre los botones */
 }
 
-.button-group .home-button {
+.con-container-platform-button-group .con-home-button {
   width: 100%; /* Asegura que los botones ocupen el ancho completo del contenedor */
   padding: 10px; /* Añade espacio interno para mejor apariencia */
   border: none; /* Sin bordes visibles */
@@ -181,11 +178,152 @@ li {
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.button-group .home-button:hover {
+.con-container-platform-button-group .con-home-button:hover {
   background-color: #ff3b3f; /* Color de fondo en hover */
   transform: scale(1.05); /* Efecto de zoom */
 }
 
-.button-group .home-button:focus {
+.con-container-platform-button-group .con-home-button:focus {
   outline: none; /* Sin borde al enfocar */
+}
+
+.con-container-platform-home-button {
+  width: 100%; /* Hace que los botones ocupen todo el ancho del contenedor */
+  padding: 10px; /* Aumenta el espacio interno para que los botones sean más grandes */
+  margin: 5px 0; /* Añade un espacio entre los botones */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  cursor: pointer;
+  background-color: var(--color-buttons); /* Color de fondo del botón */
+  color: var(--color-text); /* Color del texto */
+  font-size: 1rem; /* Tamaño del texto */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.con-container-platform-home-button:hover {
+  background-color: var(--color-buttons-hover); /* Color de fondo en hover */
+  transform: scale(1.05); /* Efecto de zoom */
+}
+
+.con-container-platform-home-button:focus {
+  outline: none; /* Sin borde al enfocar */
+}
+
+.con-masinfo {
+  background-color: var(--color-buttons); /* Rojo oscuro */
+  color: var(--color-text); /* Texto blanco */
+  padding: 15px 20px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.con-masinfo::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 0) 50%);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.con-masinfo:hover {
+  background-color: var(--color-buttons-hover); /* Rojo más oscuro en hover */
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(255, 255, 255, 0.2);
+}
+
+.con-masinfo:hover::before {
+  opacity: 1;
+}
+
+
+.con-buy-button {
+  background-color: var(--color-button-confirmation); /* Verde neón */
+  color: var(--color-text); /* Texto blanco */
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 10px rgba(30, 215, 96, 0.3);
+  position: relative;
+  overflow: hidden;
+  border: none;
+  outline: none;
+}
+
+.con-buy-button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 250%;
+  height: 250%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(0, 0, 0, 0) 50%);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.con-buy-button:hover {
+  background-color: var(--color-button-confirmation-hover);
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(30, 215, 96, 0.5);
+}
+
+.con-buy-button:hover::before {
+  opacity: 1;
+}
+
+.con-buy-button:active {
+  transform: scale(0.95);
+}
+
+.container-platform {
+  width: 250px;
+  background-color: #aeacac;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 10px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin: 10px auto 10px auto;
+  color: var(--color-background-);
+}
+.container-platform-home-button {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: var(--color-buttons);
+  color: var(--color-text);
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.container-platform-home-button:hover {
+  background-color: var(--color-buttons-hover); /* Color de fondo en hover */
+  transform: scale(1.05); /* Efecto de zoom */
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { getDocs, collection, query, where, doc, getDoc } from 'firebase/firestore';
+import { getDocs, collection, query, where, doc, getDoc, onSnapshot } from 'firebase/firestore';
 import '../WebUsuario/home.css';
 import ContainerPlatform from './plataform/plataformclientes/ContainerPlatform'; // Componente contenedor
 import ContainerPlatformP from './plataform/plataformproveedores/ContainerPlatformP'; // Componente contenedor con proveedor
@@ -13,6 +13,9 @@ import copyIcon from '../imagenes/copy.png'; // Ajusta la ruta a tu archivo copy
 import { ToastContainer, toast } from 'react-toastify'; // Importa toast
 import 'react-toastify/dist/ReactToastify.css'; // Importa los estilos del toast
 import MensajesSiNo from '../recursos/MensajesSiNo.js'; // Importa tu componente
+import spiderImage from '../recursos/spider.png'; // Import the spider image
+import { FaSignOutAlt } from 'react-icons/fa'; // Import the logout icon
+
 function Home() {
   const user = auth.currentUser; // Usuario autenticado
   const navigate = useNavigate();
@@ -32,14 +35,29 @@ function Home() {
   const [serviciosEnVenta, setServiciosEnVenta] = useState([]); // Nuevo estado para los servicios a la venta
   const [isInventarioVisible, setInventarioVisible] = useState(false); // Estado para manejar la visibilidad del inventarioomienza como invisible
   const [isServiciosClientesVisible, setServiciosClientesVisible] = useState(true); // Comienza como visible
+  const [buttonPosition, setButtonPosition] = useState('centered'); // Estado para manejar la posición del botón
   
   useEffect(() => {
     if (!user) {
       navigate('/spidibot');
     } else {
       fetchUserServices();
+      const unsubscribe = onSnapshot(
+        query(collection(db, 'clientes'), where('email', '==', user.email)),
+        (snapshot) => {
+          fetchUserServices();
+        }
+      );
+      return () => unsubscribe();
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    if (servicios.length > 0) {
+      setButtonPosition('bottom-right');
+    }
+  }, [servicios]);
+
   // Función para alternar entre inventario y servicios del cliente
   const toggleVisibility = async () => {
     setLoading(true); // Activa la pantalla de carga
@@ -54,6 +72,13 @@ function Home() {
     // Alterna la visibilidad
     setInventarioVisible(prev => !prev); // Alterna el inventario
     setServiciosClientesVisible(prev => !prev); // Alterna los servicios del cliente
+
+    // Cambia la posición del botón
+    if (servicios.length > 0) {
+      setButtonPosition(prev => (prev === 'bottom-right' || isServiciosClientesVisible ? 'bottom-right' : 'centered'));
+    } else {
+      setButtonPosition(prev => (prev === 'centered' || isServiciosClientesVisible ? 'bottom-right' : 'centered'));
+    }
 
     setLoading(false); // Finaliza la carga
 };
@@ -313,7 +338,7 @@ return (
     <p className="welcome-message">Bienvenido a tu panel de usuario.</p>
 
     <div className="container-inventario" style={{ display: isInventarioVisible ? 'block' : 'none' }}>
-    <h2 class="h2titleblanco">Servicios a la Venta</h2>
+    <h2 className="h2titleblanco">Servicios a la Venta</h2>
         {serviciosEnVenta.length > 0 ? (
           serviciosEnVenta.map((servicio) => (
             <ContainerPlatformService 
@@ -405,18 +430,18 @@ return (
     {/* Pantalla de carga como overlay */}
     {loading && <div className="loading-overlay"><Carga /></div>}
     <div className="button-group">
-    <button onClick={toggleVisibility} className="fixed-button">
-  {isInventarioVisible ? 'Ver mis servicios' : 'Adquirir servicios'}
+  <button 
+    onClick={toggleVisibility} 
+    className={`fixed-button ${buttonPosition}`}
+  >
+    {isInventarioVisible ? 'Ver mis servicios' : 'Adquirir servicios'}
+    <img src={spiderImage} alt="Spider" className="spider-image" />
+  </button>
+</div>
+
+<button onClick={handleLogout} className="logout-icon">
+  <FaSignOutAlt />
 </button>
-
-            </div>
-  
-
-    <div className="button-group">
-      <button onClick={handleLogout} className="logout-button">
-        Cerrar Sesión
-      </button>
-    </div>
 
     {/* Modal para mostrar detalles de la cuenta */}
     {modalOpen && modalData && (

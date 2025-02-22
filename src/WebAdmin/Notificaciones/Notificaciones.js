@@ -1,9 +1,9 @@
 import { toast } from 'react-toastify'; 
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, orderBy, doc, deleteDoc, addDoc } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, deleteDoc, addDoc, setDoc } from 'firebase/firestore';
 import { db } from '../../firebase'; // Asegúrate de tener la configuración de Firestore en firebase.js
 import './notificaciones.css'; // Estilos para el modal
-import { FaCheck, FaTimes, FaTrashAlt } from 'react-icons/fa'; // Import icons from react-icons
+import { FaCheck, FaTimes, FaTrashAlt, FaRecycle } from 'react-icons/fa'; // Import icons from react-icons
 
 const Notificaciones = ({ onClose }) => {
   const [pedidos, setPedidos] = useState([]);
@@ -62,13 +62,29 @@ const Notificaciones = ({ onClose }) => {
     }
   };
 
+  // Función para convertir la fecha al formato yyyy-mm-dd
+  const convertDateToInputFormat = (date) => {
+    if (!date) return '';
+    const [day, month, year] = date.split('/');
+    return `${year}-${month}-${day}`;
+  };
+
   // Función para seleccionar un pedido y mostrar los detalles
   const handleVerPedido = async (pedido) => {
-    const nuevoID = await obtenerNuevoID();
-    setPedidoSeleccionado({
-      ...pedido,
-      id: nuevoID || '', // Establecer el nuevo ID o dejar en blanco si hay error
-    });
+    if (pedido.renovacion) {
+      setPedidoSeleccionado({
+        ...pedido,
+        id: pedido.clienteId, // Usar el clienteId como ID del cliente en caso de renovación
+        fechaInicial: convertDateToInputFormat(pedido.fechaInicial), // Convertir fecha inicial a formato yyyy-mm-dd
+        fechaFinal: convertDateToInputFormat(pedido.fechaFinal), // Convertir fecha final a formato yyyy-mm-dd
+      });
+    } else {
+      const nuevoID = await obtenerNuevoID();
+      setPedidoSeleccionado({
+        ...pedido,
+        id: nuevoID || '', // Establecer el nuevo ID o dejar en blanco si hay error
+      });
+    }
 
     // Guardar el ID del documento del pedido en la variable 'pedidoIdDocumento'
     setPedidoIdDocumento(pedido.id); // Aquí guardamos el ID del documento
@@ -87,8 +103,8 @@ const Notificaciones = ({ onClose }) => {
       [name]: value,
     }));
 
-    // Si se cambia la fecha inicial, calcular la fecha final automáticamente
-    if (name === 'fechaInicial') {
+    // Si se cambia la fecha inicial y no es una renovación, calcular la fecha final automáticamente
+    if (name === 'fechaInicial' && !pedidoSeleccionado.renovacion) {
       const fechaInicial = new Date(value);
       const fechaFinal = new Date(fechaInicial.setMonth(fechaInicial.getMonth() + 1));
       setPedidoSeleccionado((prevState) => ({
@@ -120,34 +136,69 @@ const Notificaciones = ({ onClose }) => {
         servicio, // Ahora servicio será un array de strings
         notas, // Ahora es un array
         precio, // Ahora es un array de strings
+        clienteDocId, // ID del documento del cliente
+        pagado, // Array de valores pagado
       } = pedidoSeleccionado;
 
       // Aplicamos el formato de fecha a fechaInicial y fechaFinal
       const fechaInicialFormateada = formatDate(fechaInicial);
       const fechaFinalFormateada = formatDate(fechaFinal);
 
-      // Guardar la ID del documento en la colección 'notificaciones' antes de crear el cliente
-      const pedidoId = pedidoSeleccionado.id;
-
       try {
-        // Crear un nuevo documento con ID aleatorio en la colección 'clientes'
-        const clienteRef = await addDoc(collection(db, 'clientes'), {
-          nombre: nombre || '',
-          apellido: apellido || '',
-          telefono: telefono || '',
-          email: email || '',
-          fechaInicial: fechaInicialFormateada || '', // Fecha inicial formateada
-          fechaFinal: fechaFinalFormateada || '', // Fecha final formateada
-          pagado: ['SI'], // Campo pagado como array con "SI" como elemento inicial
-          grupo: Array.isArray(grupo) ? grupo.map(g => g.toUpperCase()) : [grupo.toUpperCase()] || [], // Convertir a mayúsculas
-          servicio: Array.isArray(servicio) ? servicio.map(s => String(s)) : [String(servicio)] || [], // Aseguramos que 'servicio' sea un array de strings
-          notas: Array.isArray(notas) ? notas.map(nota => nota.toUpperCase()) : [notas.toUpperCase()] || [], // Aseguramos que 'notas' sea un array y en mayúsculas
-          precio: Array.isArray(precio) ? precio.map(p => String(p)) : [String(precio)] || [], // Aseguramos que 'precio' sea un array de strings
-          PENDEJOALEJANDRO: { 
-            estado: '✅', // Estado fijo siempre "✅"
-          },
-          ID: id, // Guardar el ID del cliente dentro del documento
-        });
+        if (pedidoSeleccionado.renovacion) {
+          // Crear un nuevo documento con el ID del documento guardado en la colección 'clientes'
+          const clienteRef = doc(db, 'clientes', clienteDocId);
+          await setDoc(clienteRef, {
+            nombre: nombre || '',
+            apellido: apellido || '',
+            telefono: telefono || '',
+            email: email || '',
+            fechaInicial: fechaInicialFormateada || '', // Fecha inicial formateada
+            fechaFinal: fechaFinalFormateada || '', // Fecha final formateada
+            pagado: servicio.map(() => 'SI'), // Campo pagado como array con "SI" para cada servicio
+            grupo: Array.isArray(grupo) ? grupo.map(g => g.toUpperCase()) : [grupo.toUpperCase()] || [], // Convertir a mayúsculas
+            servicio: Array.isArray(servicio) ? servicio.map(s => String(s)) : [String(servicio)] || [], // Aseguramos que 'servicio' sea un array de strings
+            notas: Array.isArray(notas) ? notas.map(nota => nota.toUpperCase()) : [notas.toUpperCase()] || [], // Aseguramos que 'notas' sea un array y en mayúsculas
+            precio: Array.isArray(precio) ? precio.map(p => String(p)) : [String(precio)] || [], // Aseguramos que 'precio' sea un array de strings
+            PENDEJOALEJANDRO: { 
+              estado: '✅', // Estado fijo siempre "✅"
+            },
+            ID: id, // Guardar el ID del cliente dentro del documento
+          });
+
+          // Mostrar el toast de éxito cuando el cliente es renovado
+          toast.success('¡Cliente renovado exitosamente!', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+          });
+        } else {
+          // Crear un nuevo documento con ID aleatorio en la colección 'clientes'
+          const clienteRef = await addDoc(collection(db, 'clientes'), {
+            nombre: nombre || '',
+            apellido: apellido || '',
+            telefono: telefono || '',
+            email: email || '',
+            fechaInicial: fechaInicialFormateada || '', // Fecha inicial formateada
+            fechaFinal: fechaFinalFormateada || '', // Fecha final formateada
+            pagado: ['SI'], // Campo pagado como array con "SI" como elemento inicial
+            grupo: Array.isArray(grupo) ? grupo.map(g => g.toUpperCase()) : [grupo.toUpperCase()] || [], // Convertir a mayúsculas
+            servicio: Array.isArray(servicio) ? servicio.map(s => String(s)) : [String(servicio)] || [], // Aseguramos que 'servicio' sea un array de strings
+            notas: Array.isArray(notas) ? notas.map(nota => nota.toUpperCase()) : [notas.toUpperCase()] || [], // Aseguramos que 'notas' sea un array y en mayúsculas
+            precio: Array.isArray(precio) ? precio.map(p => String(p)) : [String(precio)] || [], // Aseguramos que 'precio' sea un array de strings
+            PENDEJOALEJANDRO: { 
+              estado: '✅', // Estado fijo siempre "✅"
+            },
+            ID: id, // Guardar el ID del cliente dentro del documento
+          });
+
+          // Mostrar el toast de éxito cuando el cliente es activado
+          toast.success('¡Cliente activado exitosamente!', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+          });
+        }
 
         // Verifica si la ID del pedido es válida antes de intentar eliminarlo
         if (pedidoIdDocumento) {
@@ -163,13 +214,6 @@ const Notificaciones = ({ onClose }) => {
 
         // Recargar la lista de pedidos
         await fetchPedidos();
-
-        // Mostrar el toast de éxito cuando el cliente es activado
-        toast.success('¡Cliente activado exitosamente!', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-        });
 
       } catch (error) {
         console.error('Error activando/actualizando el cliente: ', error);
@@ -264,6 +308,26 @@ const Notificaciones = ({ onClose }) => {
   const handleEscKey = (event) => {
     if (event.key === "Escape") {
       onClose();
+    }
+  };
+
+  const handleAddOneMonth = () => {
+    if (pedidoSeleccionado && pedidoSeleccionado.fechaFinal) {
+      const fechaFinal = new Date(pedidoSeleccionado.fechaFinal);
+      fechaFinal.setMonth(fechaFinal.getMonth() + 1);
+      setPedidoSeleccionado((prevState) => ({
+        ...prevState,
+        fechaFinal: fechaFinal.toISOString().split('T')[0], // Convertir a formato YYYY-MM-DD
+      }));
+
+      // Añadir la clase highlight al input de fecha final
+      const fechaFinalInput = document.querySelector('input[name="fechaFinal"]');
+      if (fechaFinalInput) {
+        fechaFinalInput.classList.add('highlight');
+        setTimeout(() => {
+          fechaFinalInput.classList.remove('highlight');
+        }, 1500); // Remover la clase después de 1.5 segundos
+      }
     }
   };
 
@@ -374,13 +438,19 @@ const Notificaciones = ({ onClose }) => {
               </p>
               <p>
                 <strong>Fecha Final:</strong>
-                <input
-                  type="date"
-                  name="fechaFinal"
-                  value={pedidoSeleccionado.fechaFinal || ''}
-                  readOnly
-                  className="notificaciones-detail-input"
-                />
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <input
+                    type="date"
+                    name="fechaFinal"
+                    value={pedidoSeleccionado.fechaFinal || ''}
+                    readOnly
+                    className="notificaciones-detail-input"
+                    style={{ flex: 1 }} // Hacer el input más estrecho
+                  />
+                  <button onClick={handleAddOneMonth} className="notificaciones-recycle-btn">
+                    <FaRecycle />
+                  </button>
+                </div>
               </p>
               <p>
                 <strong>Estado:</strong>
@@ -429,7 +499,7 @@ const Notificaciones = ({ onClose }) => {
               <p>
                 <strong>Precio:</strong>
                 <input
-                  type="number"
+                  type="text" // Cambiar el tipo de input a text
                   name="precio"
                   value={pedidoSeleccionado.precio || ''}
                   onChange={handleChange}

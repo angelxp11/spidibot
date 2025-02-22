@@ -166,7 +166,7 @@ const DatosSpotify = ({ onClose, grupo, title }) => {
       ) : (
         <div className="clientesoverlay-datos" onClick={handleOverlayClick}>
           <div className="clientesmodal">
-            <h2 className="clientesmodal-title">Datos de Spotify</h2>
+            <h2 className="clientesmodals-title">Datos de Spotify</h2>
             <form>
               <div className="clientesform-group">
                 <label htmlFor="correo" className="clientesform-label">Correo</label>

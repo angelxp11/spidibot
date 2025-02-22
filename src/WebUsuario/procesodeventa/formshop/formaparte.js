@@ -5,6 +5,7 @@ import { getAuth } from 'firebase/auth'; // Importamos el auth para obtener el u
 import { db } from '../../../firebase'; // Asegúrate de importar 'db' desde tu configuración de Firebase
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import emojiFlags from 'emoji-flags';
 
 const FormAparte = ({ service, onClose }) => {
   const [nombre, setNombre] = useState('');
@@ -18,7 +19,18 @@ const FormAparte = ({ service, onClose }) => {
   const [pinPerfil, setPinPerfil] = useState(''); // Estado para PIN del perfil
   const precio = service?.precio || ''; // Obtener el precio desde el prop `service`
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isClient, setIsClient] = useState(false); // Estado para verificar si es cliente
+  const [countryCode, setCountryCode] = useState('+57'); // Estado para el código de país
 
+  const countryCodes = [
+    { code: '+1', flag: emojiFlags.US.emoji }, { code: '+502', flag: emojiFlags.GT.emoji }, { code: '+503', flag: emojiFlags.SV.emoji }, { code: '+504', flag: emojiFlags.HN.emoji },
+    { code: '+505', flag: emojiFlags.NI.emoji }, { code: '+506', flag: emojiFlags.CR.emoji }, { code: '+507', flag: emojiFlags.PA.emoji }, { code: '+509', flag: emojiFlags.HT.emoji },
+    { code: '+51', flag: emojiFlags.PE.emoji }, { code: '+52', flag: emojiFlags.MX.emoji }, { code: '+53', flag: emojiFlags.CU.emoji }, { code: '+54', flag: emojiFlags.AR.emoji },
+    { code: '+55', flag: emojiFlags.BR.emoji }, { code: '+56', flag: emojiFlags.CL.emoji }, { code: '+57', flag: emojiFlags.CO.emoji }, { code: '+58', flag: emojiFlags.VE.emoji },
+    { code: '+591', flag: emojiFlags.BO.emoji }, { code: '+592', flag: emojiFlags.GY.emoji }, { code: '+593', flag: emojiFlags.EC.emoji }, { code: '+594', flag: emojiFlags.GF.emoji },
+    { code: '+595', flag: emojiFlags.PY.emoji }, { code: '+596', flag: emojiFlags.MQ.emoji }, { code: '+597', flag: emojiFlags.SR.emoji }, { code: '+598', flag: emojiFlags.UY.emoji },
+    { code: '+599', flag: emojiFlags.CW.emoji }
+  ];
 
   const handleSubmit = async (e) => { 
     e.preventDefault();
@@ -71,7 +83,7 @@ const FormAparte = ({ service, onClose }) => {
         nombre: nombreFormateado,
         apellido: apellidoFormateado,
         email: email,
-        telefono: telefono,
+        telefono: `${countryCode} ${telefono}`, // Guardar el teléfono con el prefijo
         notas: notasFormateadas, // Guardamos como array
         servicio: [servicioFormateado], // Guardamos el servicio como array
         precio: [precioNumerico], // Guardamos el precio como array
@@ -119,30 +131,35 @@ const FormAparte = ({ service, onClose }) => {
       if (!querySnapshot.empty) {
         const clienteData = querySnapshot.docs[0].data();
         setClienteData(clienteData); // Guardamos la información del cliente
+        setIsClient(true); // Es cliente
       } else {
         // Si no es cliente, vaciar los campos
         setClienteData(null);
+        setIsClient(false); // No es cliente
       }
     } else {
       // Si no hay un usuario autenticado, vaciar los campos
       setClienteData(null);
+      setIsClient(false); // No hay usuario autenticado
     }
   };
   // Función para actualizar el teléfono
 const handleTelefonoChange = (e) => {
-  let telefonoValue = e.target.value;
-  
-  // Verificar si el número ya tiene el prefijo +57
-  if (!telefonoValue.startsWith('+57')) {
-    telefonoValue = '+57 ' + telefonoValue;
+  let telefonoValue = e.target.value.replace(/\D/g, ''); // Eliminar caracteres no numéricos
+  if (telefonoValue.length > 10) {
+    telefonoValue = telefonoValue.slice(0, 10); // Limitar a 10 dígitos
   }
-  
-  // Asegurarse de que el número tiene exactamente 10 dígitos (excluyendo el prefijo +57)
-  if (telefonoValue.length > 14) {
-    telefonoValue = telefonoValue.slice(0, 14);
-  }
-
   setTelefono(telefonoValue);
+};
+
+const handleNombreChange = (e) => {
+  const value = e.target.value.replace(/[0-9]/g, ''); // Eliminar números
+  setNombre(value);
+};
+
+const handleApellidoChange = (e) => {
+  const value = e.target.value.replace(/[0-9]/g, ''); // Eliminar números
+  setApellido(value);
 };
 
   // Efecto que se ejecuta cuando se monta el componente (abriendo el formulario)
@@ -166,7 +183,9 @@ const handleTelefonoChange = (e) => {
           setNombre(clienteData.nombre);
           setApellido(clienteData.apellido);
           setEmail(clienteData.email);
-          setTelefono(clienteData.telefono);
+          // Formatear el teléfono para eliminar el prefijo del país si existe
+          const telefonoSinPrefijo = clienteData.telefono.replace(/^\+\d+\s/, '');
+          setTelefono(telefonoSinPrefijo);
         }
       }
       return newState;
@@ -211,18 +230,20 @@ const handleTelefonoChange = (e) => {
         <br />
         <form onSubmit={handleSubmit}>
           
-          {/* Casilla "Usar mi información personal" movida arriba */}
-          <div className="formaparte-group">
-            <label className="checkformcheckbox">
-              <input
-                type="checkbox"
-                checked={usarInfo}
-                onChange={handleCheckboxChange}
-                className="checkbox-input"
-              />
-              <span>Usar mi información personal</span>
-            </label>
-          </div>
+          {/* Mostrar checkbox solo si es cliente */}
+          {isClient && (
+            <div className="formaparte-group">
+              <label className="checkformcheckbox">
+                <input
+                  type="checkbox"
+                  checked={usarInfo}
+                  onChange={handleCheckboxChange}
+                  className="checkbox-input"
+                />
+                <span>Usar mi información personal</span>
+              </label>
+            </div>
+          )}
   
           <div className="formaparte-group">
             <label htmlFor="nombre" className="labelform">Nombre:</label>
@@ -230,7 +251,7 @@ const handleTelefonoChange = (e) => {
               type="text"
               id="nombre"
               value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
+              onChange={handleNombreChange}
               required
               readOnly={usarInfo}
               placeholder="Ej. Javier"
@@ -242,7 +263,7 @@ const handleTelefonoChange = (e) => {
               type="text"
               id="apellido"
               value={apellido}
-              onChange={(e) => setApellido(e.target.value)}
+              onChange={handleApellidoChange}
               required
               readOnly={usarInfo}
               placeholder="Ej. Martinez"
@@ -261,20 +282,29 @@ const handleTelefonoChange = (e) => {
             />
           </div>
           <div className="formaparte-group">
-  <label htmlFor="telefono" className="labelform">
-    Teléfono:
-  </label>
-  <input
-    type="text"
-    id="telefono"
-    name="telefono"
-    value={telefono}
-    onChange={handleTelefonoChange}
-    className="input-form"
-    placeholder="Ej. 3001234567"
-    maxLength={13} // Limitar a 13 caracteres (incluyendo el prefijo)
-  />
-</div>
+            <label htmlFor="telefono" className="labelform">Teléfono:</label>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <select
+                value={countryCode}
+                onChange={(e) => setCountryCode(e.target.value)}
+                style={{ marginRight: '5px', width: '90px' }} // Set width to 90px
+              >
+                {countryCodes.map(({ code, flag }) => (
+                  <option key={code} value={code}>{flag} {code}</option>
+                ))}
+              </select>
+              <input
+                type="text"
+                id="telefono"
+                name="telefono"
+                value={telefono}
+                onChange={handleTelefonoChange}
+                className="input-form"
+                placeholder="Ej. 3001234567"
+                maxLength={10} // Limitar a 10 caracteres
+              />
+            </div>
+          </div>
   
           {/* Inputs adicionales para Netflix, Max, Disney+, Prime Video, Paramount+ y Crunchyroll */}
           {['NETFLIX TV', 'NETFLIX SIN TV', 'MAX', 'DISNEY+', 'PRIME VIDEO', 'PARAMOUNT+', 'CRUNCHYROLL'].includes(service?.name) && (

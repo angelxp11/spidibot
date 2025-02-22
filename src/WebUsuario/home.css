@@ -15,7 +15,7 @@
 }
 
 .modal-contents {
-    background-color: white;
+    background-color: var(--color-background-);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -35,18 +35,18 @@
 
 /* Individual button colors */
 .copy-email {
-    background-color: #ed1b24; /* Background color for Copy Email */
-    color: white; /* Text color (if any) */
+    background-color: var(--color-buttons); /* Use variable for background color */
+    color: var(--color-text); /* Use variable for text color */
 }
 
 .copy-password {
-    background-color: #ed1b24; /* Background color for Copy Password */
-    color: white; /* Text color (if any) */
+    background-color: var(--color-buttons); /* Use variable for background color */
+    color: var(--color-text); /* Use variable for text color */
 }
 
 .copy-all {
-    background-color: red; /* Background color for Copy All */
-    color: white; /* Text color (if any) */
+    background-color: var(--color-button-negation); /* Use variable for background color */
+    color: var(--color-text); /* Use variable for text color */
 }
 
 /* Style for labels */
@@ -69,7 +69,7 @@ label {
     font-weight: bold;
 }
 .advice-message {
-    color: #d9534f; /* Color rojo para destacar el mensaje */
+    color: var(--color-button-negation); /* Use variable for color */
     font-weight: bold; /* Negrita para mayor énfasis */
     margin-top: 5px; /* Espacio entre el servicio y el mensaje */
   }
@@ -87,53 +87,120 @@ label {
   }
   
   .h2negro {
-    color: black;              /* Color del texto */
+    color: var(--color-text); /* Use variable for text color */
     font-weight: bold;        /* Negrita */
     text-align: center;         /* Alineación del texto (puedes cambiar a 'center' o 'right' si lo deseas) */
 }
 
 .fixed-button {
-    position: fixed; /* Fijo en la pantalla */
-    bottom: 20px; /* A 20px de la parte inferior */
-    right: 0px; /* A 50px de la parte derecha */
-    width: 90px; /* Ancho fijo para que sea más proporcionado */
-    height: 60px; /* Alto fijo para que sea más proporcionado */
-    background: linear-gradient(135deg, #333333, #000000); /* Degradado en tonos oscuros */
-    color: white; /* Color del texto */
-    border: none; /* Sin borde */
-    border-radius: 50%; /* Redondeado */
-    font-size: 16px; /* Tamaño de texto */
-    font-weight: bold; /* Negrita para el texto */
-    display: flex;
-    align-items: center; /* Centrado vertical */
-    justify-content: center; /* Centrado horizontal */
-    cursor: pointer; /* Cambio de cursor */
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5); /* Sombra más prominente */
-    transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease; /* Transición suave */
-    z-index: 1000; /* Asegura que el botón esté por encima del contenido */
-  }
+  background-color: var(--color-buttons); /* Use variable for background color */
+  width: 150px;
+  color: var(--color-text); /* Use variable for text color */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  display: block;
+  margin: 0 auto;
+  position: relative; /* Ensure the button is positioned relative to the image */
+  overflow: visible; /* Allow the image to be visible outside the button */
+  z-index: 1;
+  margin-top: 100px; /* Move the button 25px down */
+}
+
+.fixed-button.bottom-right {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  font: bold;
+}
+
+/* Efecto de bordes animados */
+.fixed-button::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, 
+    var(--color-button-confirmation), 
+    var(--color-iconos), 
+    var(--color-text), 
+    var(--color-button-negation), 
+    var(--color-iconos));
+  background-size: 300%;
+  border-radius: 7px;
+  z-index: -1;
+  animation: animateBorder 5s linear infinite;
+}
+
+/* Ajustar el fondo para no cubrir el botón */
+.fixed-button::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  background-color: var(--color-buttons); /* Use variable for background color */
+  border-radius: 4px;
+  z-index: -1;
+}
+
+/* Animación de bordes */
+@keyframes animateBorder {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Efecto hover */
+.fixed-button:hover {
+  background-color: var(--color-buttons-hover); /* Use variable for hover background color */
+  transform: scale(1.05);
+  box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.5);
+}
+
+/* Efecto clic */
+.fixed-button:active {
+  transform: scale(0.95);
+}
+
+/* New styles for the spider image */
+.fixed-button .spider-image {
+  position: absolute;
+  top: -100px; /* Adjusted to move 30px up */
+  left: calc(50% - 80px); /* Adjusted to move 30px to the left */
+  transform: translateX(-50%);
+  width: 150px; /* Adjust size as needed */
+  height: 150px; /* Adjust size as needed */
+  z-index: 2; /* Ensure it appears above the button */
+  pointer-events: none; /* Ensure the image does not interfere with button clicks */
+  filter: drop-shadow(0 4px 8px var(--color-button-negation)); /* Use variable for drop shadow color */
+  transition: filter 0.3s, box-shadow 0.3s; /* Transition for hover effect */
   
-  .fixed-button:hover {
-    transform: scale(1.1); /* Efecto de aumento al pasar el ratón */
-    background: linear-gradient(135deg, #444444, #1a1a1a); /* Degradado más oscuro al hacer hover */
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.6); /* Sombra más pronunciada al pasar el ratón */
-  }
-  
-  .fixed-button:focus {
-    outline: none; /* Quita el contorno por defecto */
-  }
-  
-  .fixed-button:active {
-    transform: scale(1); /* Restaura el tamaño original al hacer clic */
-    background: linear-gradient(135deg, #222222, #111111); /* Degradado más oscuro al hacer clic */
-  }
+}
+
+.fixed-button:hover .spider-image {
+  filter: drop-shadow(0 4px 8px var(--color-text)); /* Use variable for hover drop shadow color */
+}
+
   .logout-button:hover {
-    background-color: #555;
+    background-color: var(--color-buttons-hover); /* Use variable for hover background color */
   }
   .logout-button {
-    background-color: #333;
+    background-color: var(--color-buttons); /* Use variable for background color */
     width: 150px;
-    color: white;
+    color: var(--color-text); /* Use variable for text color */
     border: none;
     padding: 10px 20px; 
     border-radius: 5px;
@@ -142,10 +209,11 @@ label {
     transition: background-color 0.3s;
     display: block; /* Cambiado a block para que los márgenes funcionen */
     margin: 0 auto; /* Márgenes automáticos para centrar horizontalmente */
+    margin-top: 20px;
   }
   .home-button {
-    background-color: #ed1b24;
-    color: white;
+    background-color: var(--color-buttons); /* Use variable for background color */
+    color: var(--color-text); /* Use variable for text color */
     border: none;
     padding: 10px 20px;
     margin: 5px;
@@ -156,7 +224,7 @@ label {
   }
   
   .home-button:hover {
-    background-color: #ff3b3f;
+    background-color: var(--color-buttons-hover); /* Use variable for hover background color */
     transform: scale(1.05);
   }
   
@@ -166,4 +234,56 @@ label {
   .home-container {
     text-align: center;
     padding: 20px;
+    color: var(--color-text);
   }
+
+body {
+    background-color: var(--color-background-); /* Use variable for background color */
+    background-image: url('../recursos/fondo.png'); /* Ruta a la imagen de fondo */
+    background-repeat: repeat; /* Repetir la imagen */
+    background-size: 250px 250px; /* Tamaño de la imagen */
+}
+.logout-icon {
+  position: fixed;
+  top: 20px;
+  left: 50px;
+  background-color: var(--color-buttons); /* Use variable for background color */
+  color: var(--color-text); /* Use variable for text color */
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: background-color 0.3s, transform 0.2s;
+  transform: translate(-50%, -50%);
+  
+  /* Centramos el SVG */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;  /* Ajusta el tamaño del botón */
+  height: 50px; /* Ajusta el tamaño del botón */
+}
+
+/* Efecto hover */
+.logout-icon:hover {
+  background-color: var(--color-buttons-hover); /* Use variable for hover background color */
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Opcional: Ajustar tamaño del SVG dentro del botón */
+.logout-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.help-link {
+    color: var(--color-button-confirmation); /* Use variable for green color */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Make the text bold */
+}
+
+.help-link:hover {
+    color: var(--color-button-confirmation-hover); /* Use variable for hover green color */
+    text-decoration: underline; /* Add underline on hover */
+}

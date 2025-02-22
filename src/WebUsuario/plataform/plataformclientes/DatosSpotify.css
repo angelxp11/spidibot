@@ -1,5 +1,7 @@
 /* DatosSpotify.css */
 
+@import url('../../../recursos/colors-dark.css');
+
 .clientesoverlay-datos {
   position: fixed;
   top: 0;
@@ -14,7 +16,7 @@
 }
 
 .clientesmodal {
-  background-color: white;
+  background-color: var(--color-container);
   padding: 20px;
   border-radius: 10px;
   width: 90%;
@@ -24,11 +26,11 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.clientesmodal-title {
+.clientesmodals-title {
   text-align: center;
   font-size: 24px;
   margin-bottom: 20px;
-  color: #333;
+  color: var(--color-text);
 }
 
 form {
@@ -46,7 +48,7 @@ form {
 .clientesform-label {
   font-size: 16px;
   margin-bottom: 5px;
-  color: #333;
+  color: var(--color-text);
 }
 
 .clientesform-input {
@@ -55,13 +57,13 @@ form {
   border: 1px solid #ccc;
   border-radius: 5px;
   outline: none;
-  background-color: #f9f9f9;
+  background-color: var(--color-background-);
   position: relative;
 }
 
 .clientesform-input:focus {
-  border-color: #1db954;
-  background-color: #fff;
+  border-color: var(--color-button-confirmation);
+  background-color: var(--color-background-hover);
 }
 
 .clientespassword-container {
@@ -90,12 +92,12 @@ form {
 
 .clientesinfo-text {
   font-size: 14px;
-  color: #555;
+  color: var(--color-text);
   flex: 1;
 }
 
 .clientesenlace-clicable {
-  color: #1db954;
+  color: var(--color-button-confirmation);
   text-decoration: none;
   font-weight: bold;
 }
@@ -105,7 +107,7 @@ form {
 }
 
 .clientescopy-botones {
-  background-color: #1db954;
+  background-color: var(--color-button-confirmation);
   color: white;
   border: none;
   padding: 5px 10px;
@@ -116,7 +118,7 @@ form {
 }
 
 .clientescopy-botones:hover {
-  background-color: #1aa34a;
+  background-color: var(--color-button-confirmation-hover);
 }
 
 .clientescopy-icon {
@@ -143,21 +145,21 @@ form {
 }
 
 .clientessave-button {
-  background-color: #1db954;
+  background-color: var(--color-button-confirmation);
   color: white;
 }
 
 .clientessave-button:hover {
-  background-color: #1aa34a;
+  background-color: var(--color-button-confirmation-hover);
 }
 
 .clientesclose-button {
-  background-color: #ccc;
+  background-color: var(--color-buttons);
   color: #333;
 }
 
 .clientesclose-button:hover {
-  background-color: #bbb;
+  background-color: var(--color-buttons-hover);
 }
 
 .clientescopy-button {

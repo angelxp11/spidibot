@@ -18,7 +18,32 @@ body {
   background: linear-gradient(135deg, #ccc, #000000, #ff3b3f);
   background-size: 300% 300%;
   background-attachment: fixed;
-  animation: gradientAnimation 10s ease infinite;
+  animation: moveBackground 50s linear infinite;
+}
+
+/* Estilo para el body cuando es "Iniciar Sesión" */
+body.iniciar-sesion {
+  background-color: var(--color-background-); /* Use variable for background color */
+  background-image: url('../recursos/fondo.png'); /* Ruta a la imagen de fondo */
+  background-repeat: repeat; /* Repetir la imagen */
+  background-size: 250px 250px; /* Tamaño de la imagen */
+}
+
+/* Estilo para el body cuando es "Registrar" */
+body.registrar {
+  background-color: var(--color-background-); /* Use variable for background color */
+  background-image: url('../recursos/fondogreen.png'); /* Ruta a la imagen de fondo */
+  background-repeat: repeat; /* Repetir la imagen */
+  background-size: 250px 250px; /* Tamaño de la imagen */
+}
+
+@keyframes moveBackground {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 0%;
+  }
 }
 
 /* Contenedor de inicio de sesión */
@@ -91,7 +116,7 @@ body {
 /* Botón de inicio de sesión */
 .login-buttons {
   width: 100%;
-  background-color: #ed1b24;
+  background-color: var(--color-buttons);
   color: white;
   border: none;
   padding: 12px 20px;
@@ -101,11 +126,27 @@ body {
   transition: background-color 0.3s;
   margin-top: 20px;
   font-weight: bold;
-
+}
+.login-buttons:hover {
+  background-color: var(--color-buttons-hover);
+}
+.login-link {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 18px;
+  color: white;
+  display: inline-block;  /* Cambio a inline-block para ajustarse al contenedor */
+  width: 100%; 
+}
+.login-link span {
+  color: #ffffff;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-.login-buttons:hover {
-  background-color: #ff3b3f;
+.login-link span:hover {
+  color: var(--color-button-confirmation);
 }
 
 /* Estilo para el enlace de registro */
@@ -128,7 +169,6 @@ body {
 .reegister-link span:hover {
   color: #f3666d;
 }
-
 
 /* Animación de zoom-in */
 @keyframes zoomIn {
