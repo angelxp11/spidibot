@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/spidibot/static/css/main.cf5148ae.css",
-    "main.js": "/spidibot/static/js/main.71032d88.js",
+    "main.js": "/spidibot/static/js/main.7eafcaf1.js",
     "static/media/spider.png": "/spidibot/static/media/spider.e41fb39c59c4fb5c6757.png",
     "static/media/AHORRO.png": "/spidibot/static/media/AHORRO.b1f0a3a21db3954f4e6e.png",
     "static/media/fondogreen.png": "/spidibot/static/media/fondogreen.19eb02b739d5a402dbeb.png",
@@ -24,10 +24,10 @@
     "static/media/SPOTIFY.svg": "/spidibot/static/media/SPOTIFY.bc1a3e4cce4eff3ae498bb3540e8da44.svg",
     "index.html": "/spidibot/index.html",
     "main.cf5148ae.css.map": "/spidibot/static/css/main.cf5148ae.css.map",
-    "main.71032d88.js.map": "/spidibot/static/js/main.71032d88.js.map"
+    "main.7eafcaf1.js.map": "/spidibot/static/js/main.7eafcaf1.js.map"
   },
   "entrypoints": [
     "static/css/main.cf5148ae.css",
-    "static/js/main.71032d88.js"
+    "static/js/main.7eafcaf1.js"
   ]
 }
