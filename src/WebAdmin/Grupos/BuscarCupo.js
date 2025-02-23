@@ -204,44 +204,44 @@ const handleSearch = async () => {
   }
 };
 
-  const handleInfoClick = async () => {
-    try {
-      const serviciosRef = collection(db, 'Servicios');
-      const qServicio = query(
-        serviciosRef,
-        where('__name__', '==', servicio.trim().toUpperCase())
-      );
-      const querySnapshotServicio = await getDocs(qServicio);
+const handleInfoClick = async () => {
+  try {
+    const serviciosRef = collection(db, 'Servicios');
+    const qServicio = query(
+      serviciosRef,
+      where('__name__', '==', servicio.trim().toUpperCase())
+    );
+    const querySnapshotServicio = await getDocs(qServicio);
 
-      if (!querySnapshotServicio.empty) {
-        const servicioDoc = querySnapshotServicio.docs[0];
-        const servicioData = servicioDoc.data();
-        const grupoInfo = servicioData[grupo];
+    if (!querySnapshotServicio.empty) {
+      const servicioDoc = querySnapshotServicio.docs[0];
+      const servicioData = servicioDoc.data();
+      const grupoInfo = servicioData[grupo];
 
-        if (grupoInfo) {
-          setInfo({
-            email: Array.isArray(grupoInfo.email) ? grupoInfo.email[0] : grupoInfo.email || '',
-            password: Array.isArray(grupoInfo.password) ? grupoInfo.password[0] : grupoInfo.password || '',
-            fechaComienzo: verFechas(grupoInfo.fechaComienzo) || '',
-            fechaPago: verFechas(grupoInfo.fechaPago) || '',
-            notas: grupoInfo.notas || '',
-            direccion: grupoInfo.direccion || '',
-            enlace: grupoInfo.enlace || '',
-            price: typeof grupoInfo.price === 'number' && grupoInfo.price !== 0 ? grupoInfo.price : 0, // Ensure price is 0 if it doesn't exist or is 0
-            package: grupoInfo.package || '' // Asegúrate de que el valor del paquete se muestre correctamente
-          });
-          setInfoDocId(servicioDoc.id); // Guarda el ID del documento
-          setIsInfoVisible(true); // Muestra la información del grupo
-        } else {
-          toast('No se encontró información para el grupo especificado.');
-        }
+      if (grupoInfo) {
+        setInfo({
+          email: Array.isArray(grupoInfo.email) ? grupoInfo.email[0] : grupoInfo.email || '',
+          password: Array.isArray(grupoInfo.password) ? grupoInfo.password[0] : grupoInfo.password || '',
+          fechaComienzo: verFechas(grupoInfo.fechaComienzo) || '',
+          fechaPago: verFechas(grupoInfo.fechaPago) || '',
+          notas: grupoInfo.notas || '',
+          direccion: grupoInfo.direccion || '',
+          enlace: grupoInfo.enlace || '',
+          price: typeof grupoInfo.price === 'number' && grupoInfo.price !== 0 ? grupoInfo.price : 0,
+          package: grupoInfo.package || '' // Ensure the package value is correctly set
+        });
+        setInfoDocId(servicioDoc.id); // Guarda el ID del documento
+        setIsInfoVisible(true); // Muestra la información del grupo
       } else {
-        toast('No se encontró el servicio especificado.');
+        toast('No se encontró información para el grupo especificado.');
       }
-    } catch (error) {
-      console.error('Error al obtener información del servicio:', error);
+    } else {
+      toast('No se encontró el servicio especificado.');
     }
-  };
+  } catch (error) {
+    console.error('Error al obtener información del servicio:', error);
+  }
+};
   
   
   const handleCopyPaste = () => {
@@ -545,6 +545,9 @@ const handleCheckboxChange = (id, cliente) => {
           {packages.map((pkg) => (
             <option key={pkg} value={pkg}>{pkg}</option>
           ))}
+          {!packages.includes(info.package) && (
+            <option value={info.package}>{info.package}</option>
+          )}
         </select>
       </div>
       <div className="BuscarCupo-form-group">
