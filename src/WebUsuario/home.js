@@ -16,6 +16,14 @@ import MensajesSiNo from '../recursos/MensajesSiNo.js'; // Importa tu componente
 import spiderImage from '../recursos/spider.png'; // Import the spider image
 import { FaSignOutAlt } from 'react-icons/fa'; // Import the logout icon
 
+// Export variables for MensajesSiNo
+export const logoutHeader = '¿Estás seguro que quieres cerrar sesión?';
+export const logoutMessage = 'Recuerda que cada vez que vuelvas a entrar la sesión se mantendrá abierta. Al cerrar sesión, la próxima vez que vayas a verificar tus contraseñas te pedirá correo y contraseña.';
+export const logoutButtons = {
+  no: 'No, quiero continuar con mi sesión',
+  yes: 'Sí, deseo cerrar sesión'
+};
+
 function Home() {
   const user = auth.currentUser; // Usuario autenticado
   const navigate = useNavigate();
@@ -92,19 +100,16 @@ function Home() {
       }));
       setServiciosEnVenta(serviciosData);
     } catch (error) {
-      console.error('Error al obtener servicios en venta:', error);
     } finally {
       setLoading(false); 
     }
   };
   const handleMoreInfos = (id) => {
     // Lógica para mostrar más información sobre el servicio
-    console.log('Más información sobre el servicio ID:', id);
   };
 
   const handleBuy = (id) => {
     // Lógica para comprar el servicio
-    console.log('Comprar servicio ID:', id);
   };
   
 
@@ -147,12 +152,12 @@ function Home() {
               fechaFinal,
               nombreCliente,
               nota: data.notas[index] || 'Nota no disponible',
+              clientId: doc.id // Añadir el ID del cliente
             });
           });
         }
       });
   
-      console.log("Servicios Data:", serviciosData); // Verifica el contenido aquí
       setServicios(serviciosData);
   
       // Si encontramos un proveedor, guardamos su nombre en el estado
@@ -163,7 +168,6 @@ function Home() {
       // Aquí puedes establecer el estado de hasProvider en función de isProveedor
       setHasProvider(isProveedor);
     } catch (error) {
-      console.error('Error al obtener los servicios:', error);
     } finally {
       setLoading(false);
     }
@@ -190,11 +194,9 @@ function Home() {
         const stepsArray = data.tv.split(',').map(step => step.trim());
         setTvSteps(stepsArray);
       } else {
-        console.log('No hay pasos disponibles para este servicio.');
         setTvSteps(['No hay pasos disponibles para este servicio.']);
       }
     } catch (error) {
-      console.error('Error al obtener los pasos del TV:', error);
       setTvSteps(['Error al cargar los pasos.']);
     }
   };
@@ -217,13 +219,14 @@ function Home() {
       await signOut(auth);
       navigate('/spidibot');
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
     }
   };
 
   const cancelLogout = () => {
     setShowConfirmLogout(false);
   };
+
+
   // Función para manejar el clic en "Más Información"
   const handleMoreInfo = async (servicioId, grupo, servicioNombre, estado) => {
     // Determina el texto del botón dependiendo del estado del servicio
@@ -285,7 +288,6 @@ function Home() {
         }
       }
     } catch (error) {
-      console.error('Error al obtener la información del servicio:', error);
     } finally {
       setLoading(false);
     }
@@ -367,7 +369,6 @@ return (
         })
         .map((servicioData, index) => (
           <div key={index}>
-            {console.log(servicioData)} {/* Agrega este log para verificar el contenido */}
             {hasProvider ? ( // Mostrar ContainerPlatformP si hay proveedor
               <ContainerPlatformP
                 title={typeof servicioData.servicio === 'string' ? servicioData.servicio : servicioData.servicio.displayTitle} // Asegúrate de que sea un string
@@ -376,6 +377,7 @@ return (
                 fechaFinal={typeof servicioData.fechaFinal === 'string' ? servicioData.fechaFinal : 'Fecha no disponible'}
                 estado={typeof servicioData.estado === 'string' ? servicioData.estado : 'Estado no disponible'}
                 onMoreInfo={() => handleMoreInfo(servicioData.servicio, servicioData.grupo, servicioData.servicio, servicioData.estado)}
+                providerId={servicioData.clientId} // Añadir el ID del cliente
               />
             ) : ( // Mostrar ContainerPlatform si no hay proveedor
               <ContainerPlatform
@@ -385,6 +387,7 @@ return (
                 fechaFinal={typeof servicioData.fechaFinal === 'string' ? servicioData.fechaFinal : 'Fecha no disponible'}
                 estado={typeof servicioData.estado === 'string' ? servicioData.estado : 'Estado no disponible'}
                 onMoreInfo={() => handleMoreInfo(servicioData.servicio, servicioData.grupo, servicioData.servicio, servicioData.estado)}
+                clientId={servicioData.clientId} // Añadir el ID del cliente
               />
             )}
           </div>
@@ -397,7 +400,6 @@ return (
         })
         .map((servicioData, index) => (
           <div key={index}>
-            {console.log(servicioData)} {/* Agrega este log para verificar el contenido */}
             {hasProvider ? ( // Mostrar ContainerPlatformP si hay proveedor
               <ContainerPlatformP
                 title={typeof servicioData.servicio === 'string' ? servicioData.servicio : servicioData.servicio.displayTitle} // Asegúrate de que sea un string
@@ -406,6 +408,7 @@ return (
                 fechaFinal={typeof servicioData.fechaFinal === 'string' ? servicioData.fechaFinal : 'Fecha no disponible'}
                 estado={typeof servicioData.estado === 'string' ? servicioData.estado : 'Estado no disponible'}
                 onMoreInfo={() => handleMoreInfo(servicioData.servicio, servicioData.grupo, servicioData.servicio, servicioData.estado)}
+                providerId={servicioData.clientId} // Añadir el ID del cliente
               />
             ) : ( // Mostrar ContainerPlatform si no hay proveedor
               <ContainerPlatform
@@ -415,6 +418,7 @@ return (
                 fechaFinal={typeof servicioData.fechaFinal === 'string' ? servicioData.fechaFinal : 'Fecha no disponible'}
                 estado={typeof servicioData.estado === 'string' ? servicioData.estado : 'Estado no disponible'}
                 onMoreInfo={() => handleMoreInfo(servicioData.servicio, servicioData.grupo, servicioData.servicio, servicioData.estado)}
+                clientId={servicioData.clientId} // Añadir el ID del cliente
               />
             )}
           </div>
@@ -525,7 +529,13 @@ return (
     
     {/* Mostrar el mensaje de confirmación si está activo */}
     {showConfirmLogout && (
-      <MensajesSiNo onClose={cancelLogout} onConfirm={confirmLogout} />
+      <MensajesSiNo 
+        onClose={cancelLogout} 
+        onConfirm={confirmLogout} 
+        header={logoutHeader}
+        message={logoutMessage}
+        buttons={logoutButtons}
+      />
     )}
 
     <ToastContainer />

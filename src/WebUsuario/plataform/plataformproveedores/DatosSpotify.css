@@ -1,4 +1,5 @@
 /* DatosSpotify.css */
+@import url('../../../recursos/colors-dark.css');
 
 .overlay-datos {
   position: fixed;
@@ -6,7 +7,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--color-overlay);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,54 +15,54 @@
 }
 
 .modal {
-  background-color: white;
-  padding: 15px;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 600px;
-  max-height: 600px; /* Limitar la altura máxima */
+  background-color: var(--color-container);
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80%;
   overflow-y: auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .modal-title {
   text-align: center;
-  font-size: 22px;
-  margin-bottom: 15px;
-  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: var(--color-text);
 }
 
 form {
-
+  display: flex;
   flex-direction: column;
-  gap: 10px; /* Reducir el espacio entre los elementos */
+  gap: 15px;
 }
 
 /* Estilos de los campos del formulario */
 .form-group {
-  padding-top: 10px; /* Reducir el padding superior */
   display: flex;
   flex-direction: column;
 }
 
 .form-label {
-  font-size: 14px;
+  font-size: 16px;
   margin-bottom: 5px;
-  color: #333;
+  color: var(--color-text);
 }
 
 .form-input {
-  padding: 8px; /* Reducir el padding */
+  padding: 10px;
   font-size: 14px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 5px;
   outline: none;
-  background-color: #f9f9f9;
+  background-color: var(--color-background-);
+  position: relative;
 }
 
 .form-input:focus {
-  border-color: #1db954;
-  background-color: #fff;
+  border-color: var(--color-button-confirmation);
+  background-color: var(--color-background-hover);
 }
 
 .password-container {
@@ -69,15 +70,15 @@ form {
 }
 
 .password-container input {
-  padding-right: 30px;
+  padding-right: 40px;
 }
 
 .spotify-password-toggle {
   position: absolute;
   right: 10px;
-  top: 30%;
+  top: 50%;
   transform: translateY(-50%);
-  font-size: 18px; /* Reducir el tamaño del icono */
+  font-size: 18px;
   cursor: pointer;
 }
 
@@ -89,13 +90,13 @@ form {
 }
 
 .info-text {
-  font-size: 13px; /* Reducir el tamaño del texto */
-  color: #555;
+  font-size: 14px;
+  color: var(--color-text);
   flex: 1;
 }
 
 .enlace-clicable {
-  color: #1db954;
+  color: var(--color-button-confirmation);
   text-decoration: none;
   font-weight: bold;
 }
@@ -104,92 +105,69 @@ form {
   text-decoration: underline;
 }
 
-
-
-.copy-botones:hover {
-  background-color: #f0f0f0;
-  border-radius: 8px;
-}
-
-.copy-icon {
-  font-size: 30px; /* Reducir el tamaño del icono */
-  color: #ffffff;
-  transition: color 0.3s;
+.proveedorescopy-botones {
+  background-color: var(--color-button-confirmation);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
   display: flex;
-  justify-content: center; /* Centra el icono horizontalmente */
-  align-items: center; /* Centra el icono verticalmente */
-  height: 100%; /* Asegúrate de que el contenedor tenga una altura */
+  align-items: center;
 }
 
-.copy-button:hover .copy-icon {
-  color: #1db954;
+.proveedorescopy-botones:hover {
+  background-color: var(--color-button-confirmation-hover);
+}
+
+.copsy-icon {
+  margin-right: 5px;
+  font-size: 20px; /* Aumentar el tamaño del icono */
 }
 
 /* Estilos de los botones de acción */
 .button-group {
   display: flex;
-  justify-content: center; /* Centrar los botones horizontalmente */
-  gap: 10px; /* Reducir el espacio entre los botones */
+  flex-wrap: wrap; /* Permitir que los botones se envuelvan */
+  gap: 10px;
   width: 100%;
 }
 
 .save-button,
-.close-button {
-  padding: 8px; /* Reducir el padding */
-  font-size: 15px; /* Reducir el tamaño del texto */
-  border-radius: 4px;
+.close-button,
+.copiar-button {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
   cursor: pointer;
   border: none;
   outline: none;
-  width: 48%;
+  width: calc(50% - 10px); /* Ajustar el ancho para que quepan dos botones por fila */
 }
 
 .save-button {
-  background-color: #1db954;
+  background-color: var(--color-button-confirmation);
   color: white;
 }
 
 .save-button:hover {
-  background-color: #1aa34a;
+  background-color: var(--color-button-confirmation-hover);
 }
 
-.close-button {
-  background-color: #ccc;
-  color: #333;
-}
-
-.close-button:hover {
-  background-color: #bbb;
-}
-
-.copy-button {
-  margin-top: 10px;
-}
-
-.button-group {
-  flex-direction: row; /* Asegurarse de que los botones estén en fila */
-}
 .saves-button {
-  background-color: #dd0f0f;
+  background-color: var(--color-button-negation);
   color: white;
-  padding: 8px; /* Reducir el padding */
-  font-size: 15px; /* Reducir el tamaño del texto */
-  border-radius: 4px;
-  cursor: pointer;
-  border: none;
-  outline: none;
-  width: 48%;
 }
 
 .saves-button:hover {
-  background-color: #ea0f0f;
+  background-color: var(--color-button-negation-hover);
 }
-.copiar-button{
-  padding: 8px; /* Reducir el padding */
-  font-size: 15px; /* Reducir el tamaño del texto */
-  border-radius: 4px;
-  cursor: pointer;
-  border: none;
-  outline: none;
-  width: 48%;
+
+.copiar-button {
+  background-color: var(--color-buttons);
+  color: white;
+}
+
+.copiar-button:hover {
+  background-color: var(--color-buttons-hover);
 }

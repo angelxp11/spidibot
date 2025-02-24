@@ -209,6 +209,28 @@
   outline: none; /* Sin borde al enfocar */
 }
 
+.con-container-platform-delete-button {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: var(--color-buttons);
+  color: var(--color-text);
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.con-container-platform-delete-button:hover {
+  background-color: var(--color-buttons-hover); /* Color de fondo en hover */
+  transform: scale(1.05); /* Efecto de zoom */
+}
+
+.con-container-platform-delete-button:focus {
+  outline: none; /* Sin borde al enfocar */
+}
+
 .con-masinfo {
   background-color: var(--color-buttons); /* Rojo oscuro */
   color: var(--color-text); /* Texto blanco */
@@ -326,4 +348,29 @@
 .container-platform-home-button:hover {
   background-color: var(--color-buttons-hover); /* Color de fondo en hover */
   transform: scale(1.05); /* Efecto de zoom */
+}
+.container-platform-home-button:focus {
+  outline: none; /* Sin borde al enfocar */
+}
+
+.container-platform-delete-button {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: var(--color-buttons);
+  color: var(--color-text);
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.container-platform-delete-button:hover {
+  background-color: var(--color-buttons-hover); /* Color de fondo en hover */
+  transform: scale(1.05); /* Efecto de zoom */
+}
+
+.container-platform-delete-button:focus {
+  outline: none; /* Sin borde al enfocar */
 }

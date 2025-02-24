@@ -18,7 +18,7 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 300px;
+  width: 320px;
   max-width: 80%;
 }
 
@@ -155,13 +155,19 @@
 }
 
 .ssservice-icons img {
-  width: 100px; /* Set width to 100px */
-  height: 100px; /* Set height to 100px */
+  width: 75px; /* Set width to 75px */
+  height: 75px; /* Set height to 75px */
   margin: 5px; /* Add margin for spacing */
+  border-radius: 50%; /* Initially a circle */
+  background-color: white; /* Initial background color */
+  border: 2px solid var(--color-text); /* Add border color */
+  transition: transform 0.3s ease, border-radius 0.3s ease; /* Add transition for transform and border-radius */
 }
 
 .sclient-item.expanded .ssservice-icons {
   display: flex; /* Show when expanded */
+  max-height: 150px; /* Set a max height */
+  overflow-y: auto; /* Enable vertical scrolling */
 }
 
 .ssservice-icon {
@@ -172,7 +178,10 @@
 
 .ssservice-icon.selected {
   background-color: var(--color-button-confirmation-hover); /* Change background color when selected */
-  border-radius: 8px;
+  border-radius: 8px; /* Change to square */
+  border: 2px solid var(--color-button-confirmation-hover); /* Add border color */
+
+  transform: scale(1.1); /* Slightly enlarge */
 }
 
 .ssservice-icon-container {
@@ -232,4 +241,12 @@
 .client-id {
   margin: 0 10px; /* Add margin to the left and right */
   padding: 0 10px; /* Add padding to the left and right */
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+  color: var(--color-text);
+  max-height: 300px; /* Set a max height */
+  overflow-y: auto; /* Enable vertical scrolling */
 }

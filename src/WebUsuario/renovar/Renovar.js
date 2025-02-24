@@ -99,7 +99,7 @@ const Renovar = ({ onClose, clientId, clientName, serviceName }) => {
                 </button>
               </div>
               {expandedClientIndex === index && (
-                <div className="sservice-icons">
+                <div className="ssservice-icons">
                   {client.servicio.map((service) => {
                     const serviceKey = service.toUpperCase();
                     const isSelected = selectedServices.includes(serviceKey);
@@ -109,7 +109,7 @@ const Renovar = ({ onClose, clientId, clientName, serviceName }) => {
                           key={serviceKey}
                           src={serviceIcons['NETFLIX']}
                           alt={service}
-                          className={`sservice-icon ${isSelected ? 'selected' : ''}`}
+                          className={`ssservice-icon ${isSelected ? 'selected' : ''}`}
                           onClick={() => toggleServiceSelection(serviceKey)}
                         />
                       );
@@ -119,7 +119,7 @@ const Renovar = ({ onClose, clientId, clientName, serviceName }) => {
                         key={serviceKey}
                         src={serviceIcons[serviceKey]}
                         alt={service}
-                        className={`sservice-icon ${isSelected ? 'selected' : ''}`}
+                        className={`ssservice-icon ${isSelected ? 'selected' : ''}`}
                         onClick={() => toggleServiceSelection(serviceKey)}
                       />
                     );

@@ -231,8 +231,9 @@ El equipo de Jadeplatform 🎧`;
                 <label htmlFor="direccion" className="form-label">Dirección</label>
                 <div className="info-container">
                   <p id="direccion" className="info-text">{direccion || 'Cargando dirección...'}</p>
-                  <button type="button" className="copy-botones" onClick={() => copyToClipboard(direccion)}>
-                    <FaCopy className="copy-icon" />
+                  <button type="button" className="proveedorescopy-botones" onClick={() => copyToClipboard(direccion)}>
+                    <FaCopy className="copsy-icon" />
+                    Copiar Dirección
                   </button>
                 </div>
               </div>
@@ -254,21 +255,17 @@ El equipo de Jadeplatform 🎧`;
                 <button type="button" className="save-button" onClick={handleSave}>
                   Guardar
                 </button>
-                <button type="button" className="saves-button" onClick={onClose}>
+                <button type="button" className="copiar-button" onClick={onClose}>
                   Cerrar
+                </button>
+                <button type="button" className="copiar-button" onClick={copySpotifyTemplate}>
+                  Copiar Información de acceso Spotify
+                </button>
+                <button type="button" className="copiar-button" onClick={copyCustomTemplate}>
+                  Copiar Dirección y Enlace
                 </button>
               </div>
             </form>
-  
-            {/* Botón para copiar la plantilla personalizada */}
-            <button type="button" className="copiar-button" onClick={copySpotifyTemplate}>
-              Copiar Información de acceso Spotify
-            </button>
-
-            {/* Botón para copiar la plantilla personalizada */}
-            <button type="button" className="copiar-button" onClick={copyCustomTemplate}>
-              Copiar Plantilla Personalizada
-            </button>
           </div>
         </div>
       )}

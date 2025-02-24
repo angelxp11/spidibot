@@ -50,22 +50,15 @@ function Home() {
   const requestNotificationPermission = async () => {
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
-      console.log('Permiso para notificaciones concedido.');
-      // Obtiene el token para enviar notificaciones
       getToken(messaging, { vapidKey: 'YOUR_PUBLIC_VAPID_KEY' }) // Cambia a tu VAPID Key
         .then((currentToken) => {
           if (currentToken) {
-            console.log('Token FCM:', currentToken);
-            // Aquí puedes enviar el token a tu servidor si es necesario
           } else {
-            console.warn('No se pudo obtener el token de FCM. Asegúrate de haber habilitado las notificaciones.');
           }
         })
         .catch((error) => {
-          console.error('Error al obtener el token de FCM:', error);
         });
     } else {
-      console.error('Permiso para notificaciones denegado.');
     }
   };
 
@@ -84,7 +77,6 @@ function Home() {
         }
       });
     }, (error) => {
-      console.error('Error al obtener notificaciones:', error);
     });
 
     return () => unsubscribe();
@@ -101,7 +93,6 @@ function Home() {
   // Manejar mensajes en primer plano
   useEffect(() => {
     const unsubscribeFromMessages = onMessage(messaging, (payload) => {
-      console.log('Mensaje recibido en primer plano: ', payload);
       showBrowserNotification(payload.notification.title, payload.notification.body);
     });
 
@@ -113,7 +104,6 @@ function Home() {
       await signOut(auth);
       navigate('/spidibot');
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
     }
   };
 
