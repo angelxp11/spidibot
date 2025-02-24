@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/spidibot/static/css/main.cf5148ae.css",
-    "main.js": "/spidibot/static/js/main.7eafcaf1.js",
+    "main.css": "/spidibot/static/css/main.24f15c03.css",
+    "main.js": "/spidibot/static/js/main.5296c21f.js",
     "static/media/spider.png": "/spidibot/static/media/spider.e41fb39c59c4fb5c6757.png",
     "static/media/AHORRO.png": "/spidibot/static/media/AHORRO.b1f0a3a21db3954f4e6e.png",
     "static/media/fondogreen.png": "/spidibot/static/media/fondogreen.19eb02b739d5a402dbeb.png",
@@ -12,22 +12,22 @@
     "static/media/spidilogo.png": "/spidibot/static/media/spidilogo.1e6d18f995606fa2b33b.png",
     "static/media/spidi512.png": "/spidibot/static/media/spidi512.5e2520cdc2f6f3955473.png",
     "static/media/DAVIPLATA.png": "/spidibot/static/media/DAVIPLATA.01f11a9773fd5589b6ed.png",
+    "static/media/DISNEY.svg": "/spidibot/static/media/DISNEY.7b55f2bbbf0d42857cef2fffa4665afc.svg",
     "static/media/copy.png": "/spidibot/static/media/copy.66cf9419c7bf5cb1b66a.png",
     "static/media/PARAMOUNT.svg": "/spidibot/static/media/PARAMOUNT.b72e9eca2e34dcc2ede5770d70120293.svg",
     "static/media/PRIMEVIDEO.svg": "/spidibot/static/media/PRIMEVIDEO.ad849d69f23205a3e8d4ee26f4f367dc.svg",
-    "static/media/DISNEY.svg": "/spidibot/static/media/DISNEY.7a357cff8d58cf199b08b0ee1745ac40.svg",
     "static/media/CRUNCHY.svg": "/spidibot/static/media/CRUNCHY.d9ff87d162257734e55f1e89583e4772.svg",
     "static/media/google-logo.svg": "/spidibot/static/media/google-logo.efa560d32653a615a1db742bbf78c815.svg",
+    "static/media/SPOTIFY.svg": "/spidibot/static/media/SPOTIFY.c2791109d84d7a274db3acecc9cb32e1.svg",
     "static/media/MAX.svg": "/spidibot/static/media/MAX.729484508d2a5b84bdd3d13579676e51.svg",
     "static/media/YOUTUBE.svg": "/spidibot/static/media/YOUTUBE.f7c5cc380af592dc891e7638b6af4824.svg",
     "static/media/NETFLIX,NETFLIXTV,NETFLIXME.svg": "/spidibot/static/media/NETFLIX,NETFLIXTV,NETFLIXME.e2fd16667e47af79739fb996b6d3b366.svg",
-    "static/media/SPOTIFY.svg": "/spidibot/static/media/SPOTIFY.bc1a3e4cce4eff3ae498bb3540e8da44.svg",
     "index.html": "/spidibot/index.html",
-    "main.cf5148ae.css.map": "/spidibot/static/css/main.cf5148ae.css.map",
-    "main.7eafcaf1.js.map": "/spidibot/static/js/main.7eafcaf1.js.map"
+    "main.24f15c03.css.map": "/spidibot/static/css/main.24f15c03.css.map",
+    "main.5296c21f.js.map": "/spidibot/static/js/main.5296c21f.js.map"
   },
   "entrypoints": [
-    "static/css/main.cf5148ae.css",
-    "static/js/main.7eafcaf1.js"
+    "static/css/main.24f15c03.css",
+    "static/js/main.5296c21f.js"
   ]
 }
