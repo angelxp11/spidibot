@@ -275,17 +275,6 @@
   width: 50px;
 }
 
-/* Styles for the copy icon */
-.copy-icon {
-  margin-left: 10px;
-  cursor: pointer;
-  color: white; /* Set icon color to white */
-  background-color: #ed1b24; /* Set background color to red */
-  padding: 5px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
 .copy-icon:hover {
   background-color: #b3121a;
 }

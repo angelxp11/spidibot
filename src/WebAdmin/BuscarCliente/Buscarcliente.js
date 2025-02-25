@@ -654,7 +654,6 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             </div>
           </div>
         )}
-        ...
 {showDeleteConfirmationModal && (
   <div className="confirmation-modal-overlay">
     <div className="confirmation-modal-content">
@@ -666,7 +665,6 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
     </div>
   </div>
 )}
-...
       </div>
       <ToastContainer /> {/* Add ToastContainer here */}
     </div>

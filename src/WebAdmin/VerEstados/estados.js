@@ -7,6 +7,7 @@ import fondo from '../../fondo.png';
 import './estados.css';
 import { toast } from 'react-toastify'; // Asegúrate de instalar react-toastify
 import { FaSyncAlt, FaTimes, FaFileAlt, FaDollarSign } from 'react-icons/fa';
+import PaymentOverlay from '../metodosdepago/PaymentOverlay';
 
 const firestore = getFirestore(app);
 
@@ -546,16 +547,11 @@ const handleCobrar = async () => {
       )}
 
       {showPaymentOverlay && (
-        <div className="confirmation-modal-overlay" onClick={() => setShowPaymentOverlay(false)}>
-          <div className="confirmation-modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2>Selecciona el método de pago</h2>
-            <div className="confirmation-modal-buttons">
-              {paymentMethods.map((method) => (
-                <button key={method} className="payment-method-button" onClick={() => handlePaymentMethodSelect(method)}>{method}</button>
-              ))}
-            </div>
-          </div>
-        </div>
+        <PaymentOverlay
+          paymentMethods={paymentMethods}
+          onSelect={handlePaymentMethodSelect}
+          onClose={() => setShowPaymentOverlay(false)}
+        />
       )}
 
       </div>

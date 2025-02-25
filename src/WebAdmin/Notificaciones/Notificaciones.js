@@ -1,9 +1,10 @@
 import { toast } from 'react-toastify'; 
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, orderBy, doc, deleteDoc, addDoc, setDoc } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, deleteDoc, addDoc, setDoc, getDoc, updateDoc, increment } from 'firebase/firestore';
 import { db } from '../../firebase'; // Asegúrate de tener la configuración de Firestore en firebase.js
 import './notificaciones.css'; // Estilos para el modal
 import { FaCheck, FaTimes, FaTrashAlt, FaRecycle } from 'react-icons/fa'; // Import icons from react-icons
+import PaymentOverlay from '../metodosdepago/PaymentOverlay'; // Import PaymentOverlay component
 
 const Notificaciones = ({ onClose }) => {
   const [pedidos, setPedidos] = useState([]);
@@ -11,6 +12,9 @@ const Notificaciones = ({ onClose }) => {
   const [pedidoIdDocumento, setPedidoIdDocumento] = useState(''); // Nuevo estado para guardar el ID del documento del pedido
   const [toastMessage, setToastMessage] = useState(''); // Estado para el mensaje del toast
   const [isToastVisible, setIsToastVisible] = useState(false); // Estado para mostrar el toast
+  const [paymentMethods, setPaymentMethods] = useState([]); // State for payment methods
+  const [showPaymentOverlay, setShowPaymentOverlay] = useState(false); // State to show payment overlay
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null); // State for selected payment method
 
   // Pedir permiso para mostrar notificaciones
   const requestNotificationPermission = async () => {
@@ -34,6 +38,19 @@ const Notificaciones = ({ onClose }) => {
     return () => {
       document.removeEventListener('keydown', handleEscKey);
     };
+  }, []);
+
+  useEffect(() => {
+    const fetchPaymentMethods = async () => {
+      const financeRef = collection(db, 'finance');
+      const financeSnapshot = await getDocs(financeRef);
+      const methods = financeSnapshot.docs
+        .map(doc => doc.id)
+        .filter(id => id !== 'AHORRO'); // Filter out 'AHORRO'
+      setPaymentMethods(methods);
+    };
+
+    fetchPaymentMethods();
   }, []);
 
   // Función para generar ID con formato de 5 dígitos
@@ -124,6 +141,10 @@ const Notificaciones = ({ onClose }) => {
   // Función para activar un cliente (crear si no existe)
   const handleActivarCliente = async () => {
     if (pedidoSeleccionado) {
+      if (!selectedPaymentMethod) {
+        setShowPaymentOverlay(true); // Show payment overlay if no payment method selected
+        return;
+      }
       const {
         id, // Este es el ID del cliente que está en el input
         nombre,
@@ -145,6 +166,21 @@ const Notificaciones = ({ onClose }) => {
       const fechaFinalFormateada = formatDate(fechaFinal);
 
       try {
+        const metodoPagoRef = doc(db, 'finance', selectedPaymentMethod); // Reference to selected payment method
+        const metodoPagoSnap = await getDoc(metodoPagoRef);
+        if (!metodoPagoSnap.exists()) {
+          throw new Error('Método de pago no encontrado');
+        }
+        const metodoPagoData = metodoPagoSnap.data();
+        const totalAmount = precio.reduce((acc, curr) => acc + Number(curr), 0);
+        if (metodoPagoData.saldo < totalAmount) {
+          toast.error('Saldo insuficiente en el método de pago seleccionado');
+          return;
+        }
+        await updateDoc(metodoPagoRef, {
+          saldo: increment(-totalAmount)
+        });
+
         if (pedidoSeleccionado.renovacion) {
           // Crear un nuevo documento con el ID del documento guardado en la colección 'clientes'
           const clienteRef = doc(db, 'clientes', clienteDocId);
@@ -224,6 +260,12 @@ const Notificaciones = ({ onClose }) => {
         });
       }
     }
+  };
+
+  const handlePaymentMethodSelect = (method) => {
+    setSelectedPaymentMethod(method);
+    setShowPaymentOverlay(false);
+    handleActivarCliente(); // Proceed with client activation after selecting payment method
   };
 
   // Función para obtener pedidos ordenados por timestamp
@@ -443,7 +485,8 @@ const Notificaciones = ({ onClose }) => {
                     type="date"
                     name="fechaFinal"
                     value={pedidoSeleccionado.fechaFinal || ''}
-                    readOnly
+                    readOnly={pedidoSeleccionado.fechaFinal !== '2003-07-07'} // Editable only if fechaFinal is 07/07/2003
+                    onChange={handleChange}
                     className="notificaciones-detail-input"
                     style={{ flex: 1 }} // Hacer el input más estrecho
                   />
@@ -533,6 +576,14 @@ const Notificaciones = ({ onClose }) => {
         <button onClick={onClose} className="notificaciones-cerrar-overlay-btn">
           X
         </button>
+
+        {showPaymentOverlay && (
+          <PaymentOverlay
+            paymentMethods={paymentMethods}
+            onSelect={handlePaymentMethodSelect}
+            onClose={() => setShowPaymentOverlay(false)}
+          />
+        )}
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import './AddSeeEstatus.css'; // Asegúrate de crear este archivo para los estil
 import { toast } from 'react-toastify';
 import { FaSyncAlt, FaCopy } from 'react-icons/fa';
 import Carga from '../../Loada/Carga'; // Import the loading component
+import PaymentOverlay from '../metodosdepago/PaymentOverlay';
 
 const firestore = getFirestore(app);
 
@@ -359,6 +360,7 @@ function AddSeeEstatus({ onClose }) {
                     <div>ID: {result.id}</div>
                     <div>Nombre del Grupo: {result.groupName}</div>
                     <div>Estado: {result.estado}</div>
+                    <div>Fecha de Pago: {result.fechaPago}</div> {/* Add this line */}
                     <button onClick={() => handleViewDetails(result)} className="addseeestatus-details-button">Ver Detalles</button>
                   </li>
                 ))}
@@ -454,16 +456,11 @@ function AddSeeEstatus({ onClose }) {
           )}
         </div>
         {showPaymentOverlay && (
-          <div className="confirmation-modal-overlay" onClick={() => setShowPaymentOverlay(false)}>
-            <div className="confirmation-modal-content" onClick={(e) => e.stopPropagation()}>
-              <h2>Selecciona el método de pago</h2>
-              <div className="confirmation-modal-buttons">
-                {paymentMethods.map((method) => (
-                  <button key={method} className="payment-method-button" onClick={() => handlePaymentMethodSelect(method)}>{method}</button>
-                ))}
-              </div>
-            </div>
-          </div>
+          <PaymentOverlay
+            paymentMethods={paymentMethods}
+            onSelect={handlePaymentMethodSelect}
+            onClose={() => setShowPaymentOverlay(false)}
+          />
         )}
         {loading && <Carga />} {/* Mostrar el componente de carga */}
       </div>
