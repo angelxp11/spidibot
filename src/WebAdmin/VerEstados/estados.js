@@ -282,8 +282,6 @@ function Estados({ onClose }) {
       await updateDoc(clientRef, {
         fechaFinal: nuevaFechaFinal,
         'PENDEJOALEJANDRO.estado': nuevoEstado,
-        metodoPago: method,
-        totalPagado: totalAmount
       });
   
       const paymentMethodRef = doc(firestore, 'finance', method);
@@ -303,8 +301,6 @@ function Estados({ onClose }) {
         ...selectedClient,
         fechaFinal: nuevaFechaFinal,
         estado: nuevoEstado,
-        metodoPago: method,
-        totalPagado: totalAmount
       });
   
       toast.success('La fecha de finalización ha sido renovada y el estado actualizado.', {

@@ -33,7 +33,7 @@ const verFechas = (fecha) => {
 };
 
 const formatPrice = (value) => {
-  if (value === null || value === undefined) return '';
+  if (value === null || value === undefined || value === '') return '0';
   const stringValue = value.toString(); // Ensure value is a string
   const numberValue = parseFloat(stringValue.replace(/[$,]/g, ''));
   return `$${numberValue.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
