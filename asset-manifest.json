@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/spidibot/static/css/main.78fa2f45.css",
-    "main.js": "/spidibot/static/js/main.549d239f.js",
+    "main.js": "/spidibot/static/js/main.a84effd9.js",
     "static/media/spider.png": "/spidibot/static/media/spider.e41fb39c59c4fb5c6757.png",
     "static/media/AHORRO.png": "/spidibot/static/media/AHORRO.b1f0a3a21db3954f4e6e.png",
     "static/media/fondogreen.png": "/spidibot/static/media/fondogreen.19eb02b739d5a402dbeb.png",
@@ -24,10 +24,10 @@
     "static/media/NETFLIX,NETFLIXTV,NETFLIXME.svg": "/spidibot/static/media/NETFLIX,NETFLIXTV,NETFLIXME.e2fd16667e47af79739fb996b6d3b366.svg",
     "index.html": "/spidibot/index.html",
     "main.78fa2f45.css.map": "/spidibot/static/css/main.78fa2f45.css.map",
-    "main.549d239f.js.map": "/spidibot/static/js/main.549d239f.js.map"
+    "main.a84effd9.js.map": "/spidibot/static/js/main.a84effd9.js.map"
   },
   "entrypoints": [
     "static/css/main.78fa2f45.css",
-    "static/js/main.549d239f.js"
+    "static/js/main.a84effd9.js"
   ]
 }
