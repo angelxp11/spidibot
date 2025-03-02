@@ -277,7 +277,7 @@ const CuentasDisponibles = ({ onClose }) => {
                       if (selectedService === "DISPONIBLES") {
                         return Object.values(grupos).some(grupo => {
                           if (servicio === "NETFLIX") {
-                            return grupo.extraMessage.includes("cupos libres");
+                            return typeof grupo.extraMessage === 'string' && grupo.extraMessage.includes("cupos libres");
                           } else {
                             const count = parseInt(String(grupo).match(/\d+/)[0], 10);
                             return count < (serviceLimits[servicio] || 5);
@@ -286,7 +286,7 @@ const CuentasDisponibles = ({ onClose }) => {
                       } else if (selectedService === "LLENOS") {
                         return Object.values(grupos).some(grupo => {
                           if (servicio === "NETFLIX") {
-                            return grupo.extraMessage === "El grupo está lleno.";
+                            return typeof grupo.extraMessage === 'string' && grupo.extraMessage === "El grupo está lleno.";
                           } else {
                             const count = parseInt(String(grupo).match(/\d+/)[0], 10);
                             return count >= (serviceLimits[servicio] || 5);
@@ -300,14 +300,14 @@ const CuentasDisponibles = ({ onClose }) => {
                         .filter(([grupo, disponibilidad]) => {
                           if (selectedService === "DISPONIBLES") {
                             if (servicio === "NETFLIX") {
-                              return disponibilidad.extraMessage.includes("cupos libres");
+                              return typeof disponibilidad.extraMessage === 'string' && disponibilidad.extraMessage.includes("cupos libres");
                             } else {
                               const count = parseInt(String(disponibilidad).match(/\d+/)[0], 10);
                               return count < (serviceLimits[servicio] || 5);
                             }
                           } else if (selectedService === "LLENOS") {
                             if (servicio === "NETFLIX") {
-                              return disponibilidad.extraMessage === "El grupo está lleno.";
+                              return typeof disponibilidad.extraMessage === 'string' && disponibilidad.extraMessage === "El grupo está lleno.";
                             } else {
                               const count = parseInt(String(disponibilidad).match(/\d+/)[0], 10);
                               return count >= (serviceLimits[servicio] || 5);
