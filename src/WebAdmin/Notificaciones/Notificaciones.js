@@ -142,129 +142,131 @@ const Notificaciones = ({ onClose }) => {
     }
   };
 
-  const handlePaymentMethodSelect = async (method) => {
-    if (pedidoSeleccionado) {
-      const {
-        id, // Este es el ID del cliente que está en el input
-        nombre,
-        apellido,
-        telefono,
-        email,
-        fechaInicial,
-        fechaFinal,
-        grupo,
-        servicio, // Ahora servicio será un array de strings
-        notas, // Ahora es un array
-        precio, // Ahora es un array de strings
-        clienteDocId, // ID del documento del cliente
-        pagado, // Array de valores pagado
-      } = pedidoSeleccionado;
+  // ...existing code...
+const handlePaymentMethodSelect = async (method) => {
+  if (pedidoSeleccionado) {
+    const {
+      id, // Este es el ID del cliente que está en el input
+      nombre,
+      apellido,
+      telefono,
+      email,
+      fechaInicial,
+      fechaFinal,
+      grupo,
+      servicio, // Ahora servicio será un array de strings
+      notas, // Ahora es un array
+      precio, // Ahora es un array de strings
+      clienteDocId, // ID del documento del cliente
+      pagado, // Array de valores pagado
+    } = pedidoSeleccionado;
 
-      // Aplicamos el formato de fecha a fechaInicial y fechaFinal
-      const fechaInicialFormateada = formatDate(fechaInicial);
-      const fechaFinalFormateada = formatDate(fechaFinal);
+    // Aplicamos el formato de fecha a fechaInicial y fechaFinal
+    const fechaInicialFormateada = formatDate(fechaInicial);
+    const fechaFinalFormateada = formatDate(fechaFinal);
 
-      try {
-        if (pedidoSeleccionado.renovacion) {
-          // Crear un nuevo documento con el ID del documento guardado en la colección 'clientes'
-          const clienteRef = doc(db, 'clientes', clienteDocId);
-          await setDoc(clienteRef, {
-            nombre: nombre || '',
-            apellido: apellido || '',
-            telefono: telefono || '',
-            email: email || '',
-            fechaInicial: fechaInicialFormateada || '', // Fecha inicial formateada
-            fechaFinal: fechaFinalFormateada || '', // Fecha final formateada
-            pagado: servicio.map(() => 'SI'), // Campo pagado como array con "SI" para cada servicio
-            grupo: Array.isArray(grupo) ? grupo.map(g => g.toUpperCase()) : [grupo.toUpperCase()] || [], // Convertir a mayúsculas
-            servicio: Array.isArray(servicio) ? servicio.map(s => String(s)) : [String(servicio)] || [], // Aseguramos que 'servicio' sea un array de strings
-            notas: Array.isArray(notas) ? notas.map(nota => nota.toUpperCase()) : [notas.toUpperCase()] || [], // Aseguramos que 'notas' sea un array y en mayúsculas
-            precio: Array.isArray(precio) ? precio.map(p => String(p)) : [String(p)] || [], // Aseguramos que 'precio' sea un array de strings
-            PENDEJOALEJANDRO: { 
-              estado: '✅', // Estado fijo siempre "✅"
-            },
-            ID: id, // Guardar el ID del cliente dentro del documento
-          });
-
-          // Mostrar el toast de éxito cuando el cliente es renovado
-          toast.success('¡Cliente renovado exitosamente!', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: true,
-          });
-        } else {
-          // Crear un nuevo documento con ID aleatorio en la colección 'clientes'
-          const clienteRef = await addDoc(collection(db, 'clientes'), {
-            nombre: nombre || '',
-            apellido: apellido || '',
-            telefono: telefono || '',
-            email: email || '',
-            fechaInicial: fechaInicialFormateada || '', // Fecha inicial formateada
-            fechaFinal: fechaFinalFormateada || '', // Fecha final formateada
-            pagado: ['SI'], // Campo pagado como array con "SI" como elemento inicial
-            grupo: Array.isArray(grupo) ? grupo.map(g => g.toUpperCase()) : [grupo.toUpperCase()] || [], // Convertir a mayúsculas
-            servicio: Array.isArray(servicio) ? servicio.map(s => String(s)) : [String(servicio)] || [], // Aseguramos que 'servicio' sea un array de strings
-            notas: Array.isArray(notas) ? notas.map(nota => nota.toUpperCase()) : [notas.toUpperCase()] || [], // Aseguramos que 'notas' sea un array y en mayúsculas
-            precio: Array.isArray(precio) ? precio.map(p => String(p)) : [String(p)] || [], // Aseguramos que 'precio' sea un array de strings
-            PENDEJOALEJANDRO: { 
-              estado: '✅', // Estado fijo siempre "✅"
-            },
-            ID: id, // Guardar el ID del cliente dentro del documento
-          });
-
-          // Mostrar el toast de éxito cuando el cliente es activado
-          toast.success('¡Cliente activado exitosamente!', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: true,
-          });
-        }
-
-        // Update the payment method balance
-        const totalAmount = precio.reduce((acc, curr) => acc + Number(curr), 0);
-        const gastosOperativos = totalAmount * 0.7;
-        const utilidadNeta = totalAmount * 0.3;
-
-        const paymentMethodRef = doc(db, 'finance', method);
-        await updateDoc(paymentMethodRef, {
-          IngresosBrutos: increment(totalAmount),
-          GastosOperativos: increment(gastosOperativos),
-          UtilidadNeta: increment(utilidadNeta)
+    try {
+      if (pedidoSeleccionado.renovacion) {
+        // Crear un nuevo documento con el ID del documento guardado en la colección 'clientes'
+        const clienteRef = doc(db, 'clientes', clienteDocId);
+        await setDoc(clienteRef, {
+          nombre: nombre || '',
+          apellido: apellido || '',
+          telefono: telefono || '',
+          email: email || '',
+          fechaInicial: fechaInicialFormateada || '', // Fecha inicial formateada
+          fechaFinal: fechaFinalFormateada || '', // Fecha final formateada
+          pagado: servicio.map(() => 'SI'), // Campo pagado como array con "SI" para cada servicio
+          grupo: Array.isArray(grupo) ? grupo.map(g => g.toUpperCase()) : [grupo.toUpperCase()] || [], // Convertir a mayúsculas
+          servicio: Array.isArray(servicio) ? servicio.map(s => String(s)) : [String(servicio)] || [], // Aseguramos que 'servicio' sea un array de strings
+          notas: Array.isArray(notas) ? notas.map(nota => nota.toUpperCase()) : [notas.toUpperCase()] || [], // Aseguramos que 'notas' sea un array y en mayúsculas
+          precio: Array.isArray(precio) ? precio.map(p => String(p)) : [String(precio)] || [], // Aseguramos que 'precio' sea un array de strings
+          PENDEJOALEJANDRO: { 
+            estado: '✅', // Estado fijo siempre "✅"
+          },
+          ID: id, // Guardar el ID del cliente dentro del documento
         });
 
-        const ahorroRef = doc(db, 'finance', 'AHORRO');
-        const currentDate = new Date();
-        const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
-        await updateDoc(ahorroRef, {
-          [`${formattedDate}.GananciasNetas`]: increment(utilidadNeta)
+        // Mostrar el toast de éxito cuando el cliente es renovado
+        toast.success('¡Cliente renovado exitosamente!', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+        });
+      } else {
+        // Crear un nuevo documento con ID aleatorio en la colección 'clientes'
+        const clienteRef = await addDoc(collection(db, 'clientes'), {
+          nombre: nombre || '',
+          apellido: apellido || '',
+          telefono: telefono || '',
+          email: email || '',
+          fechaInicial: fechaInicialFormateada || '', // Fecha inicial formateada
+          fechaFinal: fechaFinalFormateada || '', // Fecha final formateada
+          pagado: ['SI'], // Campo pagado como array con "SI" como elemento inicial
+          grupo: Array.isArray(grupo) ? grupo.map(g => g.toUpperCase()) : [grupo.toUpperCase()] || [], // Convertir a mayúsculas
+          servicio: Array.isArray(servicio) ? servicio.map(s => String(s)) : [String(servicio)] || [], // Aseguramos que 'servicio' sea un array de strings
+          notas: Array.isArray(notas) ? notas.map(nota => nota.toUpperCase()) : [notas.toUpperCase()] || [], // Aseguramos que 'notas' sea un array y en mayúsculas
+          precio: Array.isArray(precio) ? precio.map(p => String(p)) : [String(precio)] || [], // Aseguramos que 'precio' sea un array de strings
+          PENDEJOALEJANDRO: { 
+            estado: '✅', // Estado fijo siempre "✅"
+          },
+          ID: id, // Guardar el ID del cliente dentro del documento
         });
 
-        // Verifica si la ID del pedido es válida antes de intentar eliminarlo
-        if (pedidoIdDocumento) {
-          // Ahora eliminamos el pedido de la colección 'notificaciones' usando la ID previamente guardada
-          const pedidoRef = doc(db, 'notificaciones', pedidoIdDocumento);
-          await deleteDoc(pedidoRef);
-        } else {
-          console.error('No se pudo obtener la ID del pedido para eliminarlo');
-        }
-
-        // Limpiar los detalles del pedido
-        setPedidoSeleccionado(null);
-
-        // Recargar la lista de pedidos
-        await fetchPedidos();
-
-      } catch (error) {
-        console.error('Error activando/actualizando el cliente: ', error);
-        toast.error('Hubo un error al activar el cliente.', {
+        // Mostrar el toast de éxito cuando el cliente es activado
+        toast.success('¡Cliente activado exitosamente!', {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: true,
         });
       }
+
+      // Update the payment method balance
+      const totalAmount = precio.reduce((acc, curr) => acc + Number(curr), 0);
+      const gastosOperativos = totalAmount * 0.7;
+      const utilidadNeta = totalAmount * 0.3;
+
+      const paymentMethodRef = doc(db, 'finance', method);
+      await updateDoc(paymentMethodRef, {
+        IngresosBrutos: increment(totalAmount),
+        GastosOperativos: increment(gastosOperativos),
+        UtilidadNeta: increment(utilidadNeta)
+      });
+
+      const ahorroRef = doc(db, 'finance', 'AHORRO');
+      const currentDate = new Date();
+      const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
+      await updateDoc(ahorroRef, {
+        [`${formattedDate}.GananciasNetas`]: increment(utilidadNeta)
+      });
+
+      // Verifica si la ID del pedido es válida antes de intentar eliminarlo
+      if (pedidoIdDocumento) {
+        // Ahora eliminamos el pedido de la colección 'notificaciones' usando la ID previamente guardada
+        const pedidoRef = doc(db, 'notificaciones', pedidoIdDocumento);
+        await deleteDoc(pedidoRef);
+      } else {
+        console.error('No se pudo obtener la ID del pedido para eliminarlo');
+      }
+
+      // Limpiar los detalles del pedido
+      setPedidoSeleccionado(null);
+
+      // Recargar la lista de pedidos
+      await fetchPedidos();
+
+    } catch (error) {
+      console.error('Error activando/actualizando el cliente: ', error);
+      toast.error('Hubo un error al activar el cliente.', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+      });
     }
-    setShowPaymentOverlay(false); // Hide payment overlay after selection
-  };
+  }
+  setShowPaymentOverlay(false); // Hide payment overlay after selection
+};
+// ...existing code...
 
   // Función para obtener pedidos ordenados por timestamp
   const fetchPedidos = async () => {
