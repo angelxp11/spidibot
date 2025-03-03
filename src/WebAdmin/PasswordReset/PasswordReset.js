@@ -3,15 +3,15 @@ import 'react-toastify/dist/ReactToastify.css'; // Importa los estilos del toast
 
 import React, { useState, useEffect } from 'react';
 import { db } from '../../firebase'; // Importar la configuración de Firebase
-import { collection, getDocs, doc, updateDoc } from 'firebase/firestore'; // Importar funciones de Firestore
+import { collection, getDocs, doc, updateDoc, writeBatch, deleteField } from 'firebase/firestore'; // Importar funciones de Firestore
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth'; // Importar autenticación de Firebase
 import './PasswordReset.css'; // Asegúrate de crear este archivo para los estilos del modal
 
 const PasswordReset = ({ onClose }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [clientsData, setClientsData] = useState([]);
-  const [selectedClient, setSelectedClient] = useState(null);
-  const [email, setEmail] = useState('');
+  const [selectedClients, setSelectedClients] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
 
   // Función para obtener los datos de clientes de Firestore
   const fetchClients = async () => {
@@ -28,91 +28,77 @@ const PasswordReset = ({ onClose }) => {
     fetchClients();
   }, []);
 
-  // Filtrar clientes según el término de búsqueda en nombre o apellido
+  // Filtrar clientes según el término de búsqueda en nombre y que tengan el campo metodoPago
   const filteredClients = clientsData.filter(client => 
-    (client.nombre + ' ' + client.apellido).toLowerCase().includes(searchTerm.toLowerCase())
+    client.metodoPago !== undefined && (client.nombre).toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handlePasswordReset = async () => {
-    if (selectedClient) {
-      const auth = getAuth(); // Obtiene la instancia de autenticación
-      const emailToSend = email || selectedClient.email; // Usar el email del cliente seleccionado o el ingresado
-
-      try {
-        await sendPasswordResetEmail(auth, emailToSend); // Enviar el enlace de restablecimiento de contraseña
-        toast.success('Email enviado con éxito.'); // Muestra el toast de éxito
-      } catch (error) {
-        toast.error(`Error: ${error.message}`); // Muestra el toast de error
-      } finally {
-        // Eliminar el mensaje después de 3 segundos y cerrar el modal
-        setTimeout(() => {
-          onClose(); // Cierra el modal después de 3 segundos
-        }, 3000); // 3 segundos
-      }
-    }
+  const handleSelectClient = (clientId) => {
+    setSelectedClients(prevSelected => 
+      prevSelected.includes(clientId)
+        ? prevSelected.filter(id => id !== clientId)
+        : [...prevSelected, clientId]
+    );
   };
 
-  // Función para guardar el email actualizado
-  const handleSaveEmail = async () => {
-    if (selectedClient) {
-      try {
-        const clientRef = doc(db, 'clientes', selectedClient.id); // Referencia al documento del cliente
-        await updateDoc(clientRef, { email }); // Actualiza el email en Firestore
+  const handleSelectAll = () => {
+    setSelectAll(!selectAll);
+    setSelectedClients(selectAll ? [] : filteredClients.map(client => client.id));
+  };
 
-        // Mostrar mensaje de éxito en un toast
-        toast.success('Email actualizado correctamente.');
-        // Refrescar la lista de clientes
-        await fetchClients();
-      } catch (error) {
-        console.error('Error al actualizar el email:', error);
-        toast.error('Error al actualizar el email.'); // Muestra el toast de error
-      }
+  const handleClearmetodoPago = async () => {
+    try {
+      const batch = writeBatch(db);
+      selectedClients.forEach(clientId => {
+        const clientRef = doc(db, 'clientes', clientId);
+        batch.update(clientRef, { metodoPago: deleteField() });
+      });
+      await batch.commit();
+      toast.success('Campos metodoPago borrados correctamente.');
+      await fetchClients();
+    } catch (error) {
+      console.error('Error al borrar los campos metodoPago:', error);
+      toast.error('Error al borrar los campos metodoPago.');
     }
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-ajua">
+    <div className="passwordmodal-overlay">
+      <div className="passwordmodal-ajua">
         <h2>Restablecer Contraseña</h2>
         <input
           type="text"
-          placeholder="Buscar cliente por nombre o apellido..."
+          placeholder="Buscar cliente por nombre..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <div className="client-list">
+        <div className="passwordclient-list">
+          <div className="passwordclient-item">
+            <input
+              type="checkbox"
+              checked={selectAll}
+              onChange={handleSelectAll}
+            />
+            <label>Seleccionar todos</label>
+          </div>
           {filteredClients.length > 0 ? (
             filteredClients.map(client => (
-              <div
-                key={client.id}
-                className={`client-item ${selectedClient?.id === client.id ? 'selected' : ''}`}
-                onClick={() => {
-                  setSelectedClient(client);
-                  setEmail(client.email); // Establecer el email del cliente seleccionado
-                }}
-              >
-                {client.nombre} {client.apellido} - {client.email}
+              <div key={client.id} className="passwordclient-item">
+                <input
+                  type="checkbox"
+                  checked={selectedClients.includes(client.id)}
+                  onChange={() => handleSelectClient(client.id)}
+                />
+                <span>{client.ID} - {client.nombre}</span>
+                <span>{client.metodoPago}</span>
               </div>
             ))
           ) : (
             <p>No se encontraron clientes</p>
           )}
         </div>
-        {selectedClient && ( // Mostrar el input de email solo si hay un cliente seleccionado
-          <div>
-            <input
-              type="email"
-              placeholder="Ingresa el email (opcional)"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-        )}
-        <button onClick={handlePasswordReset} disabled={!selectedClient}>
-          Enviar Enlace de Restablecimiento
-        </button>
-        <button onClick={handleSaveEmail} disabled={!selectedClient}>
-          Guardar cambios
+        <button onClick={handleClearmetodoPago} disabled={selectedClients.length === 0}>
+          Borrar Campos metodoPago
         </button>
         <button onClick={onClose}>Cerrar</button>
       </div>

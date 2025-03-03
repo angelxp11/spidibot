@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
-import { getFirestore, collection, query, where, getDocs, doc, updateDoc, increment, getDoc, writeBatch } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc, increment, getDoc, writeBatch, addDoc } from 'firebase/firestore';
 import { app } from '../../firebase';
 import html2canvas from 'html2canvas';
 import fondo from '../../fondo.png';
@@ -258,6 +258,17 @@ function Estados({ onClose }) {
     }
   };
 
+  const registrarMovimiento = async (id, tipo, monto, metodoPago, descripcion) => {
+    const movimientosRef = collection(firestore, 'Movimientos');
+    await addDoc(movimientosRef, {
+      tipo,
+      monto,
+      metodoPago,
+      timestamp: new Date(),
+      descripcion
+    });
+  };
+
   const handlePaymentMethodSelect = async (method) => {
     if (selectedClient) {
       const [day, month, year] = selectedClient.fechaFinal.split('/').map(Number);
@@ -297,6 +308,14 @@ function Estados({ onClose }) {
       // Cambiar el valor del campo pagado de NO a SI para el cliente seleccionado
       await actualizarClientePagado(selectedClient.id);
   
+      await registrarMovimiento(
+        selectedClient.id,
+        'Ingreso',
+        totalPorCliente,
+        method,
+        `Pago de mensualidad de ${selectedClient.nombre} ${selectedClient.apellido}`
+      );
+
       setSelectedClient({
         ...selectedClient,
         fechaFinal: nuevaFechaFinal,

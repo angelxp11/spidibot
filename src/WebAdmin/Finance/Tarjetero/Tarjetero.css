@@ -1,0 +1,81 @@
+.finance-tarjetero {
+  padding: 15px;
+  background-color: var(--color-container);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 200px; /* Set the height to 200px */
+  gap: 10px;
+  overflow: hidden; /* Prevent content from overflowing */
+  justify-content: center; /* Center the cards horizontally */
+}
+
+.card {
+  padding: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: top 0.3s ease, z-index 0s 0.3s; /* Add z-index transition */
+  position: absolute;
+  width: calc(100% - 30px); /* Adjust width to fit within tarjetero */
+  left: 15px; /* Center the cards within tarjetero */
+  color: var(--color-text);
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  height: 150px; /* Set the height to 150px */
+}
+
+/* Remove hover animation */
+.card:hover {
+  transform: none;
+  box-shadow: none;
+  z-index: auto;
+}
+
+.card-1 {
+  background-color: #ff9999; /* Red */
+  top: 35px;
+}
+
+.card-2 {
+  background-color: var(--color-container); /* Blue */
+  top: 30px;
+}
+
+.card-3 {
+  background-color: #99ff99; /* Green */
+  top: 25px;
+}
+
+.card-4 {
+  background-color: #ffff99; /* Yellow */
+  top: 20px;
+}
+
+.card-animation {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.card-balance {
+  margin-top: 10px;
+  font-size: 16px; /* Increase font size */
+  color: var(--color-text); /* Change text color to white */
+  text-align: center;
+  font-weight: bold; /* Make the text bold */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add shadow effect */
+  background-color: rgba(0, 0, 0, 0.5); /* Add semi-transparent background */
+  padding: 5px 10px; /* Add padding */
+  border-radius: 8px; /* Add border radius */
+}

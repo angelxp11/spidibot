@@ -1,0 +1,62 @@
+@import url('../../../recursos/colors-dark.css');
+
+.movimientos-container {
+  background-color: var(--color-container);
+  color: var(--color-text);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--color-text); /* Add border color */
+  width: 450px
+}
+
+.movimientos-list {
+  list-style: none;
+  padding: 0;
+}
+
+.movimientos-date-label {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.movimiento-item {
+  background-color: var(--color-container-hover);
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.movimiento-left {
+  display: flex;
+  align-items: center;
+}
+
+.movimiento-arrow {
+  margin-right: 5px;
+}
+
+.movimiento-right {
+  font-size: 1.2em;
+  color: green;
+}
+
+.movimiento-item div {
+  margin-bottom: 5px;
+}
+
+button {
+  background-color: var(--color-buttons);
+  color: var(--color-text);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: var(--color-buttons-hover);
+  cursor: not-allowed;
+}
