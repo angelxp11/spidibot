@@ -297,12 +297,16 @@ function Estados({ onClose }) {
   
       const paymentMethodRef = doc(firestore, 'finance', method);
       await updateDoc(paymentMethodRef, {
-        saldo: increment(totalPorCliente)
+        IngresosBrutos: increment(totalAmount),
+        GastosOperativos: increment(totalPorCliente),
+        UtilidadNeta: increment(valorAhorro)
       });
   
       const ahorroRef = doc(firestore, 'finance', 'AHORRO');
+      const currentDate = new Date();
+      const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
       await updateDoc(ahorroRef, {
-        saldo: increment(valorAhorro)
+        [`${formattedDate}.GananciasNetas`]: increment(valorAhorro)
       });
   
       // Cambiar el valor del campo pagado de NO a SI para el cliente seleccionado
@@ -311,7 +315,7 @@ function Estados({ onClose }) {
       await registrarMovimiento(
         selectedClient.id,
         'Ingreso',
-        totalPorCliente,
+        totalAmount,
         method,
         `Pago de mensualidad de ${selectedClient.nombre} ${selectedClient.apellido}`
       );

@@ -7,7 +7,25 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  height: 200px; /* Set the height to 200px */
+  height: 280px; /* Adjust height to accommodate select dropdown */
+  gap: 10px;
+  overflow: hidden; /* Prevent content from overflowing */
+  justify-content: flex-start; /* Align items to the top */
+}
+
+.tarjetero-select {
+  margin-bottom: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-size: 16px;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
   gap: 10px;
   overflow: hidden; /* Prevent content from overflowing */
   justify-content: center; /* Center the cards horizontally */

@@ -225,9 +225,9 @@ function AddSeeEstatus({ onClose }) {
         montoADescontar = 20000;
       }
   
-      // Verificar si el saldo es suficiente
-      if (metodoPagoData.saldo < montoADescontar) {
-        toast.error('Saldo insuficiente en el método de pago seleccionado');
+      // Verificar si el GastosOperativos es suficiente
+      if (metodoPagoData.GastosOperativos < montoADescontar) {
+        toast.error('GastosOperativos insuficiente en el método de pago seleccionado');
         setLoading(false); // Ocultar el componente de carga
         return;
       }
@@ -243,9 +243,13 @@ function AddSeeEstatus({ onClose }) {
         [`${selectedGroup.groupName}.estado`]: nuevoEstado
       });
   
-      // Descontar el monto del saldo del método de pago
-      const nuevoSaldo = metodoPagoData.saldo - montoADescontar;
-      await updateDoc(metodoPagoRef, { saldo: nuevoSaldo });
+      // Descontar el monto del GastosOperativos y IngresosBrutos del método de pago
+      const nuevoGastosOperativos = metodoPagoData.GastosOperativos - montoADescontar;
+      const nuevoIngresosBrutos = metodoPagoData.IngresosBrutos - montoADescontar;
+      await updateDoc(metodoPagoRef, { 
+        GastosOperativos: nuevoGastosOperativos,
+        IngresosBrutos: nuevoIngresosBrutos
+      });
   
       // Refrescar los detalles del grupo renovado
       const updatedDocSnap = await getDoc(docRef);

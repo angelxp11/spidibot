@@ -6,7 +6,7 @@ import jadePlatformImage from "../../../recursos/svg/NEQUI-JADEPLATFORM.png";
 import ahorroalamanoImage from "../../../recursos/svg/AHORRO-A-LA-MANO.png";
 import ahorroImage from "../../../recursos/svg/AHORRO.png";
 
-const Tarjetero = ({ cards, handleCardClick, getCardPosition, formatCurrency }) => {
+const Tarjetero = ({ cards, handleCardClick, getCardPosition, formatCurrency, selectedOption }) => {
   const getCardStyle = (card, index) => {
     return {
       top: `${getCardPosition(index)}px`,
@@ -22,6 +22,10 @@ const Tarjetero = ({ cards, handleCardClick, getCardPosition, formatCurrency }) 
     };
   };
 
+  const getCardBalance = (card) => {
+    return formatCurrency(card.cardbalance);
+  };
+
   return (
     <div className="finance-tarjetero">
       {cards.map((card, index) => (
@@ -31,7 +35,7 @@ const Tarjetero = ({ cards, handleCardClick, getCardPosition, formatCurrency }) 
           onClick={handleCardClick}
           style={getCardStyle(card, index)}
         >
-          <div className="card-balance">{formatCurrency(card.saldo)}</div>
+          <div className="card-balance">{getCardBalance(card)}</div>
         </div>
       ))}
     </div>

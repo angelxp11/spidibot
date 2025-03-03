@@ -11,14 +11,29 @@ const Finance = () => {
 
   useEffect(() => {
     const financeCollection = collection(db, 'finance');
-    const unsubscribe = onSnapshot(financeCollection, (snapshot) => {
-      const financeData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        saldo: doc.data().saldo,
-      }));
+
+    const unsubscribeFinance = onSnapshot(financeCollection, (snapshot) => {
+      const financeData = snapshot.docs.map(doc => {
+        const data = doc.data();
+        let cardbalance = data.IngresosBrutos || 0;
+
+        if (doc.id === 'AHORRO') {
+          const gananciasNetas = Object.values(data).find(value => typeof value === 'object' && value.GananciasNetas);
+          cardbalance = gananciasNetas ? gananciasNetas.GananciasNetas : cardbalance;
+        }
+
+        return {
+          id: doc.id,
+          saldo: data.saldo,
+          cardbalance: cardbalance,
+        };
+      });
       setCards(financeData);
     });
-    return () => unsubscribe();
+
+    return () => {
+      unsubscribeFinance();
+    };
   }, [db]);
 
   const handleCardClick = () => {
@@ -45,9 +60,6 @@ const Finance = () => {
         getCardPosition={getCardPosition} 
         formatCurrency={formatCurrency} 
       />
-      <div className="finance-analiticas">
-        <h3>Analiticas</h3>
-      </div>
       <Movimientos />
     </div>
   );

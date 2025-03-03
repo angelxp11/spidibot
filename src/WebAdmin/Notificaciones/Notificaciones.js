@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify'; 
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, orderBy, doc, deleteDoc, addDoc, setDoc, getDoc, updateDoc, increment } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, deleteDoc, addDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
 import { db } from '../../firebase'; // Asegúrate de tener la configuración de Firestore en firebase.js
 import './notificaciones.css'; // Estilos para el modal
 import { FaCheck, FaTimes, FaTrashAlt, FaRecycle } from 'react-icons/fa'; // Import icons from react-icons
@@ -12,9 +12,8 @@ const Notificaciones = ({ onClose }) => {
   const [pedidoIdDocumento, setPedidoIdDocumento] = useState(''); // Nuevo estado para guardar el ID del documento del pedido
   const [toastMessage, setToastMessage] = useState(''); // Estado para el mensaje del toast
   const [isToastVisible, setIsToastVisible] = useState(false); // Estado para mostrar el toast
-  const [paymentMethods, setPaymentMethods] = useState([]); // State for payment methods
-  const [showPaymentOverlay, setShowPaymentOverlay] = useState(false); // State to show payment overlay
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null); // State for selected payment method
+  const [showPaymentOverlay, setShowPaymentOverlay] = useState(false); // New state for payment overlay
+  const [paymentMethods, setPaymentMethods] = useState([]); // New state for payment methods
 
   // Pedir permiso para mostrar notificaciones
   const requestNotificationPermission = async () => {
@@ -34,24 +33,22 @@ const Notificaciones = ({ onClose }) => {
   useEffect(() => {
     requestNotificationPermission();
     fetchPedidos();
+    fetchPaymentMethods(); // Fetch payment methods on component mount
     document.addEventListener('keydown', handleEscKey);
     return () => {
       document.removeEventListener('keydown', handleEscKey);
     };
   }, []);
 
-  useEffect(() => {
-    const fetchPaymentMethods = async () => {
-      const financeRef = collection(db, 'finance');
-      const financeSnapshot = await getDocs(financeRef);
-      const methods = financeSnapshot.docs
-        .map(doc => doc.id)
-        .filter(id => id !== 'AHORRO'); // Filter out 'AHORRO'
-      setPaymentMethods(methods);
-    };
-
-    fetchPaymentMethods();
-  }, []);
+  // Fetch payment methods from Firestore
+  const fetchPaymentMethods = async () => {
+    const financeRef = collection(db, 'finance');
+    const financeSnapshot = await getDocs(financeRef);
+    const methods = financeSnapshot.docs
+      .map(doc => doc.id)
+      .filter(id => id !== 'AHORRO'); // Filter out 'AHORRO'
+    setPaymentMethods(methods);
+  };
 
   // Función para generar ID con formato de 5 dígitos
   const generateId = (maxId) => {
@@ -117,7 +114,7 @@ const Notificaciones = ({ onClose }) => {
     const { name, value } = e.target;
     setPedidoSeleccionado((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: name === 'precio' ? value.split(',').map(item => item.trim()) : value,
     }));
 
     // Si se cambia la fecha inicial y no es una renovación, calcular la fecha final automáticamente
@@ -141,10 +138,12 @@ const Notificaciones = ({ onClose }) => {
   // Función para activar un cliente (crear si no existe)
   const handleActivarCliente = async () => {
     if (pedidoSeleccionado) {
-      if (!selectedPaymentMethod) {
-        setShowPaymentOverlay(true); // Show payment overlay if no payment method selected
-        return;
-      }
+      setShowPaymentOverlay(true); // Show payment overlay when activating client
+    }
+  };
+
+  const handlePaymentMethodSelect = async (method) => {
+    if (pedidoSeleccionado) {
       const {
         id, // Este es el ID del cliente que está en el input
         nombre,
@@ -166,21 +165,6 @@ const Notificaciones = ({ onClose }) => {
       const fechaFinalFormateada = formatDate(fechaFinal);
 
       try {
-        const metodoPagoRef = doc(db, 'finance', selectedPaymentMethod); // Reference to selected payment method
-        const metodoPagoSnap = await getDoc(metodoPagoRef);
-        if (!metodoPagoSnap.exists()) {
-          throw new Error('Método de pago no encontrado');
-        }
-        const metodoPagoData = metodoPagoSnap.data();
-        const totalAmount = precio.reduce((acc, curr) => acc + Number(curr), 0);
-        if (metodoPagoData.saldo < totalAmount) {
-          toast.error('Saldo insuficiente en el método de pago seleccionado');
-          return;
-        }
-        await updateDoc(metodoPagoRef, {
-          saldo: increment(-totalAmount)
-        });
-
         if (pedidoSeleccionado.renovacion) {
           // Crear un nuevo documento con el ID del documento guardado en la colección 'clientes'
           const clienteRef = doc(db, 'clientes', clienteDocId);
@@ -195,7 +179,7 @@ const Notificaciones = ({ onClose }) => {
             grupo: Array.isArray(grupo) ? grupo.map(g => g.toUpperCase()) : [grupo.toUpperCase()] || [], // Convertir a mayúsculas
             servicio: Array.isArray(servicio) ? servicio.map(s => String(s)) : [String(servicio)] || [], // Aseguramos que 'servicio' sea un array de strings
             notas: Array.isArray(notas) ? notas.map(nota => nota.toUpperCase()) : [notas.toUpperCase()] || [], // Aseguramos que 'notas' sea un array y en mayúsculas
-            precio: Array.isArray(precio) ? precio.map(p => String(p)) : [String(precio)] || [], // Aseguramos que 'precio' sea un array de strings
+            precio: Array.isArray(precio) ? precio.map(p => String(p)) : [String(p)] || [], // Aseguramos que 'precio' sea un array de strings
             PENDEJOALEJANDRO: { 
               estado: '✅', // Estado fijo siempre "✅"
             },
@@ -221,7 +205,7 @@ const Notificaciones = ({ onClose }) => {
             grupo: Array.isArray(grupo) ? grupo.map(g => g.toUpperCase()) : [grupo.toUpperCase()] || [], // Convertir a mayúsculas
             servicio: Array.isArray(servicio) ? servicio.map(s => String(s)) : [String(servicio)] || [], // Aseguramos que 'servicio' sea un array de strings
             notas: Array.isArray(notas) ? notas.map(nota => nota.toUpperCase()) : [notas.toUpperCase()] || [], // Aseguramos que 'notas' sea un array y en mayúsculas
-            precio: Array.isArray(precio) ? precio.map(p => String(p)) : [String(precio)] || [], // Aseguramos que 'precio' sea un array de strings
+            precio: Array.isArray(precio) ? precio.map(p => String(p)) : [String(p)] || [], // Aseguramos que 'precio' sea un array de strings
             PENDEJOALEJANDRO: { 
               estado: '✅', // Estado fijo siempre "✅"
             },
@@ -235,6 +219,25 @@ const Notificaciones = ({ onClose }) => {
             hideProgressBar: true,
           });
         }
+
+        // Update the payment method balance
+        const totalAmount = precio.reduce((acc, curr) => acc + Number(curr), 0);
+        const gastosOperativos = totalAmount * 0.7;
+        const utilidadNeta = totalAmount * 0.3;
+
+        const paymentMethodRef = doc(db, 'finance', method);
+        await updateDoc(paymentMethodRef, {
+          IngresosBrutos: increment(totalAmount),
+          GastosOperativos: increment(gastosOperativos),
+          UtilidadNeta: increment(utilidadNeta)
+        });
+
+        const ahorroRef = doc(db, 'finance', 'AHORRO');
+        const currentDate = new Date();
+        const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
+        await updateDoc(ahorroRef, {
+          [`${formattedDate}.GananciasNetas`]: increment(utilidadNeta)
+        });
 
         // Verifica si la ID del pedido es válida antes de intentar eliminarlo
         if (pedidoIdDocumento) {
@@ -260,12 +263,7 @@ const Notificaciones = ({ onClose }) => {
         });
       }
     }
-  };
-
-  const handlePaymentMethodSelect = (method) => {
-    setSelectedPaymentMethod(method);
-    setShowPaymentOverlay(false);
-    handleActivarCliente(); // Proceed with client activation after selecting payment method
+    setShowPaymentOverlay(false); // Hide payment overlay after selection
   };
 
   // Función para obtener pedidos ordenados por timestamp
@@ -485,10 +483,9 @@ const Notificaciones = ({ onClose }) => {
                     type="date"
                     name="fechaFinal"
                     value={pedidoSeleccionado.fechaFinal || ''}
-                    readOnly={pedidoSeleccionado.fechaFinal !== '2003-07-07'} // Editable only if fechaFinal is 07/07/2003
-                    onChange={handleChange}
+                    readOnly
                     className="notificaciones-detail-input"
-                    style={{ flex: 1 }} // Hacer el input más estrecho
+                    style={{ flex: 1 }}
                   />
                   <button onClick={handleAddOneMonth} className="notificaciones-recycle-btn">
                     <FaRecycle />
@@ -542,7 +539,7 @@ const Notificaciones = ({ onClose }) => {
               <p>
                 <strong>Precio:</strong>
                 <input
-                  type="text" // Cambiar el tipo de input a text
+                  type="text"
                   name="precio"
                   value={pedidoSeleccionado.precio || ''}
                   onChange={handleChange}
@@ -577,6 +574,7 @@ const Notificaciones = ({ onClose }) => {
           X
         </button>
 
+        {/* Payment Overlay */}
         {showPaymentOverlay && (
           <PaymentOverlay
             paymentMethods={paymentMethods}
