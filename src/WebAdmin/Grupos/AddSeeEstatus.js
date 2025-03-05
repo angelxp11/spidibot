@@ -281,24 +281,25 @@ function AddSeeEstatus({ onClose }) {
     const clientesRef = collection(firestore, 'clientes');
     const querySnapshot = await getDocs(clientesRef);
     const batch = writeBatch(firestore);
-
+  
     querySnapshot.forEach((doc) => {
       const data = doc.data();
       const servicios = data.servicio || [];
       const grupos = data.grupo || [];
       const pagado = data.pagado || [];
-
+  
       servicios.forEach((servicio, index) => {
-        if (grupos[index] === groupName) {
+        if (grupos[index] === groupName && pagado[index] === 'SI') {
           pagado[index] = 'NO';
         }
       });
-
+  
       batch.update(doc.ref, { pagado });
     });
-
+  
     await batch.commit();
   };
+  
 
   const agregarMes = (fecha) => {
     const [day, month, year] = fecha.split('/');
