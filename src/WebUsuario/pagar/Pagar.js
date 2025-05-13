@@ -50,7 +50,7 @@ const Pagar = ({ onClose, client, selectedServices }) => {
     ) {
       return 'https://firebasestorage.googleapis.com/v0/b/spidijade.appspot.com/o/spidibo.png?alt=media&token=11295a61-032c-4a8d-999c-021249de794a';
     } else {
-      return 'https://firebasestorage.googleapis.com/v0/b/spidijade.appspot.com/o/jade.png?alt=media&token=f676b445-137a-4407-ac05-10827def52ec';
+      return 'https://firebasestorage.googleapis.com/v0/b/spidijade.appspot.com/o/spidibo.png?alt=media&token=11295a61-032c-4a8d-999c-021249de794a';
     }
   };
 
