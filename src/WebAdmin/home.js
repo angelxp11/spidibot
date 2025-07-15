@@ -141,7 +141,7 @@ function Home() {
   return (
     <div className="dashboard-base">
       <div className="dashboard-top">
-        <h1 className="welcome-message">Welcome to Spidi Dashboard cabron</h1>
+        <h1 className="welcome-message">Welcome to Spidi Dashboard</h1>
         <div className="notification-bell-container">
           <FaBell className={`notification-bell ${notificacionCount > 0 ? 'ringing' : ''}`} onClick={handleOpenNotificaciones} />
           {notificacionCount > 0 && (
