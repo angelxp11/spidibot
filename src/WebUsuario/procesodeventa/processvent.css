@@ -9,7 +9,7 @@
     display: flex;
     justify-content: center; /* Centra horizontalmente */
     align-items: center; /* Centra verticalmente */
-    z-index: 900; /* Asegura que el overlay esté encima de otros elementos */
+    z-index: 1020; /* Asegura que el overlay esté encima de otros elementos */
 }
 
 /* Estilo del modal (formulario de venta) */
