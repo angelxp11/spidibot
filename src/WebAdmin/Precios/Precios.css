@@ -1,0 +1,248 @@
+.precios-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 1200;
+}
+
+.precios-modal {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: #121212;
+  color: #fff;
+  padding: 1.4rem;
+  border-radius: 10px;
+  width: 92%;
+  max-width: 620px;
+  z-index: 1201;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.precios-title {
+  margin: 0;
+  font-size: 1.4rem;
+  text-align: left;
+  color: #ffd54f;
+}
+
+.precios-body {
+  max-height: 55vh;
+  overflow: auto;
+  padding-right: 4px;
+  color: #e0e0e0;
+  font-size: 0.98rem;
+}
+
+/* Lista de clientes */
+.precios-clients-list {
+  max-height: 40vh;
+  overflow: auto;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.precios-client-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 8px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+/* Izquierda: checkbox + nombre */
+.precios-client-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* Nombre del cliente */
+.precios-client-name {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.precios-client-fullname {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Precio alineado a la derecha */
+.precios-client-price {
+  font-weight: 700;
+  margin-left: 12px;
+  white-space: nowrap;
+  color: #ffd54f;
+}
+
+/* Checkbox estilo personalizado (similar a BuscarCupo) */
+.precios-custom-checkbox {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ed1b24;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+.precios-custom-checkbox:checked::before {
+  content: '✔';
+  color: #fff;
+  font-size: 13px;
+  position: absolute;
+}
+.precios-custom-checkbox:checked {
+  background-color: #ed1b24;
+  border-color: #ed1b24;
+}
+
+/* Botones */
+.precios-actions {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-end;
+  margin-top: 0.4rem;
+}
+
+.precios-button {
+  background: #ed1b24;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.precios-button.precios-close {
+  background: #333;
+}
+
+/* Selección de todos */
+.precios-select-all {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* hace que el input de precio mantenga estilo coherente */
+.precios-price-input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  background: #121212;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .precios-modal { padding: 1rem; max-width: 94%; }
+  .precios-title { font-size: 1.1rem; }
+  .precios-client-item { padding: 8px; }
+  .precios-client-fullname { font-size: 14px; }
+}
+
+/* Fila del contador */
+.precios-count-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Título del contador */
+.precios-count-title {
+  color: #d7d7d7;
+  font-size: 0.95rem;
+  font-weight: 600;
+  min-width: 170px;
+}
+
+/* Badge estilada */
+.precios-count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(237,27,36,0.12), rgba(255,213,79,0.06));
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 6px 18px rgba(12,12,12,0.45), inset 0 1px 0 rgba(255,255,255,0.02);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  user-select: none;
+  min-width: 72px;
+  justify-content: center;
+}
+
+/* Pequeña animación al cambiar (se puede activar con JS cambiando clase si se desea) */
+.precios-count-badge:active,
+.precios-count-badge.precios-count-animate {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 26px rgba(12,12,12,0.55);
+}
+
+/* colores internos */
+.precios-count-selected { color: #ffd54f; }
+.precios-count-sep { color: rgba(255,255,255,0.35); margin: 0 4px; }
+.precios-count-total { color: rgba(255,255,255,0.7); font-weight: 600; }
+
+/* Ajustes responsive */
+@media (max-width: 480px) {
+  .precios-count-title { min-width: 120px; font-size: 0.9rem; }
+  .precios-count-badge { padding: 5px 8px; font-size: 0.9rem; min-width: 64px; }
+}
+
+/* botón que alterna orden por frecuencia */
+.precios-toggle-order {
+  background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  color: #ffd54f;
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: -3px;
+}
+.precios-toggle-order:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.45); }
+.precios-toggle-order:active { transform: translateY(0); }
+
+/* estado activo (menos frecuentes): invertir colores para indicar cambio */
+.precios-toggle-order.active {
+  background: linear-gradient(90deg, rgba(255,213,79,0.12), rgba(237,27,36,0.06));
+  color: #111;
+  border-color: rgba(255,213,79,0.22);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.45);
+}
+
+/* ajuste responsive */
+@media (max-width: 480px) {
+  .precios-toggle-order { padding: 5px 8px; font-size: 0.8rem; }
+}
+
+/* Se eliminaron los estilos del inventario de este archivo.
+   Los estilos de Inventario ahora están en:
+   c:\CODIGOS\spidibot\src\WebAdmin\Inventario\Inventario.css
+*/

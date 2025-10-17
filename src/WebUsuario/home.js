@@ -50,12 +50,10 @@ function Home() {
       navigate('/spidibot');
     } else {
       fetchUserServices();
-      const unsubscribe = onSnapshot(
-        query(collection(db, 'clientes'), where('email', '==', user.email)),
-        (snapshot) => {
-          fetchUserServices();
-        }
-      );
+      // Escuchar la colección completa; fetchUserServices ya normaliza el email
+      const unsubscribe = onSnapshot(collection(db, 'clientes'), () => {
+        fetchUserServices();
+      });
       return () => unsubscribe();
     }
   }, [user, navigate]);
@@ -116,56 +114,55 @@ function Home() {
   // Función para obtener servicios, grupos y estado del usuario autenticado
   const fetchUserServices = async () => {
     try {
-      const email = user.email;
-      const q = query(collection(db, 'clientes'), where('email', '==', email));
+      const email = user.email.toLowerCase(); // Normaliza el correo a minúsculas
+      const q = query(collection(db, 'clientes'));
       const querySnapshot = await getDocs(q);
       const serviciosData = [];
-      let isProveedor = false; // Bandera para verificar si el usuario es proveedor
-      let providerData = null; // Para almacenar los datos del proveedor si se encuentra
-      let matchingDocuments = []; // Para llevar un registro de documentos con el correo coincidente
-  
-      // Recopilar todos los documentos coincidentes
+      let isProveedor = false;
+      let providerData = null;
+      let matchingDocuments = [];
+
+      // Recopilar todos los documentos coincidentes ignorando mayúsculas/minúsculas
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        matchingDocuments.push(data);
-  
-        // Verificar si este documento es un proveedor
-        if (data.proveedor === true) { // Comparar como booleano
-          isProveedor = true;
-          providerData = data; // Almacenar datos del proveedor
-        }
-  
-        const nombreCliente = data.nombre || 'Nombre no disponible';
-        setNombreCliente(nombreCliente);
-  
-        const fechaFinal = data.fechaFinal || 'Fecha no disponible';
-  
-        if (data.servicio && data.grupo && data.notas) {
-          data.servicio.forEach((servicio, index) => {
-            const grupo = data.grupo[index] || 'Grupo no disponible';
-            const estado = data.PENDEJOALEJANDRO?.estado || 'Estado no disponible';
-  
-            serviciosData.push({
-              servicio,
-              grupo,
-              estado,
-              fechaFinal,
-              nombreCliente,
-              nota: data.notas[index] || 'Nota no disponible',
-              clientId: doc.id // Añadir el ID del cliente
+        if ((data.email || '').toLowerCase() === email) { // Comparación insensible a mayúsculas
+          matchingDocuments.push(data);
+
+          if (data.proveedor === true) {
+            isProveedor = true;
+            providerData = data;
+          }
+
+          const nombreCliente = data.nombre || 'Nombre no disponible';
+          setNombreCliente(nombreCliente);
+
+          const fechaFinal = data.fechaFinal || 'Fecha no disponible';
+
+          if (data.servicio && data.grupo && data.notas) {
+            data.servicio.forEach((servicio, index) => {
+              const grupo = data.grupo[index] || 'Grupo no disponible';
+              const estado = data.PENDEJOALEJANDRO?.estado || 'Estado no disponible';
+
+              serviciosData.push({
+                servicio,
+                grupo,
+                estado,
+                fechaFinal,
+                nombreCliente,
+                nota: data.notas[index] || 'Nota no disponible',
+                clientId: doc.id
+              });
             });
-          });
+          }
         }
       });
-  
+
       setServicios(serviciosData);
-  
-      // Si encontramos un proveedor, guardamos su nombre en el estado
+
       if (providerData) {
         setProviderName(providerData.nombre || 'Proveedor no disponible');
       }
-  
-      // Aquí puedes establecer el estado de hasProvider en función de isProveedor
+
       setHasProvider(isProveedor);
     } catch (error) {
     } finally {
@@ -338,7 +335,7 @@ return (
   <div className="home-container">
     <h1 className="greeting">{getUserName()}</h1>
     <p className="welcome-message">Bienvenido a tu panel de usuario.</p>
-
+    <p className="user-email">{user?.email}</p>
     <div className="container-inventario" style={{ display: isInventarioVisible ? 'block' : 'none' }}>
     <h2 className="h2titleblanco">Servicios a la Venta</h2>
         {serviciosEnVenta.length > 0 ? (

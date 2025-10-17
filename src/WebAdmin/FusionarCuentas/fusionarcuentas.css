@@ -1,0 +1,216 @@
+/* Fondo oscuro de superposición */
+.fusionarcuentas-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 1000;
+}
+
+/* Contenedor principal del modal */
+.fusionarcuentas-modal {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--color-container, #1e1e1e);
+  color: var(--color-text, #fff);
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 550px;
+  max-height: 85vh;
+  overflow: hidden;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Título */
+.fusionarcuentas-title {
+  margin: 0 0 1.5rem;
+  font-size: 1.8rem;
+  text-align: center;
+  font-weight: bold;
+  color: var(--color-text, #fff);
+}
+
+/* Controles de búsqueda */
+.fusionarcuentas-search-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+  justify-content: center;
+}
+
+.fusionarcuentas-search-select,
+.fusionarcuentas-search-input {
+  background: var(--color-background-, #121212);
+  color: var(--color-text, #fff);
+  border: 1px solid var(--color-buttons, #ed1b24);
+  border-radius: 6px;
+  padding: 0.5rem 0.8rem;
+  font-size: 1rem;
+  flex: 1;
+  min-width: 120px;
+  max-width: 180px;
+  max-height: fit-content;
+}
+
+/* Botón buscar y otros botones de acción */
+.fusionarcuentas-search-button,
+.fusionarcuentas-close-button {
+  background: var(--color-buttons, #ed1b24);
+  color: var(--color-text, #fff);
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  align-self: center;
+}
+
+.fusionarcuentas-search-button:hover,
+.fusionarcuentas-close-button:hover {
+  background: var(--color-buttons-hover, #c4161d);
+}
+
+/* Resultados */
+.fusionarcuentas-search-results {
+  overflow-y: auto;
+  max-height: 35vh;
+  padding-right: 4px;
+  margin-bottom: 1rem;
+}
+
+/* Mejorar visualización de detalles de cuentas */
+.fusionarcuentas-result-item {
+  background: var(--color-container-hover, #2a2a2a);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+  border: 1px solid rgba(255,255,255,0.04);
+  position: relative;
+}
+
+.fusionarcuentas-result-item strong {
+  display: block;
+  font-size: 1.08rem;
+  color: #ffb74d;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.fusionarcuentas-result-item > div {
+  margin-bottom: 0.18rem;
+  font-size: 0.97rem;
+  word-break: break-word;
+}
+
+.fusionarcuentas-result-item ul {
+  margin: 0.1rem 0 0.2rem 1.1em;
+  padding-left: 1em;
+  font-size: 0.95rem;
+  color: #bdbdbd;
+  list-style: disc inside;
+}
+
+.fusionarcuentas-field-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3em;
+  margin-bottom: 0.18rem;
+  font-size: 0.97rem;
+}
+
+.fusionarcuentas-field-label {
+  font-weight: 500;
+  color: #bdbdbd;
+  margin-right: 0.3em;
+}
+
+.fusionarcuentas-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25em;
+  margin: 0;
+}
+
+.fusionarcuentas-tag {
+  display: inline-block;
+  background: #23272e;
+  color: #ffb74d;
+  border-radius: 12px;
+  padding: 0.18em 0.8em;
+  font-size: 0.97em;
+  font-weight: 500;
+  border: 1px solid #444;
+  margin-right: 0.10em;
+  margin-bottom: 0.10em;
+  white-space: nowrap;
+  letter-spacing: 0.1px;
+}
+
+.fusionarcuentas-result-item span[style*="color: #aaa"] {
+  color: #888 !important;
+  font-style: italic;
+}
+
+.fusionarcuentas-result-item b {
+  color: #90caf9;
+  font-weight: 600;
+}
+
+.fusionarcuentas-result-item:not(:last-child)::after {
+  content: "";
+  display: block;
+  border-bottom: 1px dashed #444;
+  margin: 1rem 0 0 0;
+}
+
+.fusionarcuentas-result-id,
+.fusionarcuentas-result-nombre,
+.fusionarcuentas-result-estado {
+  margin-bottom: 0.18rem;
+  font-size: 1rem;
+  color: #fff;
+}
+
+/* Mejorar visualización de campos agrupados */
+.fusionarcuentas-result-item > div > ul {
+  margin-top: 0.1rem;
+  margin-bottom: 0.2rem;
+}
+
+.fusionarcuentas-result-item > div > b {
+  margin-right: 0.3em;
+}
+
+/* Responsive para detalles de cuentas */
+@media (max-width: 600px) {
+  .fusionarcuentas-result-item {
+    padding: 0.7rem 0.5rem;
+    font-size: 0.97rem;
+  }
+  .fusionarcuentas-result-item strong {
+    font-size: 1rem;
+  }
+}
+
+/* Responsive para móviles */
+@media (max-width: 480px) {
+  .fusionarcuentas-search-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .fusionarcuentas-search-button,
+  .fusionarcuentas-close-button {
+    width: 100%;
+  }
+}

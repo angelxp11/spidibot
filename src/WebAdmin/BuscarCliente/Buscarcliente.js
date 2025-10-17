@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { getFirestore, collection, query, where, getDocs, doc, updateDoc, deleteDoc, getDoc } from 'firebase/firestore';
-import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
-import { toast, ToastContainer } from 'react-toastify'; // Import ToastContainer
-import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
+import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './buscarCliente.css';
 import html2canvas from 'html2canvas';
 import fondo from '../../fondo.png';
 import { FaSave, FaTimes, FaFileAlt, FaTrash } from 'react-icons/fa';
+import DetallesCliente from '../DetallesCliente/DetallesCliente'; // Importa el nuevo componente
 
 const firestore = getFirestore();
 
@@ -49,7 +50,6 @@ function BuscarCliente({ onClose }) {
     }
   });
   const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
-  const [showSpotifyInfo, setShowSpotifyInfo] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -178,139 +178,6 @@ function BuscarCliente({ onClose }) {
     }
   };
 
-  const handleShowDetails = (client) => {
-    setSelectedClient(client);
-    setClientData({
-      ID: client.ID,
-      nombre: client.nombre,
-      apellido: client.apellido,
-      telefono: client.telefono,
-      email: client.email,
-      fechaInicial: convertirFecha(client.fechaInicial),
-      fechaFinal: convertirFecha(client.fechaFinal),
-      pagado: client.pagado,
-      estado: client.PENDEJOALEJANDRO?.estado || '',
-      grupo: client.grupo,
-      servicio: client.servicio,
-      notas: client.notas,
-      precio: client.precio,
-      SPOTIFY: {
-        email: client.SPOTIFY?.email[0] || '',
-        password: client.SPOTIFY?.password[0] || '',
-        principal: client.SPOTIFY?.principal || [true]
-      }
-    });
-  };
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    const [field, subfield] = name.split('.');
-
-    if (subfield) {
-      setClientData((prevData) => ({
-        ...prevData,
-        [field]: {
-          ...prevData[field],
-          [subfield]: value
-        }
-      }));
-    } else {
-      setClientData((prevData) => ({
-        ...prevData,
-        [name]: value
-      }));
-    }
-  };
-
-  const handleSpotifyCheckboxChange = (event) => {
-    setShowSpotifyInfo(event.target.checked);
-  };
-
-  const handleSaveChanges = async () => {
-    try {
-      const clientDocRef = doc(firestore, 'clientes', selectedClient.id);
-
-      const grupoArray = Array.isArray(clientData.grupo)
-        ? clientData.grupo.map(item => item.toUpperCase())
-        : (clientData.grupo ? clientData.grupo.split(',').map(item => item.trim().toUpperCase()) : []);
-
-      const servicioArray = Array.isArray(clientData.servicio)
-        ? clientData.servicio.map(item => item.toUpperCase())
-        : (clientData.servicio ? clientData.servicio.split(',').map(item => item.trim().toUpperCase()) : []);
-
-      const notasArray = Array.isArray(clientData.notas)
-        ? clientData.notas.map(item => item.toUpperCase())
-        : (clientData.notas ? clientData.notas.split(',').map(item => item.trim().toUpperCase()) : []);
-
-      const precioArray = Array.isArray(clientData.precio)
-        ? clientData.precio.map(item => item.toUpperCase())
-        : (clientData.precio ? clientData.precio.split(',').map(item => item.trim().toUpperCase()) : []);
-
-      const pagadoArray = Array.isArray(clientData.pagado)
-        ? clientData.pagado
-        : (clientData.pagado ? clientData.pagado.split(',').map(item => item.trim()) : []);
-
-      const fechaInicial = clientData.fechaInicial ? convertirFechaInvertida(clientData.fechaInicial) : '';
-      const fechaFinal = clientData.fechaFinal ? convertirFechaInvertida(clientData.fechaFinal) : '';
-
-      const updates = {};
-      if (clientData.nombre) {
-        updates['nombre'] = clientData.nombre.toUpperCase();
-      }
-      if (clientData.apellido) {
-        updates['apellido'] = clientData.apellido.toUpperCase();
-      }
-      if (clientData.telefono) {
-        updates['telefono'] = clientData.telefono.toUpperCase();
-      }
-      if (clientData.email) {
-        updates['email'] = clientData.email.toLowerCase();
-      }
-      if (fechaInicial) {
-        updates['fechaInicial'] = fechaInicial;
-      }
-      if (fechaFinal) {
-        updates['fechaFinal'] = fechaFinal;
-      }
-      if (pagadoArray.length > 0) {
-        updates['pagado'] = pagadoArray;
-      }
-      if (clientData.estado !== '') {
-        updates['PENDEJOALEJANDRO.estado'] = clientData.estado;
-      }
-      if (grupoArray.length > 0) {
-        updates['grupo'] = grupoArray;
-      }
-      if (servicioArray.length > 0) {
-        updates['servicio'] = servicioArray;
-      }
-      if (notasArray.length > 0) {
-        updates['notas'] = notasArray;
-      }
-      if (precioArray.length > 0) {
-        updates['precio'] = precioArray;
-      }
-
-      const clienteDoc = await getDoc(clientDocRef);
-      const clienteData = clienteDoc.data();
-      const updatedSpotify = {
-        email: [clientData.SPOTIFY.email],
-        password: [clientData.SPOTIFY.password],
-        principal: [clientData.SPOTIFY.principal[0] === 'true']
-      };
-
-      updates['SPOTIFY'] = updatedSpotify;
-
-      await updateDoc(clientDocRef, updates);
-      toast.success('Datos guardados con éxito');
-      handleSearch(null);
-      setSelectedClient(null);
-    } catch (error) {
-      console.error('Error al guardar cambios:', error);
-      toast.error('Error al guardar cambios: ' + error.message);
-    }
-  };
-
   const handleGenerateComprobante = async () => {
     if (selectedClient) {
       const servicios = Array.isArray(selectedClient.servicio) ? selectedClient.servicio : [];
@@ -388,8 +255,19 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
     }
   };
 
-  const handleCloseDetails = () => {
-    setSelectedClient(null);
+  // Nueva función para cargar datos frescos del cliente
+  const handleShowDetails = async (client) => {
+    try {
+      const clientDocRef = doc(firestore, 'clientes', client.id);
+      const clientSnap = await getDoc(clientDocRef);
+      if (clientSnap.exists()) {
+        setSelectedClient({ id: client.id, ...clientSnap.data() });
+      } else {
+        toast.error('No se encontró el cliente en la base de datos.');
+      }
+    } catch (error) {
+      toast.error('Error al cargar datos del cliente.');
+    }
   };
 
   return (
@@ -441,232 +319,35 @@ Haz click aquí para visualizar tu comprobante: ${downloadURL}`;
             )}
           </div>
         </div>
+        {/* Renderiza el componente DetallesCliente si hay un cliente seleccionado */}
         {selectedClient && (
-          <div className="BuscarCliente-details-panel-container">
-            <div className={`BuscarCliente-details-panel ${selectedClient ? 'show' : ''}`}>
-              <h2>Detalles del Cliente</h2>
-              <label>
-                ID:
-                <input
-                  type="text"
-                  name="ID"
-                  value={clientData.ID}
-                  onChange={handleChange}
-                  className="BuscarCliente-detail-input"
-                  placeholder="ID"
-                />
-              </label>
-              <label>
-                Nombre:
-                <input
-                  type="text"
-                  name="nombre"
-                  value={clientData.nombre}
-                  onChange={handleChange}
-                  className="BuscarCliente-detail-input"
-                  placeholder="Nombre"
-                />
-              </label>
-              <label>
-                Apellido:
-                <input
-                  type="text"
-                  name="apellido"
-                  value={clientData.apellido}
-                  onChange={handleChange}
-                  className="BuscarCliente-detail-input"
-                  placeholder="Apellido"
-                />
-              </label>
-              <label>
-                Teléfono:
-                <input
-                  type="text"
-                  name="telefono"
-                  value={clientData.telefono}
-                  onChange={handleChange}
-                  className="BuscarCliente-detail-input"
-                  placeholder="Teléfono"
-                />
-              </label>
-              <label>
-                Email:
-                <input
-                  type="text"
-                  name="email"
-                  value={clientData.email}
-                  onChange={handleChange}
-                  className="BuscarCliente-detail-input"
-                  placeholder="Email"
-                />
-              </label>
-              <label>
-                Fecha Inicial:
-                <input
-                  type="date"
-                  name="fechaInicial"
-                  value={clientData.fechaInicial}
-                  onChange={handleChange}
-                  className="BuscarCliente-detail-input"
-                  placeholder="Fecha Inicial (dd/mm/yyyy)"
-                />
-              </label>
-              <label>
-                Fecha Final:
-                <input
-                  type="date"
-                  name="fechaFinal"
-                  value={clientData.fechaFinal}
-                  onChange={handleChange}
-                  className="BuscarCliente-detail-input"
-                  placeholder="Fecha Final (dd/mm/yyyy)"
-                />
-              </label>
-              <label>
-                Pagado:
-                <input
-                  type="text"
-                  name="pagado"
-                  value={clientData.pagado}
-                  onChange={handleChange}
-                  className="BuscarCliente-detail-input"
-                  placeholder="Pagado"
-                />
-              </label>
-              <label>
-                Estado:
-                <select
-                  name="estado"
-                  value={clientData.estado}
-                  onChange={handleChange}
-                  className="BuscarCliente-detail-input"
-                >
-                  <option value="⚠️">⚠️</option>
-                  <option value="❌">❌</option>
-                  <option value="✅">✅</option>
-                </select>
-              </label>
-              <label>
-                Grupo:
-                <input
-                  type="text"
-                  name="grupo"
-                  value={clientData.grupo}
-                  onChange={handleChange}
-                  className="BuscarCliente-detail-input"
-                  placeholder="Grupo"
-                />
-              </label>
-              <label>
-                Servicio:
-                <input
-                  type="text"
-                  name="servicio"
-                  value={clientData.servicio}
-                  onChange={handleChange}
-                  className="BuscarCliente-detail-input"
-                  placeholder="Servicio"
-                />
-              </label>
-              <label>
-                Notas:
-                <input
-                  type="text"
-                  name="notas"
-                  value={clientData.notas}
-                  onChange={handleChange}
-                  className="BuscarCliente-detail-input"
-                  placeholder="notas"
-                />
-              </label>
-              <label>
-                Precio:
-                <input
-                  type="text"
-                  name="precio"
-                  value={clientData.precio}
-                  onChange={handleChange}
-                  className="BuscarCliente-detail-input"
-                  placeholder="Precio"
-                />
-              </label>
-              <div className="BuscarCliente-checkbox-container">
-                <input
-                  type="checkbox"
-                  id="spotify-checkbox"
-                  checked={showSpotifyInfo}
-                  onChange={handleSpotifyCheckboxChange}
-                />
-                <label htmlFor="spotify-checkbox">¿Deseas ingresar Spotify information?</label>
-              </div>
-              {showSpotifyInfo && (
-                <>
-                  <label>
-                    SPOTIFY Email:
-                    <input
-                      type="text"
-                      name="SPOTIFY.email"
-                      value={clientData.SPOTIFY.email}
-                      onChange={handleChange}
-                      className="BuscarCliente-detail-input"
-                      placeholder="SPOTIFY Email"
-                    />
-                  </label>
-                  <label>
-                    SPOTIFY Password:
-                    <input
-                      type="text"
-                      name="SPOTIFY.password"
-                      value={clientData.SPOTIFY.password}
-                      onChange={handleChange}
-                      className="BuscarCliente-detail-input"
-                      placeholder="SPOTIFY Password"
-                    />
-                  </label>
-                  <label>
-                    Principal:
-                    <select
-                      name="SPOTIFY.principal"
-                      value={clientData.SPOTIFY.principal[0]}
-                      onChange={(e) => handleChange({ target: { name: 'SPOTIFY.principal', value: [e.target.value === 'true'] } })}
-                      className="BuscarCliente-detail-input"
-                    >
-                      <option value="true">True</option>
-                      <option value="false">False</option>
-                    </select>
-                  </label>
-                </>
-              )}
-              <div className="button-container">
-                <button onClick={handleSaveChanges} className="BuscarCliente-save-button">
-                  <FaSave /> Guardar
-                </button>
-                <button onClick={handleCloseDetails} className="BuscarCliente-save-button">
-                  <FaTimes /> Cerrar
-                </button>
-                <button onClick={handleGenerateComprobante} className="BuscarCliente-save-button">
-                  <FaFileAlt /> Generar Comprobante
-                </button>
-                <button onClick={handleDeleteClient} className="BuscarCliente-save-button">
-                  <FaTrash /> Eliminar
-                </button>
+          <DetallesCliente
+            client={selectedClient}
+            onClose={() => setSelectedClient(null)}
+            onSave={() => {
+              setSelectedClient(null);
+              handleSearch();
+            }}
+            onDelete={() => {
+              setSelectedClient(null);
+              handleSearch();
+            }}
+            fondo={fondo}
+          />
+        )}
+        {showDeleteConfirmationModal && (
+          <div className="confirmation-modal-overlay">
+            <div className="confirmation-modal-content">
+              <h2>¿Estás seguro de que deseas eliminar a este cliente? 💀</h2>
+              <div className="confirmation-modal-buttons">
+                <button className="no-button" onClick={cancelDeleteClient}>No, Quiero Continuar</button>
+                <button className="yes-button" onClick={confirmDeleteClient}>Sí, Deseo Eliminarlo</button>
               </div>
             </div>
           </div>
         )}
-{showDeleteConfirmationModal && (
-  <div className="confirmation-modal-overlay">
-    <div className="confirmation-modal-content">
-      <h2>¿Estás seguro de que deseas eliminar a este cliente? 💀</h2>
-      <div className="confirmation-modal-buttons">
-        <button className="no-button" onClick={cancelDeleteClient}>No, Quiero Continuar</button>
-        <button className="yes-button" onClick={confirmDeleteClient}>Sí, Deseo Eliminarlo</button>
       </div>
-    </div>
-  </div>
-)}
-      </div>
-      <ToastContainer /> {/* Add ToastContainer here */}
+      <ToastContainer />
     </div>
   );
 }

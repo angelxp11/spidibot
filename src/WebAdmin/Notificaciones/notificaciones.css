@@ -185,6 +185,34 @@
   color: var(--color-text);
 }
 
+.notificaciones-detail-input.highlight {
+  border-color: #ffeb3b; /* Color de borde amarillo */
+  box-shadow: 0 0 5px #ffeb3b; /* Sombra amarilla */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  /* Animación de pulso para destacar el input cuando se añade la clase */
+  animation: pulse-highlight 1.5s ease-in-out;
+}
+
+/* Animación de pulso para el highlight */
+@keyframes pulse-highlight {
+  0% {
+    box-shadow: 0 0 0px rgba(255, 235, 59, 0.0);
+    border-color: rgba(255, 235, 59, 0.0);
+  }
+  30% {
+    box-shadow: 0 0 12px rgba(255, 235, 59, 0.9);
+    border-color: rgba(255, 235, 59, 1);
+  }
+  70% {
+    box-shadow: 0 0 6px rgba(255, 235, 59, 0.6);
+    border-color: rgba(255, 235, 59, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 0px rgba(255, 235, 59, 0.0);
+    border-color: rgba(255, 235, 59, 0.0);
+  }
+}
+
 .notificaciones-activar-btn,
 .notificaciones-cerrar-btn,
 .notificaciones-cancelar-btn {
@@ -265,10 +293,25 @@
   background-color: var(--color-buttons-hover); /* Updated color */
 }
 
-.notificaciones-detail-input.highlight {
-  border-color: #ffeb3b; /* Color de borde amarillo */
-  box-shadow: 0 0 5px #ffeb3b; /* Sombra amarilla */
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+/* Botón para poner la fecha de hoy junto al input de fechaInicial */
+.notificaciones-today-btn {
+  background-color: var(--color-buttons);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 8px;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  height: 35px;
+  margin-top: -4px;
+}
+
+.notificaciones-today-btn:hover {
+  background-color: var(--color-buttons-hover);
 }
 
 /* Para móviles */

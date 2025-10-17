@@ -395,3 +395,147 @@
   margin-bottom: 10px;
   margin-top: 10px;
 }
+
+.BuscarCupo-create-button {
+  background-color: var(--color-buttons);
+  color: white;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: 8px;
+}
+
+.BuscarCupo-create-button:hover {
+  background-color: var(--color-buttons-hover);
+}
+
+/* modal create specific (overrides inline styles if needed) */
+.BuscarCupo-create-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Debe quedar por encima de todo */
+  padding: 20px;
+}
+
+.BuscarCupo-create-modal {
+  background: var(--color-container);
+  color: var(--color-text);
+  border-radius: 10px;
+  padding: 18px;
+  width: 100%;
+  max-width: 1000px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* Asegurar que el panel interno reutilice las reglas existentes */
+.BuscarCupo-create-panel-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+/* ...existing code... */
+
+/* Small adjustment so the custom checkbox inside labels se vea alineado */
+.BuscarCupo-custom-checkbox {
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+/* Si se necesita una variante más pequeña para modales (opcional) */
+.BuscarCupo-custom-checkbox.small {
+  width: 16px;
+  height: 16px;
+}
+
+.BuscarCupo-create-panel {
+  width: 100%;
+  max-width: 1150px;
+  margin: 18px auto 0;
+  background: var(--color-container);
+  border-radius: 8px;
+  padding: 18px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+  color: var(--color-text);
+  box-sizing: border-box;
+}
+
+.BuscarCupo-create-panel-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.create-header {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.create-section, .delete-section {
+  background: rgba(255,255,255,0.02);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.section-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.inline-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.create-actions, .delete-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255,255,255,0.04);
+  color: var(--color-text);
+}
+
+.btn.primary {
+  background: var(--color-buttons);
+  color: white;
+}
+
+.btn.danger {
+  background: #c62828;
+  color: white;
+}
+
+/* Responsive: panel full width on small screens */
+@media (max-width: 880px) {
+  .BuscarCupo-create-panel-inner {
+    grid-template-columns: 1fr;
+  }
+}

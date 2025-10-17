@@ -1,0 +1,187 @@
+@import '../../recursos/colors-dark.css';
+
+.cambiarfechapago-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #000000a9;
+  z-index: 1000;
+}
+
+.cambiarfechapago-modal {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--color-container, #23272f);
+  color: var(--color-text, #fff);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  border-radius: 16px;
+  z-index: 1001;
+  min-width: 340px;
+  max-width: 95vw;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  max-height: 90vh; /* 🔹 Limita la altura para permitir scroll */
+  overflow-y: auto;
+}
+
+.cambiarfechapago-title {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.7rem;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.cambiarfechapago-search-controls {
+  display: flex;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.cambiarfechapago-search-select,
+.cambiarfechapago-search-input {
+  padding: 0.45rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-container-hover, #2a2a2a);
+  background: var(--color-background-, #181c22);
+  color: var(--color-text, #fff);
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+.cambiarfechapago-search-select:focus,
+.cambiarfechapago-search-input:focus {
+  border-color: var(--color-iconos, #64b5f6);
+}
+
+.cambiarfechapago-search-button {
+  padding: 0.45rem 1.3rem;
+  border-radius: 8px;
+  border: none;
+  background: var(--color-button-confirmation, #1ed760);
+  color: var(--color-text, #fff);
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px 0 rgba(30,215,96,0.07);
+}
+.cambiarfechapago-search-button:disabled {
+  background: #888;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.cambiarfechapago-search-button:not(:disabled):hover {
+  background: var(--color-button-confirmation-hover, #39de74);
+}
+
+.cambiarfechapago-search-results {
+  margin-bottom: 1.2rem;
+}
+
+.cambiarfechapago-results-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.cambiarfechapago-result-item {
+  background: var(--color-background-hover, #23272f);
+  border-radius: 10px;
+  padding: 0.8rem 1.1rem;
+  margin-bottom: 0.8rem;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.cambiarfechapago-result-item:hover {
+  background: var(--color-container-hover, #2a2a2a);
+}
+
+.cambiarfechapago-result-id,
+.cambiarfechapago-result-nombre,
+.cambiarfechapago-result-estado {
+  font-size: 1rem;
+  margin-bottom: 0.1rem;
+  font-weight: 500;
+}
+
+.cambiarfechapago-field-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.4rem;
+}
+
+.cambiarfechapago-field-label {
+  font-weight: bold;
+  min-width: 120px;
+  color: var(--color-iconos, #64b5f6);
+  letter-spacing: 0.2px;
+}
+
+.cambiarfechapago-placeholder {
+  color: #aaa;
+}
+
+.cambiarfechapago-fecha-row {
+  margin-bottom: 1.1rem;
+}
+
+.cambiarfechapago-proporcional-info {
+  color: #ffb74d;
+  margin-bottom: 1.1rem;
+  display: none;
+  flex-direction: column;
+  align-items: flex-start;
+  border-radius: 8px;
+  background: rgba(255,183,77,0.07);
+  border: 1px solid var(--color-iconos, #64b5f6);
+  padding: 0.7rem 1rem;
+  font-size: 1.05rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+.cambiarfechapago-proporcional-info.visible {
+  display: flex;
+}
+
+.cambiarfechapago-no-results {
+  color: var(--color-text, #fff);
+  opacity: 0.7;
+  margin: 0.5rem 0;
+  text-align: center;
+}
+
+.cambiarfechapago-soon {
+  color: #bbb;
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.cambiarfechapago-close-button {
+  margin-top: 1.3rem;
+  padding: 0.45rem 1.3rem;
+  border-radius: 8px;
+  border: none;
+  background: var(--color-button-negation, #ff000d);
+  color: var(--color-text, #fff);
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s;
+  font-size: 1rem;
+  letter-spacing: 0.2px;
+}
+.cambiarfechapago-close-button:hover {
+  background: var(--color-button-negation-hover, #8d0007);
+}

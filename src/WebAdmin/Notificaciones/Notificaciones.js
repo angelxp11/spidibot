@@ -1,9 +1,9 @@
 import { toast } from 'react-toastify'; 
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, orderBy, doc, deleteDoc, addDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, deleteDoc,getDoc, addDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
 import { db } from '../../firebase'; // Asegúrate de tener la configuración de Firestore en firebase.js
 import './notificaciones.css'; // Estilos para el modal
-import { FaCheck, FaTimes, FaTrashAlt, FaRecycle } from 'react-icons/fa'; // Import icons from react-icons
+import { FaCheck, FaTimes, FaTrashAlt, FaRecycle, FaRegCalendarAlt } from 'react-icons/fa'; // Import icons from react-icons (added calendar icon)
 import PaymentOverlay from '../metodosdepago/PaymentOverlay'; // Import PaymentOverlay component
 
 const Notificaciones = ({ onClose }) => {
@@ -14,6 +14,27 @@ const Notificaciones = ({ onClose }) => {
   const [isToastVisible, setIsToastVisible] = useState(false); // Estado para mostrar el toast
   const [showPaymentOverlay, setShowPaymentOverlay] = useState(false); // New state for payment overlay
   const [paymentMethods, setPaymentMethods] = useState([]); // New state for payment methods
+  const [availableGroups, setAvailableGroups] = useState([]); // { group, count }[]
+  const [servicesGroupsMap, setServicesGroupsMap] = useState({}); // servicio token -> [grupo,...]
+  const [docGroupsMap, setDocGroupsMap] = useState({}); // docId -> [grupo,...] (para selects que usan docId como value)
+  const [servicesList, setServicesList] = useState([]); // [{ id, label }]
+  // servicio -> { grupo: count } for available (non-ignored) clients
+  const [cuentasAvailable, setCuentasAvailable] = useState({});
+  // servicio -> { grupo: count } for ignored clients (estado === '😶‍🌫️')
+  const [cuentasIgnored, setCuentasIgnored] = useState({});
+
+  // Reuse package limits and icons similar to CuentasDisponibles
+  const packageLimits = {
+    'PREMIUM4K+HDR+2MIEMBROSEXTRAS': 7,
+    'PREMIUM4K+HDR': 5,
+    'ESTÁNDAR+1MIEMBROEXTRA': 3,
+    'ESTÁNDAR': 2,
+  };
+  const serviceIcons = {
+    NETFLIX: '📱',
+    NETFLIXTV: '📺',
+    NETFLIXME: '👾',
+  };
 
   // Pedir permiso para mostrar notificaciones
   const requestNotificationPermission = async () => {
@@ -373,6 +394,189 @@ const handlePaymentMethodSelect = async (method) => {
     }
   };
 
+  // Botón para establecer la fecha inicial al día de hoy
+  const handleSetFechaHoy = () => {
+    if (!pedidoSeleccionado) return;
+
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const todayStr = `${yyyy}-${mm}-${dd}`; // formato YYYY-MM-DD
+
+    // Actualizar fechaInicial
+    setPedidoSeleccionado((prevState) => ({
+      ...prevState,
+      fechaInicial: todayStr,
+    }));
+
+    // Si NO es renovación, calcular fechaFinal automáticamente (un mes después)
+    if (!pedidoSeleccionado.renovacion) {
+      const fechaInicialDate = new Date(todayStr);
+      const fechaFinal = new Date(fechaInicialDate.setMonth(fechaInicialDate.getMonth() + 1));
+      setPedidoSeleccionado((prevState) => ({
+        ...prevState,
+        fechaFinal: fechaFinal.toISOString().split('T')[0],
+      }));
+    }
+
+    // Añadir efecto de highlight al input de fechaInicial
+    const fechaInicialInput = document.querySelector('input[name="fechaInicial"]');
+    if (fechaInicialInput) {
+      fechaInicialInput.classList.add('highlight');
+      setTimeout(() => {
+        fechaInicialInput.classList.remove('highlight');
+      }, 1500);
+    }
+  };
+
+  // Carga inicial: leer Servicios y contar clientes por servicio/grupo (usar lógica similar a BuscarCupo)
+  useEffect(() => {
+    const fetchCuentasDisponibles = async () => {
+      try {
+        const serviciosSnap = await getDocs(collection(db, 'Servicios'));
+        const servicesMap = {};
+        const docsMap = {};
+        const svcList = [];
+
+        serviciosSnap.forEach(snap => {
+          const docId = snap.id; // puede ser "NETFLIX,NETFLIXTV,NETFLIXME" u otros
+          const data = snap.data() || {};
+
+          // Filtrar grupos que inician por 'G' o 'g' y convertir a array
+          const gruposRaw = Object.keys(data).filter(g => /^g\d+/i.test(g));
+
+          // Ordenar de mayor a menor según el número en el nombre del grupo
+          const gruposOrdenadosDesc = gruposRaw.sort((a, b) => {
+            const numA = parseInt(a.replace(/[^\d]/g, ''), 10) || 0;
+            const numB = parseInt(b.replace(/[^\d]/g, ''), 10) || 0;
+            return numB - numA; // descendente
+          });
+
+          // Guardar por docId
+          docsMap[docId] = gruposOrdenadosDesc;
+
+          // Mapear cada token en el docId a los mismos grupos (ej: NETFLIX,NETFLIXTV,...)
+          docId.split(',').forEach(token => {
+            servicesMap[token.toUpperCase()] = gruposOrdenadosDesc;
+          });
+
+          // Guardar lista de servicios para select (label = primera parte antes de la coma)
+          svcList.push({ id: docId, label: docId.split(',')[0] });
+        });
+
+        // Contar clientes por servicio/grupo (discriminando clientes "😶‍🌫️")
+        const clientesSnap = await getDocs(collection(db, 'clientes'));
+        const availableCounts = {}; // non-ignored
+        const ignoredCounts = {};   // estado === '😶‍🌫️'
+
+        clientesSnap.forEach(snap => {
+          const c = snap.data();
+          const estadoCliente = c?.estado || c?.PENDEJOALEJANDRO?.estado || '';
+          if (c?.servicio && c?.grupo) {
+            c.servicio.forEach((svcRaw, idx) => {
+              const svc = String(svcRaw).toUpperCase();
+              const svcKey = (svc === 'NETFLIX' || svc === 'NETFLIXTV' || svc === 'NETFLIXME') ? 'NETFLIX' : svc;
+              const grp = c.grupo[idx];
+              if (!grp) return;
+
+              if (estadoCliente === '😶‍🌫️') {
+                ignoredCounts[svcKey] = ignoredCounts[svcKey] || {};
+                ignoredCounts[svcKey][grp] = (ignoredCounts[svcKey][grp] || 0) + 1;
+              } else {
+                availableCounts[svcKey] = availableCounts[svcKey] || {};
+                availableCounts[svcKey][grp] = (availableCounts[svcKey][grp] || 0) + 1;
+              }
+            });
+          }
+        });
+
+        // Filter out services that have no usable groups:
+        // A group is considered "blocked" if availableCounts[group] === 0 && ignoredCounts[group] > 0
+        const filteredSvcList = svcList.filter(svc => {
+          const docId = svc.id;
+          const grupos = docsMap[docId] || [];
+          // if any group is usable (has available >0 OR has no clients at all (ign === 0 && avail === 0)), keep service
+          const hasUsableGroup = grupos.some(g => {
+            const svcToken = docId.split(',')[0].trim().toUpperCase();
+            const svcKey = (svcToken === 'NETFLIX' || svcToken === 'NETFLIXTV' || svcToken === 'NETFLIXME') ? 'NETFLIX' : svcToken;
+            const avail = availableCounts[svcKey]?.[g] || 0;
+            const ign = ignoredCounts[svcKey]?.[g] || 0;
+            // usable if there is any non-ignored client OR there are no clients at all
+            return avail > 0 || (avail === 0 && ign === 0);
+          });
+          return hasUsableGroup;
+        });
+
+        setDocGroupsMap(docsMap);
+        setServicesGroupsMap(servicesMap);
+        setServicesList(filteredSvcList);
+        setCuentasAvailable(availableCounts);
+        setCuentasIgnored(ignoredCounts);
+       } catch (err) {
+         console.error('Error fetching cuentas disponibles:', err);
+       }
+     };
+ 
+     fetchCuentasDisponibles();
+   }, []);
+
+  // Mantener availableGroups sincronizado con el servicio seleccionado
+  useEffect(() => {
+    if (!pedidoSeleccionado) return;
+
+    // Obtener el valor real del servicio seleccionado (puede ser docId con comas)
+    const svcRaw = Array.isArray(pedidoSeleccionado.servicio)
+      ? String(pedidoSeleccionado.servicio[0])
+      : String(pedidoSeleccionado.servicio || '');
+
+    // Preferir grupos definidos por docGroupsMap si existe un docId; si no, usar el primer token mapeado
+    let gruposDesdeDoc = docGroupsMap[svcRaw] || [];
+    let svcKeyForCounts = svcRaw.toUpperCase();
+    if (!gruposDesdeDoc || gruposDesdeDoc.length === 0) {
+      // si el valor es un docId compuesto (por ej "NETFLIX,NETFLIXTV,NETFLIXME") intentamos obtener por primera token
+      const firstToken = svcRaw.split(',')[0].trim().toUpperCase();
+      gruposDesdeDoc = servicesGroupsMap[firstToken] || [];
+      svcKeyForCounts = (firstToken === 'NETFLIX' || firstToken === 'NETFLIXTV' || firstToken === 'NETFLIXME') ? 'NETFLIX' : firstToken;
+    } else {
+      // si usamos docGroupsMap (docId), para conteos preferimos normalizar NETFLIX si aplica
+      const firstToken = svcRaw.split(',')[0].trim().toUpperCase();
+      svcKeyForCounts = (firstToken === 'NETFLIX' || firstToken === 'NETFLIXTV' || firstToken === 'NETFLIXME') ? 'NETFLIX' : firstToken;
+    }
+
+    // Exclude groups that are fully ignored (available===0 and ignored>0)
+    const filteredGruposDesdeDoc = (gruposDesdeDoc || []).filter(g => {
+      const avail = cuentasAvailable[svcKeyForCounts]?.[g] || 0;
+      const ign = cuentasIgnored[svcKeyForCounts]?.[g] || 0;
+      return !(avail === 0 && ign > 0);
+    });
+    
+    const gruposDesdeClientes = cuentasAvailable[svcKeyForCounts] ? Object.keys(cuentasAvailable[svcKeyForCounts]) : [];
+
+    // Asegurar orden descendente numérico en mergedGroups
+    const mergedGroups = Array.from(new Set([...(filteredGruposDesdeDoc || []), ...gruposDesdeClientes]));
+    mergedGroups.sort((a, b) => {
+      const na = parseInt(String(a).replace(/[^\d]/g, ''), 10) || 0;
+      const nb = parseInt(String(b).replace(/[^\d]/g, ''), 10) || 0;
+      return nb - na;
+    });
+
+    const available = mergedGroups.map(g => ({
+      group: g,
+      count: (cuentasAvailable[svcKeyForCounts] && cuentasAvailable[svcKeyForCounts][g]) ? cuentasAvailable[svcKeyForCounts][g] : 0
+    }));
+    setAvailableGroups(available);
+
+    // Asignar grupo por defecto si el actual no está en la lista
+    setPedidoSeleccionado((prev) => {
+      if (!prev) return prev;
+      const currentGrupo = prev.grupo || '';
+      if (available.length === 0) return { ...prev };
+      if (currentGrupo && available.some(a => a.group === currentGrupo)) return prev;
+      return { ...prev, grupo: available[0].group };
+    });
+  }, [pedidoSeleccionado?.servicio, servicesGroupsMap, cuentasAvailable, cuentasIgnored, docGroupsMap]);
+
   return (
     <div className="notificaciones-modal-overlay" onClick={handleOverlayClick}>
       <div className="notificaciones-modal-content">
@@ -388,8 +592,9 @@ const handlePaymentMethodSelect = async (method) => {
                     className={`notificaciones-pedido-item ${pedido.compra ? 'notificaciones-compra' : 'notificaciones-renovacion'}`}>
                     <div>
                       <strong>{pedido.nombre} {pedido.apellido}</strong>
+                      {/* Mostrar tipo y servicio: COMPRA-NETFLIX o RENOVACION-NETFLIX */}
                       <span className={`notificaciones-label ${pedido.compra ? 'notificaciones-compra' : 'notificaciones-renovacion'}`}>
-                        {pedido.compra ? 'COMPRA' : 'RENOVACIÓN'}
+                        {`${(pedido.compra ? 'COMPRA' : 'RENOVACION')}${pedido.servicio ? '-' + (Array.isArray(pedido.servicio) ? String(pedido.servicio[0]).toUpperCase() : String(pedido.servicio).toUpperCase()) : ''}`}
                       </span>
                     </div>
                     <button onClick={() => handleVerPedido(pedido)} className="notificaciones-ver-pedido-btn">
@@ -470,13 +675,18 @@ const handlePaymentMethodSelect = async (method) => {
               </p>
               <p>
                 <strong>Fecha Inicial:</strong>
-                <input
-                  type="date"
-                  name="fechaInicial"
-                  value={pedidoSeleccionado.fechaInicial || ''}
-                  onChange={handleChange}
-                  className="notificaciones-detail-input"
-                />
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <input
+                    type="date"
+                    name="fechaInicial"
+                    value={pedidoSeleccionado.fechaInicial || ''}
+                    onChange={handleChange}
+                    className="notificaciones-detail-input"
+                  />
+                  <button onClick={handleSetFechaHoy} className="notificaciones-today-btn" title="Poner hoy">
+                    <FaRegCalendarAlt />
+                  </button>
+                </div>
               </p>
               <p>
                 <strong>Fecha Final:</strong>
@@ -485,7 +695,7 @@ const handlePaymentMethodSelect = async (method) => {
                     type="date"
                     name="fechaFinal"
                     value={pedidoSeleccionado.fechaFinal || ''}
-                    readOnly
+                    readOnly={!pedidoSeleccionado.renovacion} // editable solo si es renovación
                     className="notificaciones-detail-input"
                     style={{ flex: 1 }}
                   />
@@ -507,27 +717,65 @@ const handlePaymentMethodSelect = async (method) => {
                 />
               </p>
               <p>
-                <strong>Grupo:</strong>
-                <input
-                  type="text"
-                  name="grupo"
-                  value={pedidoSeleccionado.grupo || ''}
-                  onChange={handleChange}
-                  className="notificaciones-detail-input"
-                  placeholder="Grupo"
-                />
-              </p>
-              <p>
                 <strong>Servicio:</strong>
-                <input
-                  type="text"
-                  name="servicio"
-                  value={pedidoSeleccionado.servicio || ''}
-                  onChange={handleChange}
-                  className="notificaciones-detail-input"
-                  placeholder="Servicio"
-                />
-              </p>
+                {pedidoSeleccionado.compra ? (
+                  <select
+                    name="servicio"
+                    value={Array.isArray(pedidoSeleccionado.servicio) ? String(pedidoSeleccionado.servicio[0]) : String(pedidoSeleccionado.servicio || '')}
+                    onChange={handleChange}
+                    className="notificaciones-detail-input"
+                  >
+                    <option value="">Selecciona un servicio</option>
+                    {servicesList.map(s => (
+                      <option key={s.id} value={s.id}>
+                        {s.label}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    name="servicio"
+                    value={Array.isArray(pedidoSeleccionado.servicio) ? pedidoSeleccionado.servicio.join(', ') : (pedidoSeleccionado.servicio || '')}
+                    onChange={handleChange}
+                    className="notificaciones-detail-input"
+                    placeholder="Servicio (renovación editable)"
+                  />
+                )}
+               </p>
+               <p>
+                 <strong>Grupo:</strong>
+                 {pedidoSeleccionado.compra ? (
+                   <select
+                     name="grupo"
+                     value={Array.isArray(pedidoSeleccionado.grupo) ? String(pedidoSeleccionado.grupo[0]) : String(pedidoSeleccionado.grupo || '')}
+                     onChange={handleChange}
+                     className="notificaciones-detail-input"
+                   >
+                    {availableGroups.length === 0 ? (
+                      <option value="" disabled>No hay grupos disponibles</option>
+                    ) : (
+                      <>
+                        <option value="" disabled>Seleccionar grupo</option>
+                        {availableGroups.map(({ group, count }) => (
+                          <option key={group} value={group}>
+                            {`${group} (${count})`}
+                          </option>
+                        ))}
+                      </>
+                    )}
+                   </select>
+                 ) : (
+                   <input
+                     type="text"
+                     name="grupo"
+                     value={Array.isArray(pedidoSeleccionado.grupo) ? pedidoSeleccionado.grupo.join(', ') : (pedidoSeleccionado.grupo || '')}
+                     onChange={handleChange}
+                     className="notificaciones-detail-input"
+                     placeholder="Grupo (renovación editable)"
+                   />
+                 )}
+               </p>
               <p>
                 <strong>Notas:</strong>
                 <textarea

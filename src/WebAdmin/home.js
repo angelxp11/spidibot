@@ -15,14 +15,18 @@ import Notificaciones from './Notificaciones/Notificaciones';
 import CuentasDisponibles from './CuentasDisponibles.js';  // Importamos el nuevo componente
 import Bolsillos from './Bolsillos/Bolsillos.js';  // Importamos el nuevo componente
 import Finance from './Finance/finance'; // Import the new Finance component
+import FusionarCuentas from './FusionarCuentas/fusionarcuentas'; // Importa el nuevo componente
+import CambiarFechaPago from './CambiarFechaPago/cambiarfechapago'; // Importa el nuevo componente
+import Precios from './Precios/Precios'; // Importa el nuevo componente Precios
 import { getFirestore, collection, onSnapshot } from 'firebase/firestore';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import './home.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { FaBell } from 'react-icons/fa'; // Import the bell icon from react-icons
-import { FaServicestack, FaSignOutAlt, FaUserPlus, FaSearch, FaUsers, FaLayerGroup, FaEnvelope, FaDatabase, FaExclamationTriangle, FaMoneyBillWave, FaWallet } from 'react-icons/fa'; // Import icons
+import { FaServicestack, FaSignOutAlt, FaUserPlus, FaSearch, FaUsers, FaLayerGroup, FaEnvelope, FaDatabase, FaExclamationTriangle, FaMoneyBillWave, FaWallet, FaSyncAlt, FaCalendarAlt, FaTag, FaBoxes } from 'react-icons/fa'; // Añadido FaBoxes
 import logo from '../recursos/spidilogo.png'; // Import the logo image
+import Inventario from './Inventario/Inventario'; // Nuevo componente Inventario
 
 function Home() {
   const navigate = useNavigate();
@@ -38,6 +42,10 @@ function Home() {
   const [showCuentasDisponibles, setShowCuentasDisponibles] = useState(false); // Estado para mostrar "Cuentas Disponibles"
   const [showBolsillos, setShowBolsillos] = useState(false); // Estado para mostrar "Bolsillos"
   const [showFinance, setShowFinance] = useState(false); // Estado para mostrar "Finance"
+  const [showFusionarCuentas, setShowFusionarCuentas] = useState(false); // Estado para mostrar el modal de fusionar cuentas
+  const [showCambiarFechaPago, setShowCambiarFechaPago] = useState(false); // Estado para mostrar CambiarFechaPago
+  const [showPrecios, setShowPrecios] = useState(false); // Estado para mostrar Precios
+  const [showInventario, setShowInventario] = useState(false); // Nuevo estado para Inventario
   const [notificacionCount, setNotificacionCount] = useState(0);
   const [notificaciones, setNotificaciones] = useState([]); // Estado para almacenar las notificaciones
   const [isUpdating, setIsUpdating] = useState(false);
@@ -203,6 +211,24 @@ function Home() {
                 <FaWallet className="grid-icon" /> {/* Change icon to FaWallet */}
                 <span>Bolsillos</span>
               </div>
+              <div className="icon-item" onClick={() => setShowFusionarCuentas(true)}>
+                <FaSyncAlt className="grid-icon" /> {/* Cambiado a FaSyncAlt */}
+                <span>Fusionar Cuentas</span>
+              </div>
+              <div className="icon-item" onClick={() => setShowCambiarFechaPago(true)}>
+                <FaCalendarAlt className="grid-icon" />
+                <span>Cambiar Fecha Pago</span>
+              </div>
+              <div className="icon-item" onClick={() => setShowPrecios(true)}>
+                <FaTag className="grid-icon" />
+                <span>Precios</span>
+              </div>
+
+              {/* Inventario como icono (FaBoxes) justo después de Precios */}
+              <div className="icon-item" onClick={() => setShowInventario(true)}>
+                <FaBoxes className="grid-icon" />
+                <span>Inventario</span>
+              </div>
             </div>
           )}
           {showFinance && (
@@ -221,6 +247,14 @@ function Home() {
           {showNotificaciones && <Notificaciones onClose={handleCloseNotificaciones} />}
           {showCuentasDisponibles && <CuentasDisponibles onClose={() => setShowCuentasDisponibles(false)} />}
           {showBolsillos && <Bolsillos onClose={() => setShowBolsillos(false)} />}
+          {showFusionarCuentas && (
+            <FusionarCuentas onClose={() => setShowFusionarCuentas(false)} />
+          )}
+          {showPrecios && <Precios onClose={() => setShowPrecios(false)} />}
+          {showInventario && <Inventario onClose={() => setShowInventario(false)} />}
+          {showCambiarFechaPago && (
+            <CambiarFechaPago onClose={() => setShowCambiarFechaPago(false)} />
+          )}
           {!showBuscarCliente && !showEstados && !showActualizarBd && !showBuscarCupo && !showRegistrarCliente && !showPruebas && !showAddSeeEstatus && !showPasswordReset && !showNotificaciones && !showCuentasDisponibles && !showServices && !showFinance && (
             <div className="logo-container">
               <img src={logo} alt="Logo" className="spinning-logo" />
