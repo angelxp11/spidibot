@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/spidibot/static/css/main.b04d7769.css",
-    "main.js": "/spidibot/static/js/main.17a11ea4.js",
+    "main.css": "/spidibot/static/css/main.4c423e49.css",
+    "main.js": "/spidibot/static/js/main.10810799.js",
     "static/media/spider.png": "/spidibot/static/media/spider.e41fb39c59c4fb5c6757.png",
     "static/media/AHORRO.png": "/spidibot/static/media/AHORRO.b1f0a3a21db3954f4e6e.png",
     "static/media/fondogreen.png": "/spidibot/static/media/fondogreen.19eb02b739d5a402dbeb.png",
@@ -17,17 +17,17 @@
     "static/media/PARAMOUNT.svg": "/spidibot/static/media/PARAMOUNT.b72e9eca2e34dcc2ede5770d70120293.svg",
     "static/media/PRIMEVIDEO.svg": "/spidibot/static/media/PRIMEVIDEO.ad849d69f23205a3e8d4ee26f4f367dc.svg",
     "static/media/CRUNCHY.svg": "/spidibot/static/media/CRUNCHY.d9ff87d162257734e55f1e89583e4772.svg",
-    "static/media/google-logo.svg": "/spidibot/static/media/google-logo.efa560d32653a615a1db742bbf78c815.svg",
+    "static/media/google-logo.svg": "/spidibot/static/media/google-logo.ab7caa8c05be78d8388ae25f88ab900e.svg",
     "static/media/SPOTIFY.svg": "/spidibot/static/media/SPOTIFY.c2791109d84d7a274db3acecc9cb32e1.svg",
     "static/media/MAX.svg": "/spidibot/static/media/MAX.729484508d2a5b84bdd3d13579676e51.svg",
     "static/media/YOUTUBE.svg": "/spidibot/static/media/YOUTUBE.f7c5cc380af592dc891e7638b6af4824.svg",
     "static/media/NETFLIX,NETFLIXTV,NETFLIXME.svg": "/spidibot/static/media/NETFLIX,NETFLIXTV,NETFLIXME.e2fd16667e47af79739fb996b6d3b366.svg",
     "index.html": "/spidibot/index.html",
-    "main.b04d7769.css.map": "/spidibot/static/css/main.b04d7769.css.map",
-    "main.17a11ea4.js.map": "/spidibot/static/js/main.17a11ea4.js.map"
+    "main.4c423e49.css.map": "/spidibot/static/css/main.4c423e49.css.map",
+    "main.10810799.js.map": "/spidibot/static/js/main.10810799.js.map"
   },
   "entrypoints": [
-    "static/css/main.b04d7769.css",
-    "static/js/main.17a11ea4.js"
+    "static/css/main.4c423e49.css",
+    "static/js/main.10810799.js"
   ]
 }
