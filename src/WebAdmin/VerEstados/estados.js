@@ -6,7 +6,7 @@ import html2canvas from 'html2canvas';
 import fondo from '../../fondo.png';
 import './estados.css';
 import { toast } from 'react-toastify'; // Asegúrate de instalar react-toastify
-import { FaSyncAlt, FaTimes, FaFileAlt, FaDollarSign } from 'react-icons/fa';
+import { FaSyncAlt, FaTimes, FaFileAlt, FaDollarSign, FaDownload } from 'react-icons/fa';
 import PaymentOverlay from '../metodosdepago/PaymentOverlay';
 
 const firestore = getFirestore(app);
@@ -271,7 +271,8 @@ function Estados({ onClose }) {
 
   const handlePaymentMethodSelect = async (method) => {
     if (selectedClient) {
-      const [day, month, year] = selectedClient.fechaFinal.split('/').map(Number);
+      const [day, month] = selectedClient.fechaFinal.split('/').map(Number);
+      const year = new Date().getFullYear(); // Usar el año actual
       const fechaActual = new Date(year, month - 1, day);
       fechaActual.setMonth(fechaActual.getMonth() + 1);
       if (fechaActual.getDate() !== day) {
@@ -476,9 +477,98 @@ const handleCobrar = async () => {
   }
 };
   
-  
-  
-  
+
+const handleDownloadCobros = async () => {
+  if (searchResults.length === 0) {
+    toast.warning('No hay clientes en los resultados para generar los cobros.');
+    return;
+  }
+
+  const mensajes = searchResults.map(cliente => {
+    const nombreCliente = cliente.nombre.charAt(0).toUpperCase() + cliente.nombre.slice(1).toLowerCase();
+
+    // Transformar los nombres de servicio según tus reglas
+    let servicios = cliente.servicio.map(servicio => {
+      if (servicio === 'NETFLIXME') return 'NETFLIXTV';
+      if (servicio === 'NETFLIX') return 'NETFLIXSINTV';
+      return servicio;
+    }).join(', ') || 'Ninguno';
+
+    // Calcular días restantes
+    const [day, month, year] = cliente.fechaFinal.split('/');
+    const fechaFinal = new Date(year, month - 1, day);
+    const fechaActual = new Date();
+    const diasRestantes = Math.ceil((fechaFinal - fechaActual) / (1000 * 60 * 60 * 24));
+
+    // Calcular total
+    const totalAPagar = formatPrice(cliente.precio.reduce((acc, curr) => acc + Number(curr), 0));
+
+    // Crear el mensaje dinámico según los días restantes
+    let mensaje = `*¡Hola, ${nombreCliente}! 😊*\n\n¿Cómo estás? Espero que todo vaya genial y que estés teniendo un excelente día. 💪🌟\n\n`;
+
+    if (diasRestantes > 1) {
+      mensaje += `Te quedan *${diasRestantes} días* de tus servicios de *${servicios}*. 🕒✨ No olvides realizar el pago para seguir disfrutando de tus servicios. 🎥🎶`;
+    } else if (diasRestantes === 1) {
+      mensaje += `Te queda *1 día* de tu servicio de *${servicios}*. 🕒✨ No olvides realizar el pago para seguir disfrutando de tus servicios. 🎥🎶`;
+    } else if (diasRestantes === 0) {
+      mensaje += `Hoy se vencen tus servicios de *${servicios}*. 🕒⚠️ ¡Recuerda realizar el pago para evitar interrupciones! 🎥🎶`;
+    } else {
+      mensaje += `*Los servicios de ${servicios} ya se han vencido*. 🕒⚠️ Por favor, realiza el pago lo antes posible. 🎥🎶`;
+    }
+
+    mensaje += `\n\nEl total a pagar es: *${totalAPagar}*.\n\nSi necesitas ayuda con algo, no dudes en decirme. ¡Que tengas un día increíble! 😊❤️`;
+
+    return {
+      id: cliente.ID,
+      nombre: cliente.nombre,
+      apellido: cliente.apellido,
+      telefono: cliente.telefono || 'No disponible',
+      mensaje
+    };
+  });
+
+  const jsonContent = JSON.stringify(mensajes, null, 2);
+
+  // Nombre por defecto del archivo
+  const now = new Date();
+  const dia = String(now.getDate());
+  const mes = now.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+  const anio = now.getFullYear();
+  const estado = searchValue;
+  const defaultFileName = `${dia}_${mes}_${anio}_${estado}.json`;
+
+  try {
+    const opts = {
+      suggestedName: defaultFileName,
+      types: [{
+        description: 'Archivo JSON',
+        accept: { 'application/json': ['.json'] }
+      }]
+    };
+
+    if ('showSaveFilePicker' in window) {
+      const handle = await window.showSaveFilePicker(opts);
+      const writable = await handle.createWritable();
+      await writable.write(jsonContent);
+      await writable.close();
+    } else {
+      const blob = new Blob([jsonContent], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = defaultFileName;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    toast.success('Archivo JSON generado y listo para guardar.', { autoClose: 2000 });
+  } catch (error) {
+    console.error('Error al guardar el archivo:', error);
+    toast.error('No se pudo guardar el archivo.');
+  }
+};
+
+
   
 
   return (
@@ -495,6 +585,9 @@ const handleCobrar = async () => {
               <option value="😶‍🌫️">😶‍🌫️</option>
             </select>
             <button className="estado-search-button" onClick={handleSearch}>Buscar</button>
+            <button className="estado-search-button" onClick={handleDownloadCobros}>
+  <FaDownload style={{ marginRight: "5px" }} /> Descargar cobros
+</button>
           </div>
           <div className="estado-search-results">
             {searchResults.length > 0 ? (
