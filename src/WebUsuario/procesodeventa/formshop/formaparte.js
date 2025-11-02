@@ -221,11 +221,23 @@ const handleApellidoChange = (e) => {
   };
 
   return (
-    <div className="formaparte-overlay">
-      <div className="formaparte-modal">
-        <button className="formaparte-close-btn" onClick={onClose}>
-          X
-        </button>
+    <div
+      className="formaparte-overlay"
+      onClick={(e) => {
+        // Cierra el modal solo si se hizo click en el overlay (fondo), no dentro del modal
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div
+        className="formaparte-modal"
+        onClick={(e) => {
+          // Evita que clicks dentro del modal burbujeen al overlay
+          e.stopPropagation();
+        }}
+      >
+         <button className="formaparte-close-btn" onClick={onClose}>
+           X
+         </button>
         <h2>Servicio a adquirir aparte: {capitalizeFirstLetter(service?.name || 'Servicio')}</h2>
         <br />
         <form onSubmit={handleSubmit}>

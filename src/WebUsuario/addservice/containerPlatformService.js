@@ -145,19 +145,26 @@ const ContainerPlatformService = ({ id, precio, info, onBuy }) => {
       </button>
   
       {/* Modal */}
-      {isModalOpen && (
-        <div className="overlay">
-          <div className="mensaje-container">
-            <h2 className="encabezado-user">Información del Servicio</h2>
-            <ul>{formatInfoList(info)}</ul>
-            <div className="button-group">
-              <button className="cerrabutton" onClick={toggleModal}>
-                Cerrar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+{isModalOpen && (
+  <div
+    className="overlay"
+    onClick={toggleModal} // clic fuera del modal lo cierra
+  >
+    <div
+      className="mensaje-container"
+      onClick={(e) => e.stopPropagation()} // evita que el clic dentro cierre el modal
+    >
+      <h2 className="encabezado-user">Información del Servicio</h2>
+      <ul>{formatInfoList(info)}</ul>
+      <div className="button-group">
+        <button className="cerrabutton" onClick={toggleModal}>
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
   
       {/* Proceso de Venta */}
       {showProcessVent && (

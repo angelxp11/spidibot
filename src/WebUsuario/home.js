@@ -445,81 +445,120 @@ return (
 </button>
 
     {/* Modal para mostrar detalles de la cuenta */}
-    {modalOpen && modalData && (
-      <div className="modal-overlays">
-        <div className="modal-contents">
-          {showSteps ? (
-            // Mostrar los pasos para ingresar al TV desde Firestore
-            <>
-              <h2 className="h2negro">Como ingresar Tv</h2>
-              <div className="steps-container">
-                {tvSteps.length > 0 ? (
-                  tvSteps.map((step, index) => (
-                    <p key={index}><strong>Paso {index + 1}:</strong> {step}</p>
-                  ))
-                ) : (
-                  <p>No hay pasos disponibles.</p>
-                )}
-              </div>
-              <button
-                onClick={() => setShowSteps(false)} // Volver a la información de acceso
-                className="home-button"
-              >
-                Mostrar información de acceso
-              </button>
-            </>
-          ) : (
-            // Mostrar la información de acceso
-            <>
-              <h2 className="h2negro">Detalles de la cuenta</h2>
-              <div className="modal-item">
-                <label>Email:</label>
-              </div>
-              <div className="modal-item">
-                <p>{modalData.email}</p>
-                <div className="copy-button copy-email" onClick={() => copyToClipboard(modalData.email, 'Email')}>
-                  <img src={copyIcon} alt="Copiar Email" style={{ width: '20px', height: '20px', marginRight: '5px' }} />
-                  Copiar Email
-                </div>
-              </div>
-              <div className="modal-item">
-                <label>Contraseña:</label>
-              </div>
-              <div className="modal-item">
-                <p>{modalData.password}</p>
-                <div className="copy-button copy-password" onClick={() => copyToClipboard(modalData.password, 'Contraseña')}>
-                  <img src={copyIcon} alt="Copiar Contraseña" style={{ width: '20px', height: '20px', marginRight: '5px' }} />
-                  Copiar Contraseña
-                </div>
-              </div>
-              <div className="modal-item">
-                <label>Nota:</label>
-              </div>
-              <div className="modal-item">
-                <p>{modalData.nota || 'No hay nota disponible'}</p>
-              </div>
-              {/* Aquí se agrega el enlace con el servicio formateado */}
-              <div className="modal-item">
-                <a
-                  href=""
-                  className="help-link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleShowSteps(modalData.servicio); // Cargar y mostrar los pasos al hacer clic
-                  }}
-                >
-                  Pasos para ingresar a <strong>{capitalizeFirstLetter(modalData.servicio)}</strong> en el TV
-                </a>
-              </div>
-              {/* Botón "Cerrar" solo se muestra cuando no está en modo pasos */}
-              <button onClick={handleCloseModal} className="home-button">
-                Cerrar
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-    )}
+{modalOpen && modalData && (
+  <div
+    className="modal-overlays"
+    onClick={handleCloseModal} // 👉 Cierra si se hace clic fuera
+  >
+    <div
+      className="modal-contents"
+      onClick={(e) => e.stopPropagation()} // ❗Evita cerrar si clic es dentro
+    >
+      {showSteps ? (
+        <>
+          <h2 className="h2negro">Como ingresar Tv</h2>
+          <div className="steps-container">
+            {tvSteps.length > 0 ? (
+              tvSteps.map((step, index) => (
+                <p key={index}>
+                  <strong>Paso {index + 1}:</strong> {step}
+                </p>
+              ))
+            ) : (
+              <p>No hay pasos disponibles.</p>
+            )}
+          </div>
+          <button
+            onClick={() => setShowSteps(false)}
+            className="home-button"
+          >
+            Mostrar información de acceso
+          </button>
+        </>
+      ) : (
+        <>
+          <h2 className="h2negro">Detalles de la cuenta</h2>
+          <div className="modal-item">
+            <label>Email:</label>
+          </div>
+          <div className="modal-item">
+            <p>{modalData.email}</p>
+            <div
+              className="copy-button copy-email"
+              onClick={() =>
+                copyToClipboard(modalData.email, 'Email')
+              }
+            >
+              <img
+                src={copyIcon}
+                alt="Copiar Email"
+                style={{
+                  width: '20px',
+                  height: '20px',
+                  marginRight: '5px',
+                }}
+              />
+              Copiar Correo
+            </div>
+          </div>
+
+          <div className="modal-item">
+            <label>Contraseña:</label>
+          </div>
+          <div className="modal-item">
+            <p>{modalData.password}</p>
+            <div
+              className="copy-button copy-password"
+              onClick={() =>
+                copyToClipboard(modalData.password, 'Contraseña')
+              }
+            >
+              <img
+                src={copyIcon}
+                alt="Copiar Contraseña"
+                style={{
+                  width: '20px',
+                  height: '20px',
+                  marginRight: '5px',
+                }}
+              />
+              Copiar Contraseña
+            </div>
+          </div>
+
+          <div className="modal-item">
+            <label>Nota:</label>
+          </div>
+          <div className="modal-item">
+            <p>{modalData.nota || 'No hay nota disponible'}</p>
+          </div>
+
+          <div className="modal-item">
+            <a
+              href=""
+              className="help-link"
+              onClick={(e) => {
+                e.preventDefault();
+                handleShowSteps(modalData.servicio);
+              }}
+            >
+              Pasos para ingresar a{' '}
+              <strong>
+                {capitalizeFirstLetter(modalData.servicio)}
+              </strong>{' '}
+              en el TV
+            </a>
+          </div>
+
+          <button onClick={handleCloseModal} className="home-button">
+            Cerrar
+          </button>
+        </>
+      )}
+    </div>
+  </div>
+)}
+
 
     {/* Muestra el mensaje de asesor si está disponible */}
     {adviceMessage && <p className="advice-message">{adviceMessage}</p>}
