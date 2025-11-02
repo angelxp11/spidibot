@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/spidibot/static/css/main.4c423e49.css",
-    "main.js": "/spidibot/static/js/main.e107a6da.js",
+    "main.css": "/spidibot/static/css/main.7cdfe5ac.css",
+    "main.js": "/spidibot/static/js/main.8f7e8c48.js",
     "static/media/spider.png": "/spidibot/static/media/spider.e41fb39c59c4fb5c6757.png",
     "static/media/AHORRO.png": "/spidibot/static/media/AHORRO.b1f0a3a21db3954f4e6e.png",
     "static/media/fondogreen.png": "/spidibot/static/media/fondogreen.19eb02b739d5a402dbeb.png",
@@ -23,11 +23,11 @@
     "static/media/YOUTUBE.svg": "/spidibot/static/media/YOUTUBE.f7c5cc380af592dc891e7638b6af4824.svg",
     "static/media/NETFLIX,NETFLIXTV,NETFLIXME.svg": "/spidibot/static/media/NETFLIX,NETFLIXTV,NETFLIXME.e2fd16667e47af79739fb996b6d3b366.svg",
     "index.html": "/spidibot/index.html",
-    "main.4c423e49.css.map": "/spidibot/static/css/main.4c423e49.css.map",
-    "main.e107a6da.js.map": "/spidibot/static/js/main.e107a6da.js.map"
+    "main.7cdfe5ac.css.map": "/spidibot/static/css/main.7cdfe5ac.css.map",
+    "main.8f7e8c48.js.map": "/spidibot/static/js/main.8f7e8c48.js.map"
   },
   "entrypoints": [
-    "static/css/main.4c423e49.css",
-    "static/js/main.e107a6da.js"
+    "static/css/main.7cdfe5ac.css",
+    "static/js/main.8f7e8c48.js"
   ]
 }
