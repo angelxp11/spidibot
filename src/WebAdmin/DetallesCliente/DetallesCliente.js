@@ -34,9 +34,12 @@ function DetallesCliente({ client, onClose, onSave, onDelete, fondo }) {
     notas: Array.isArray(client.notas) ? client.notas : (client.notas ? client.notas.split(',').map(x => x.trim()) : []),
     precio: Array.isArray(client.precio) ? client.precio : (client.precio ? client.precio.split(',').map(x => x.trim()) : []),
     SPOTIFY: {
-      email: client.SPOTIFY?.email[0] || '',
-      password: client.SPOTIFY?.password[0] || '',
-      principal: client.SPOTIFY?.principal || [true]
+      // evito crash usando optional chaining antes del index y normalizo principal a array
+      email: client.SPOTIFY?.email?.[0] || '',
+      password: client.SPOTIFY?.password?.[0] || '',
+      principal: client.SPOTIFY?.principal
+        ? (Array.isArray(client.SPOTIFY.principal) ? client.SPOTIFY.principal : [client.SPOTIFY.principal])
+        : [true]
     }
   });
   const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
@@ -83,9 +86,12 @@ function DetallesCliente({ client, onClose, onSave, onDelete, fondo }) {
       notas: Array.isArray(client.notas) ? client.notas : (client.notas ? client.notas.split(',').map(x => x.trim()) : []),
       precio: Array.isArray(client.precio) ? client.precio : (client.precio ? client.precio.split(',').map(x => x.trim()) : []),
       SPOTIFY: {
-        email: client.SPOTIFY?.email[0] || '',
-        password: client.SPOTIFY?.password[0] || '',
-        principal: client.SPOTIFY?.principal || [true]
+        // mismo arreglo en el useEffect de sincronización
+        email: client.SPOTIFY?.email?.[0] || '',
+        password: client.SPOTIFY?.password?.[0] || '',
+        principal: client.SPOTIFY?.principal
+          ? (Array.isArray(client.SPOTIFY.principal) ? client.SPOTIFY.principal : [client.SPOTIFY.principal])
+          : [true]
       }
     });
     setNewGrupo('');
@@ -187,9 +193,12 @@ function DetallesCliente({ client, onClose, onSave, onDelete, fondo }) {
       const clienteDoc = await getDoc(clientDocRef);
       const clienteData = clienteDoc.data();
       const updatedSpotify = {
+        // asegurar que se suben arrays y principal siempre como array
         email: [clientData.SPOTIFY.email],
         password: [clientData.SPOTIFY.password],
-        principal: [clientData.SPOTIFY.principal[0]] // ya es booleano
+        principal: Array.isArray(clientData.SPOTIFY.principal)
+          ? clientData.SPOTIFY.principal
+          : [clientData.SPOTIFY.principal]
       };
 
       updates['SPOTIFY'] = updatedSpotify;
