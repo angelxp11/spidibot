@@ -271,13 +271,17 @@ function Estados({ onClose }) {
 
   const handlePaymentMethodSelect = async (method) => {
     if (selectedClient) {
-      const [day, month] = selectedClient.fechaFinal.split('/').map(Number);
-      const year = new Date().getFullYear(); // Usar el año actual
+      const [day, month, year] = selectedClient.fechaFinal.split('/').map(Number);
       const fechaActual = new Date(year, month - 1, day);
+
+        // Sumar 1 mes correctamente
       fechaActual.setMonth(fechaActual.getMonth() + 1);
+
+// Ajuste por meses cortos (ej: 31 → 30)
       if (fechaActual.getDate() !== day) {
-        fechaActual.setDate(0);
-      }
+  fechaActual.setDate(0);
+  }
+
   
       const nuevaFechaFinal = fechaActual.toLocaleDateString('es-ES', {
         day: '2-digit',
