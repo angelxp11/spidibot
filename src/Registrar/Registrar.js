@@ -50,7 +50,7 @@ function Registrar({ toggleVisibility }) {
         email: userEmail,
         createdAt: new Date(),
       });
-      navigate('/spidibot');
+      navigate('');
     } catch (error) {
       console.error('Error al registrar el usuario: ' + error.message);
       toast.error('Error al registrar el usuario: ' + error.message);
@@ -77,7 +77,7 @@ function Registrar({ toggleVisibility }) {
           createdAt: new Date(),
         });
       }
-      navigate('/spidibot');
+      navigate('');
     } catch (error) {
       console.error('Error en Google Login: ' + error.message);
       toast.error('Error al iniciar sesión con Google: ' + error.message);

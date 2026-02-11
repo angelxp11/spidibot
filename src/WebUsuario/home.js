@@ -47,7 +47,7 @@ function Home() {
   
   useEffect(() => {
     if (!user) {
-      navigate('/spidibot');
+      navigate('');
     } else {
       fetchUserServices();
       // Escuchar la colección completa; fetchUserServices ya normaliza el email
@@ -214,7 +214,7 @@ function Home() {
     setShowConfirmLogout(false);
     try {
       await signOut(auth);
-      navigate('/spidibot');
+      navigate('');
     } catch (error) {
     }
   };

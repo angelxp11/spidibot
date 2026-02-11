@@ -110,13 +110,13 @@ function Home() {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      navigate('/spidibot');
+      navigate('');
     } catch (error) {
     }
   };
 
   useEffect(() => {
-    navigate('/spidibot');
+    navigate('');
   }, [navigate]);
 
   const handleOpenNotificaciones = () => {
