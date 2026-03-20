@@ -50,9 +50,166 @@ function Home() {
   const [notificaciones, setNotificaciones] = useState([]); // Estado para almacenar las notificaciones
   const [isUpdating, setIsUpdating] = useState(false);
   const [showServices, setShowServices] = useState(false);
+  const [windowTitle, setWindowTitle] = useState("Spidibot V1");
 
   const db = getFirestore();
   const messaging = getMessaging(); // Inicializa FCM
+
+  // Efecto para cambiar el título de la ventana
+  useEffect(() => {
+    document.title = windowTitle;
+  }, [windowTitle]);
+
+  // Funciones para abrir y cerrar modales con cambio de título
+  const handleOpenBuscarCliente = () => {
+    setShowBuscarCliente(true);
+    setWindowTitle("Buscar Cliente - Spidibot V1");
+  };
+
+  const handleCloseBuscarCliente = () => {
+    setShowBuscarCliente(false);
+    setWindowTitle("Spidibot V1");
+  };
+
+  const handleOpenEstados = () => {
+    setShowEstados(true);
+    setWindowTitle("Ver Estados - Spidibot V1");
+  };
+
+  const handleCloseEstados = () => {
+    setShowEstados(false);
+    setWindowTitle("Spidibot V1");
+  };
+
+  const handleOpenActualizarBd = () => {
+    setShowActualizarBd(true);
+    setWindowTitle("Actualizar Base de Datos - Spidibot V1");
+  };
+
+  const handleCloseActualizarBd = () => {
+    setShowActualizarBd(false);
+    setWindowTitle("Spidibot V1");
+  };
+
+  const handleOpenBuscarCupo = () => {
+    setShowBuscarCupo(true);
+    setWindowTitle("Buscar Cupo - Spidibot V1");
+  };
+
+  const handleCloseBuscarCupo = () => {
+    setShowBuscarCupo(false);
+    setWindowTitle("Spidibot V1");
+  };
+
+  const handleOpenRegistrarCliente = () => {
+    setShowRegistrarCliente(true);
+    setWindowTitle("Registrar Cliente - Spidibot V1");
+  };
+
+  const handleCloseRegistrarCliente = () => {
+    setShowRegistrarCliente(false);
+    setWindowTitle("Spidibot V1");
+  };
+
+  const handleOpenPruebas = () => {
+    setShowPruebas(true);
+    setWindowTitle("Pruebas - Spidibot V1");
+  };
+
+  const handleClosePruebas = () => {
+    setShowPruebas(false);
+    setWindowTitle("Spidibot V1");
+  };
+
+  const handleOpenAddSeeEstatus = () => {
+    setShowAddSeeEstatus(true);
+    setWindowTitle("Grupos y Estados - Spidibot V1");
+  };
+
+  const handleCloseAddSeeEstatus = () => {
+    setShowAddSeeEstatus(false);
+    setWindowTitle("Spidibot V1");
+  };
+
+  const handleOpenPasswordReset = () => {
+    setShowPasswordReset(true);
+    setWindowTitle("Restablecer Contraseña - Spidibot V1");
+  };
+
+  const handleClosePasswordReset = () => {
+    setShowPasswordReset(false);
+    setWindowTitle("Spidibot V1");
+  };
+
+  const handleOpenNotificaciones = () => {
+    setShowNotificaciones(true);
+    setWindowTitle("Notificaciones - Spidibot V1");
+  };
+
+  const handleCloseNotificaciones = () => {
+    setShowNotificaciones(false);
+    setWindowTitle("Spidibot V1");
+  };
+
+  const handleOpenCuentasDisponibles = () => {
+    setShowCuentasDisponibles(true);
+    setWindowTitle("Cuentas Disponibles - Spidibot V1");
+  };
+
+  const handleCloseCuentasDisponibles = () => {
+    setShowCuentasDisponibles(false);
+    setWindowTitle("Spidibot V1");
+  };
+
+  const handleOpenBolsillos = () => {
+    setShowBolsillos(true);
+    setWindowTitle("Bolsillos - Spidibot V1");
+  };
+
+  const handleCloseBolsillos = () => {
+    setShowBolsillos(false);
+    setWindowTitle("Spidibot V1");
+  };
+
+  const handleOpenFusionarCuentas = () => {
+    setShowFusionarCuentas(true);
+    setWindowTitle("Fusionar Cuentas - Spidibot V1");
+  };
+
+  const handleCloseFusionarCuentas = () => {
+    setShowFusionarCuentas(false);
+    setWindowTitle("Spidibot V1");
+  };
+
+  const handleOpenCambiarFechaPago = () => {
+    setShowCambiarFechaPago(true);
+    setWindowTitle("Cambiar Fecha de Pago - Spidibot V1");
+  };
+
+  const handleCloseCambiarFechaPago = () => {
+    setShowCambiarFechaPago(false);
+    setWindowTitle("Spidibot V1");
+  };
+
+  const handleOpenPrecios = () => {
+    setShowPrecios(true);
+    setWindowTitle("Precios - Spidibot V1");
+  };
+
+  const handleClosePrecios = () => {
+    setShowPrecios(false);
+    setWindowTitle("Spidibot V1");
+  };
+
+  const handleOpenInventario = () => {
+    setShowInventario(true);
+    setWindowTitle("Inventario - Spidibot V1");
+  };
+
+  const handleCloseInventario = () => {
+    setShowInventario(false);
+    setWindowTitle("Spidibot V1");
+  };
 
   // Solicitar permisos de notificación
   const requestNotificationPermission = async () => {
@@ -119,17 +276,9 @@ function Home() {
     navigate('');
   }, [navigate]);
 
-  const handleOpenNotificaciones = () => {
-    setShowNotificaciones(true);
-  };
-
-  const handleCloseNotificaciones = () => {
-    setShowNotificaciones(false);
-  };
-
   const handleActualizarClick = () => {
     setIsUpdating(true);
-    setShowActualizarBd(true);
+    handleOpenActualizarBd();
     // Simulate an update process
     setTimeout(() => {
       setIsUpdating(false);
@@ -179,53 +328,53 @@ function Home() {
         <div className="dashboard-right">
           {showServices && (
             <div className="icon-grid">
-              <div className="icon-item" onClick={() => setShowRegistrarCliente(true)}>
+              <div className="icon-item" onClick={handleOpenRegistrarCliente}>
                 <FaUserPlus className="grid-icon" />
                 <span>Registrar Cliente</span>
               </div>
-              <div className="icon-item" onClick={() => setShowBuscarCliente(true)}>
+              <div className="icon-item" onClick={handleOpenBuscarCliente}>
                 <FaSearch className="grid-icon" />
                 <span>Buscar Cliente</span>
               </div>
-              <div className="icon-item" onClick={() => setShowEstados(true)}>
+              <div className="icon-item" onClick={handleOpenEstados}>
                 <FaExclamationTriangle className="grid-icon" />
                 <span>Estado</span>
               </div>
-              <div className="icon-item-cupos" onClick={() => setShowBuscarCupo(true)}>
+              <div className="icon-item-cupos" onClick={handleOpenBuscarCupo}>
                 <FaUsers className="grid-icon-cupos" />
                 <span>Cupos</span>
               </div>
-              <div className="icon-item" onClick={() => setShowAddSeeEstatus(true)}>
+              <div className="icon-item" onClick={handleOpenAddSeeEstatus}>
                 <FaLayerGroup className="grid-icon" />
                 <span>GruposEstados</span>
               </div>
-              <div className="icon-item" onClick={() => setShowPasswordReset(true)}>
+              <div className="icon-item" onClick={handleOpenPasswordReset}>
                 <FaEnvelope className="grid-icon" />
                 <span>Email Clientes</span>
               </div>
-              <div className="icon-item" onClick={() => setShowCuentasDisponibles(true)}>
+              <div className="icon-item" onClick={handleOpenCuentasDisponibles}>
                 <FaDatabase className="grid-icon" />
                 <span>Cuentas Disponibles</span>
               </div>
-              <div className="icon-item" onClick={() => setShowBolsillos(true)}>
+              <div className="icon-item" onClick={handleOpenBolsillos}>
                 <FaWallet className="grid-icon" /> {/* Change icon to FaWallet */}
                 <span>Bolsillos</span>
               </div>
-              <div className="icon-item" onClick={() => setShowFusionarCuentas(true)}>
+              <div className="icon-item" onClick={handleOpenFusionarCuentas}>
                 <FaSyncAlt className="grid-icon" /> {/* Cambiado a FaSyncAlt */}
                 <span>Fusionar Cuentas</span>
               </div>
-              <div className="icon-item" onClick={() => setShowCambiarFechaPago(true)}>
+              <div className="icon-item" onClick={handleOpenCambiarFechaPago}>
                 <FaCalendarAlt className="grid-icon" />
                 <span>Cambiar Fecha Pago</span>
               </div>
-              <div className="icon-item" onClick={() => setShowPrecios(true)}>
+              <div className="icon-item" onClick={handleOpenPrecios}>
                 <FaTag className="grid-icon" />
                 <span>Precios</span>
               </div>
 
               {/* Inventario como icono (FaBoxes) justo después de Precios */}
-              <div className="icon-item" onClick={() => setShowInventario(true)}>
+              <div className="icon-item" onClick={handleOpenInventario}>
                 <FaBoxes className="grid-icon" />
                 <span>Inventario</span>
               </div>
@@ -236,24 +385,24 @@ function Home() {
               <Finance onClose={() => setShowFinance(false)} /> {/* Add the Finance component */}
             </div>
           )}
-          {showBuscarCliente && <BuscarCliente onClose={() => setShowBuscarCliente(false)} />}
-          {showEstados && <Estados onClose={() => setShowEstados(false)} />}
-          {showActualizarBd && <ActualizarBd onClose={() => setShowActualizarBd(false)} />}
-          {showBuscarCupo && <BuscarCupo onClose={() => setShowBuscarCupo(false)} />}
-          {showRegistrarCliente && <RegistrarCliente onClose={() => setShowRegistrarCliente(false)} />}
-          {showPruebas && <Pruebas onClose={() => setShowPruebas(false)} />}
-          {showAddSeeEstatus && <AddSeeEstatus onClose={() => setShowAddSeeEstatus(false)} />}
-          {showPasswordReset && <PasswordReset onClose={() => setShowPasswordReset(false)} />}
+          {showBuscarCliente && <BuscarCliente onClose={handleCloseBuscarCliente} />}
+          {showEstados && <Estados onClose={handleCloseEstados} />}
+          {showActualizarBd && <ActualizarBd onClose={handleCloseActualizarBd} />}
+          {showBuscarCupo && <BuscarCupo onClose={handleCloseBuscarCupo} />}
+          {showRegistrarCliente && <RegistrarCliente onClose={handleCloseRegistrarCliente} />}
+          {showPruebas && <Pruebas onClose={handleClosePruebas} />}
+          {showAddSeeEstatus && <AddSeeEstatus onClose={handleCloseAddSeeEstatus} />}
+          {showPasswordReset && <PasswordReset onClose={handleClosePasswordReset} />}
           {showNotificaciones && <Notificaciones onClose={handleCloseNotificaciones} />}
-          {showCuentasDisponibles && <CuentasDisponibles onClose={() => setShowCuentasDisponibles(false)} />}
-          {showBolsillos && <Bolsillos onClose={() => setShowBolsillos(false)} />}
+          {showCuentasDisponibles && <CuentasDisponibles onClose={handleCloseCuentasDisponibles} />}
+          {showBolsillos && <Bolsillos onClose={handleCloseBolsillos} />}
           {showFusionarCuentas && (
-            <FusionarCuentas onClose={() => setShowFusionarCuentas(false)} />
+            <FusionarCuentas onClose={handleCloseFusionarCuentas} />
           )}
-          {showPrecios && <Precios onClose={() => setShowPrecios(false)} />}
-          {showInventario && <Inventario onClose={() => setShowInventario(false)} />}
+          {showPrecios && <Precios onClose={handleClosePrecios} />}
+          {showInventario && <Inventario onClose={handleCloseInventario} />}
           {showCambiarFechaPago && (
-            <CambiarFechaPago onClose={() => setShowCambiarFechaPago(false)} />
+            <CambiarFechaPago onClose={handleCloseCambiarFechaPago} />
           )}
           {!showBuscarCliente && !showEstados && !showActualizarBd && !showBuscarCupo && !showRegistrarCliente && !showPruebas && !showAddSeeEstatus && !showPasswordReset && !showNotificaciones && !showCuentasDisponibles && !showServices && !showFinance && (
             <div className="logo-container">

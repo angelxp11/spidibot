@@ -534,3 +534,27 @@
   background-color: var(--color-buttons-hover); /* Updated color */
   transform: scale(1.05);
 }
+
+.copy-icon {
+  margin-left: 10px;
+  cursor: pointer;
+  color: white; /* Set icon color to white */
+  background-color: #ed1b24; /* Set background color to red */
+  padding: 7px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  height: 36px;
+  width: 36px; /* Match the height of the input field */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copy-icon:hover {
+  background-color: #b3121a;
+}
+
+.telefono-container {
+  display: flex;
+  align-items: center;
+}

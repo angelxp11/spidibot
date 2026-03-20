@@ -72,7 +72,7 @@ function BuscarCupo({ onClose }) {
     const [infoDocId, setInfoDocId] = useState('');
   const [isResultadosVisible, setIsResultadosVisible] = useState(false);
   const [isInfoVisible, setIsInfoVisible] = useState(false);
-  const [selectedClientInfo, setSelectedClientInfo] = useState({ email: '', password: '' });
+  const [selectedClientInfo, setSelectedClientInfo] = useState({ email: '', password: '', notas: '' });
   const [isClientInfoVisible, setIsClientInfoVisible] = useState(false);
 
   // Reemplazo: estados simplificados para crear grupo
@@ -463,17 +463,27 @@ const handleCheckboxChange = (id, cliente) => {
 
   setSelectedClientes(newSelectedClientes);
 
-  if (servicio === 'SPOTIFY' && newSelectedClientes[id]) {
+  if (newSelectedClientes[id]) {
     const index = cliente.servicio?.findIndex((serv, idx) => serv === servicio && cliente.grupo[idx] === grupo);
     if (index !== -1) {
-      setSelectedClientInfo({
-        email: cliente.SPOTIFY?.email[index] || '',
-        password: cliente.SPOTIFY?.password[index] || ''
-      });
+      if (servicio === 'SPOTIFY') {
+        setSelectedClientInfo({
+          email: cliente.SPOTIFY?.email[index] || '',
+          password: cliente.SPOTIFY?.password[index] || '',
+          notas: ''
+        });
+      } else {
+        // Para servicios distintos a SPOTIFY, mostrar notas
+        setSelectedClientInfo({
+          email: '',
+          password: '',
+          notas: cliente.notas?.[index] || ''
+        });
+      }
       setIsClientInfoVisible(true);
     }
   } else {
-    setSelectedClientInfo({ email: '', password: '' });
+    setSelectedClientInfo({ email: '', password: '', notas: '' });
     setIsClientInfoVisible(false);
   }
 };
@@ -810,20 +820,33 @@ const handleCheckboxChange = (id, cliente) => {
           <h3 className="BuscarCupo-clientinfo-title">
             Información del Cliente:
           </h3>
-          <div className="BuscarCupo-info-item">
-            <span>Email: {selectedClientInfo.email}</span>
-            <FaCopy
-              className="copy-icon"
-              onClick={() => handleCopy(selectedClientInfo.email)}
-            />
-          </div>
-          <div className="BuscarCupo-info-item">
-            <span>Password: {selectedClientInfo.password}</span>
-            <FaCopy
-              className="copy-icon"
-              onClick={() => handleCopy(selectedClientInfo.password)}
-            />
-          </div>
+          {selectedClientInfo.email && (
+            <div className="BuscarCupo-info-item">
+              <span>Email: {selectedClientInfo.email}</span>
+              <FaCopy
+                className="copy-icon"
+                onClick={() => handleCopy(selectedClientInfo.email)}
+              />
+            </div>
+          )}
+          {selectedClientInfo.password && (
+            <div className="BuscarCupo-info-item">
+              <span>Password: {selectedClientInfo.password}</span>
+              <FaCopy
+                className="copy-icon"
+                onClick={() => handleCopy(selectedClientInfo.password)}
+              />
+            </div>
+          )}
+          {selectedClientInfo.notas && (
+            <div className="BuscarCupo-info-item">
+              <span>Notas: {selectedClientInfo.notas}</span>
+              <FaCopy
+                className="copy-icon"
+                onClick={() => handleCopy(selectedClientInfo.notas)}
+              />
+            </div>
+          )}
         </div>
       </div>
     )}

@@ -39,7 +39,7 @@ function DetallesCliente({ client, onClose, onSave, onDelete, fondo }) {
       password: client.SPOTIFY?.password?.[0] || '',
       principal: client.SPOTIFY?.principal
         ? (Array.isArray(client.SPOTIFY.principal) ? client.SPOTIFY.principal : [client.SPOTIFY.principal])
-        : [true]
+        : [false]
     }
   });
   const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
@@ -91,7 +91,7 @@ function DetallesCliente({ client, onClose, onSave, onDelete, fondo }) {
         password: client.SPOTIFY?.password?.[0] || '',
         principal: client.SPOTIFY?.principal
           ? (Array.isArray(client.SPOTIFY.principal) ? client.SPOTIFY.principal : [client.SPOTIFY.principal])
-          : [true]
+          : [false]
       }
     });
     setNewGrupo('');
@@ -192,16 +192,19 @@ function DetallesCliente({ client, onClose, onSave, onDelete, fondo }) {
 
       const clienteDoc = await getDoc(clientDocRef);
       const clienteData = clienteDoc.data();
-      const updatedSpotify = {
-        // asegurar que se suben arrays y principal siempre como array
-        email: [clientData.SPOTIFY.email],
-        password: [clientData.SPOTIFY.password],
-        principal: Array.isArray(clientData.SPOTIFY.principal)
-          ? clientData.SPOTIFY.principal
-          : [clientData.SPOTIFY.principal]
-      };
-
-      updates['SPOTIFY'] = updatedSpotify;
+      
+      // Solo guardar SPOTIFY si el checkbox está marcado
+      if (showSpotifyInfo) {
+        const updatedSpotify = {
+          // asegurar que se suben arrays y principal siempre como array
+          email: [clientData.SPOTIFY.email],
+          password: [clientData.SPOTIFY.password],
+          principal: Array.isArray(clientData.SPOTIFY.principal)
+            ? clientData.SPOTIFY.principal
+            : [clientData.SPOTIFY.principal]
+        };
+        updates['SPOTIFY'] = updatedSpotify;
+      }
 
       await updateDoc(clientDocRef, updates);
       toast.success('Datos guardados con éxito');

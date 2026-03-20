@@ -6,7 +6,7 @@ import html2canvas from 'html2canvas';
 import fondo from '../../fondo.png';
 import './estados.css';
 import { toast } from 'react-toastify'; // Asegúrate de instalar react-toastify
-import { FaSyncAlt, FaTimes, FaFileAlt, FaDollarSign, FaDownload } from 'react-icons/fa';
+import { FaSyncAlt, FaTimes, FaFileAlt, FaDollarSign, FaDownload, FaCopy } from 'react-icons/fa';
 import PaymentOverlay from '../metodosdepago/PaymentOverlay';
 
 const firestore = getFirestore(app);
@@ -364,6 +364,16 @@ const formatPrice = (price) => {
   return `$ ${new Intl.NumberFormat('es-ES').format(price)}`;
 };
 
+// Función para formatear la fecha
+const formatDate = (dateStr) => {
+  const [day, month, year] = dateStr.split('/');
+  const months = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ];
+  return `${day} de ${months[parseInt(month) - 1]} de ${year}`;
+};
+
 const handleGenerateComprobante = async () => {
   if (selectedClient) {
     const servicios = Array.isArray(selectedClient.servicio) ? selectedClient.servicio : [];
@@ -464,7 +474,7 @@ const handleCobrar = async () => {
     } else if (diasRestantes === 0) {
       mensaje += `Hoy se vencen tus servicios de *${servicios}*. 🕒⚠️ ¡Recuerda realizar el pago para evitar interrupciones! 🎥🎶`;
     } else {
-      mensaje += `*Los servicios de ${servicios} ya se han vencido*. 🕒⚠️ Por favor, realiza el pago lo antes posible. 🎥🎶`;
+      mensaje += `*Los servicios de ${servicios} ya se han vencido el ${formatDate(selectedClient.fechaFinal)}*. 🕒⚠️ Por favor, realiza el pago lo antes posible. 🎥🎶`;
     }
 
     mensaje += `\n\nEl total a pagar es: *${totalAPagar}*.\n\nSi necesitas ayuda con algo, no dudes en decirme. ¡Que tengas un día increíble! 😊❤️`;
@@ -517,7 +527,7 @@ const handleDownloadCobros = async () => {
     } else if (diasRestantes === 0) {
       mensaje += `Hoy se vencen tus servicios de *${servicios}*. 🕒⚠️ ¡Recuerda realizar el pago para evitar interrupciones! 🎥🎶`;
     } else {
-      mensaje += `*Los servicios de ${servicios} ya se han vencido*. 🕒⚠️ Por favor, realiza el pago lo antes posible. 🎥🎶`;
+      mensaje += `*Los servicios de ${servicios} ya se han vencido el ${formatDate(cliente.fechaFinal)}*. 🕒⚠️ Por favor, realiza el pago lo antes posible. 🎥🎶`;
     }
 
     mensaje += `\n\nEl total a pagar es: *${totalAPagar}*.\n\nSi necesitas ayuda con algo, no dudes en decirme. ¡Que tengas un día increíble! 😊❤️`;
@@ -573,7 +583,13 @@ const handleDownloadCobros = async () => {
 };
 
 
-  
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast('Información copiada al portapapeles.');
+    }).catch(err => {
+      console.error('Error al copiar al portapapeles: ', err);
+    });
+  };
 
   return (
     <div className="estado-modal-overlay" onClick={onClose}>
@@ -619,6 +635,12 @@ const handleDownloadCobros = async () => {
     <div>Nombre: {selectedClient.nombre} {selectedClient.apellido}</div>
     <div>Estado: {selectedClient.estado}</div>
     <div>Fecha Final: {selectedClient.fechaFinal}</div>
+    <div className="telefono-container">
+      <strong>Teléfono:</strong> {selectedClient.telefono || 'No disponible'}
+      {selectedClient.telefono && (
+        <FaCopy className="copy-icon" onClick={() => handleCopy(selectedClient.telefono)} />
+      )}
+    </div>
     <div>Servicios a vencer: {Array.isArray(selectedClient.servicio) ? selectedClient.servicio.join(', ') : 'Ninguno'}</div>
     <div>Valor del servicio: {Array.isArray(selectedClient.valoresServicios) ? selectedClient.valoresServicios.map(formatPrice).join(', ') : 'No disponible'}</div>
     <div>Valor a pagar por cliente: {Array.isArray(selectedClient.valoresPorCliente) ? selectedClient.valoresPorCliente.map(formatPrice).join(', ') : 'No disponible'}</div>
