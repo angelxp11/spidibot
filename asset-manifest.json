@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.977fb46a.css",
-    "main.js": "/static/js/main.d0ae8758.js",
+    "main.js": "/static/js/main.52d0085b.js",
     "static/media/spider.png": "/static/media/spider.e41fb39c59c4fb5c6757.png",
     "static/media/AHORRO.png": "/static/media/AHORRO.b1f0a3a21db3954f4e6e.png",
     "static/media/fondogreen.png": "/static/media/fondogreen.19eb02b739d5a402dbeb.png",
@@ -12,6 +12,7 @@
     "static/media/spidilogo.png": "/static/media/spidilogo.1e6d18f995606fa2b33b.png",
     "static/media/spidi512.png": "/static/media/spidi512.5e2520cdc2f6f3955473.png",
     "static/media/DAVIPLATA.png": "/static/media/DAVIPLATA.01f11a9773fd5589b6ed.png",
+    "static/media/qrpago.png": "/static/media/qrpago.94d48dfe9dd549188d0f.png",
     "static/media/DISNEY.svg": "/static/media/DISNEY.7b55f2bbbf0d42857cef2fffa4665afc.svg",
     "static/media/copy.png": "/static/media/copy.66cf9419c7bf5cb1b66a.png",
     "static/media/PARAMOUNT.svg": "/static/media/PARAMOUNT.b72e9eca2e34dcc2ede5770d70120293.svg",
@@ -24,10 +25,10 @@
     "static/media/NETFLIX,NETFLIXTV,NETFLIXME.svg": "/static/media/NETFLIX,NETFLIXTV,NETFLIXME.e2fd16667e47af79739fb996b6d3b366.svg",
     "index.html": "/index.html",
     "main.977fb46a.css.map": "/static/css/main.977fb46a.css.map",
-    "main.d0ae8758.js.map": "/static/js/main.d0ae8758.js.map"
+    "main.52d0085b.js.map": "/static/js/main.52d0085b.js.map"
   },
   "entrypoints": [
     "static/css/main.977fb46a.css",
-    "static/js/main.d0ae8758.js"
+    "static/js/main.52d0085b.js"
   ]
 }
