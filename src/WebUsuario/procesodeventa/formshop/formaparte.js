@@ -1,11 +1,13 @@
+
 import React, { useState, useEffect } from 'react';
-import './formaparte.css'; // Asegúrate de importar los estilos para el modal
+import './formaparte.css';
 import { addDoc , collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth'; // Importamos el auth para obtener el usuario autenticado
-import { db } from '../../../firebase'; // Asegúrate de importar 'db' desde tu configuración de Firebase
+import { getAuth } from 'firebase/auth';
+import { db } from '../../../firebase';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import emojiFlags from 'emoji-flags';
+import qrPago from "../../../imagenes/qrpago.png"; // Asegúrate de tener esta imagen en la ruta correcta
 
 const FormAparte = ({ service, onClose }) => {
   const [nombre, setNombre] = useState('');
@@ -193,18 +195,9 @@ const handleApellidoChange = (e) => {
   };
 
   // Determinar la imagen a mostrar según el servicio
+  // Ahora siempre retorna la imagen importada localmente
   const getImageForService = (serviceName) => {
-    if (
-      serviceName === 'SPOTIFY' ||
-      serviceName === 'NETFLIX TV' ||
-      serviceName === 'NETFLIX SIN TV' ||
-      serviceName === 'YOUTUBE PREMIUM' ||
-      serviceName === 'YOUTUBE + GOOGLE'
-    ) {
-      return 'https://firebasestorage.googleapis.com/v0/b/spidijade.appspot.com/o/spidibo.png?alt=media&token=11295a61-032c-4a8d-999c-021249de794a';
-    } else {
-      return 'https://firebasestorage.googleapis.com/v0/b/spidijade.appspot.com/o/spidibo.png?alt=media&token=11295a61-032c-4a8d-999c-021249de794a';
-    }
+    return qrPago;
   };
 
   // Función para formatear el precio
