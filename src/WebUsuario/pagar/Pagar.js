@@ -12,6 +12,7 @@ import paramountIcon from '../../recursos/svg/PARAMOUNT.svg';
 import disneyIcon from '../../recursos/svg/DISNEY.svg';
 import crunchyIcon from '../../recursos/svg/CRUNCHY.svg';
 import maxIcon from '../../recursos/svg/MAX.svg';
+import qr from "../../imagenes/qrpago.png"
 
 const serviceIcons = {
   SPOTIFY: spotifyIcon,
@@ -40,18 +41,8 @@ const Pagar = ({ onClose, client, selectedServices }) => {
   const totalPrecio = selectedServiceDetails.precio.reduce((acc, curr) => acc + parseFloat(curr), 0)
     .toLocaleString('es-ES', { minimumFractionDigits: 0 });
 
-  const getImageForService = (serviceName) => {
-    if (
-      serviceName === 'SPOTIFY' ||
-      serviceName === 'NETFLIX TV' ||
-      serviceName === 'NETFLIX SIN TV' ||
-      serviceName === 'YOUTUBE PREMIUM' ||
-      serviceName === 'YOUTUBE + GOOGLE'
-    ) {
-      return 'https://firebasestorage.googleapis.com/v0/b/spidijade.appspot.com/o/spidibo.png?alt=media&token=11295a61-032c-4a8d-999c-021249de794a';
-    } else {
-      return 'https://firebasestorage.googleapis.com/v0/b/spidijade.appspot.com/o/spidibo.png?alt=media&token=11295a61-032c-4a8d-999c-021249de794a';
-    }
+  const getImageForService = () => {
+    return qr;
   };
 
   const handleConfirmPayment = () => {
@@ -109,7 +100,7 @@ const Pagar = ({ onClose, client, selectedServices }) => {
               Escanea el siguiente código y haz el pago del servicio {servicesToShow.map(service => service).join(', ')} por el valor de ${totalPrecio}, luego de hacer el pago dale clic en Pago Realizado.
             </p>
             <img
-              src={getImageForService(servicesToShow[0])}
+              src={getImageForService()}
               alt="Código de pago"
               style={{ width: '100%', maxWidth: '300px', marginTop: '10px' }}
             />

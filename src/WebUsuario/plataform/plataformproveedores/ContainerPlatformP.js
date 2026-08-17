@@ -6,6 +6,7 @@ import DatosSpotify from './DatosSpotify.js'; // Importa el componente
 import Renovar from '../../renovar/Renovar'; // Importa el componente Renovar
 import MensajesSiNo from '../../../recursos/MensajesSiNo.js'; // Importa MensajesSiNo
 import { app } from '../../../firebase'; // Importa la configuración de Firebase
+import AvisoVencimiento from '../../ads/aviso';
 
 const firestore = getFirestore(app);
 
@@ -38,6 +39,30 @@ const ContainerPlatformP = ({ title, grupo, estado, fechaFinal, nombreCliente, o
   const [showRenovar, setShowRenovar] = useState(false); // Estado para mostrar Renovar
   const [showConfirmDelete, setShowConfirmDelete] = useState(false); // Estado para mostrar confirmación de eliminación
   const [deleteHeaderText, setDeleteHeaderText] = useState(''); // Estado para almacenar el encabezado de eliminación
+  const [showExpiredModal, setShowExpiredModal] = useState(false);
+
+  const isExpiredDate = (value) => {
+    if (!value || value === 'Fecha no disponible') return false;
+
+    let date;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      const [year, month, day] = value.split('-').map(Number);
+      date = new Date(year, month - 1, day);
+    } else if (/^\d{2}\/\d{2}\/\d{4}$/.test(value)) {
+      const [day, month, year] = value.split('/').map(Number);
+      date = new Date(year, month - 1, day);
+    } else {
+      date = new Date(value);
+    }
+
+    if (Number.isNaN(date.getTime())) return false;
+
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    date.setHours(0, 0, 0, 0);
+
+    return date <= hoy;
+  };
 
   // Normalizar el título para mostrar "NETFLIX" si corresponde
   const displayTitle = ['NETFLIX', 'NETFLIXME', 'NETFLIXTV'].includes(title) ? 'NETFLIX' : title;
@@ -74,24 +99,34 @@ const ContainerPlatformP = ({ title, grupo, estado, fechaFinal, nombreCliente, o
     setShowConfirmDelete(false);
   };
 
+  const handleActionClick = (action) => {
+    if (isExpiredDate(fechaFinal)) {
+      setShowExpiredModal(true);
+      setShowRenovar(true);
+      return;
+    }
+
+    action();
+  };
+
   const renderButton = () => {
     if (title === 'SPOTIFY') { 
       if (estado === '❌') {
         return (
-          <button className="container-platform-home-button" onClick={handleShowToast}>
+          <button className="container-platform-home-button" onClick={() => handleActionClick(handleShowToast)}>
             Renovar
           </button>
         );
       } else if (estado === '✅' || estado === '⚠️') {
         return (
-          <button className="container-platform-home-button" onClick={handleOpenModal}>
+          <button className="container-platform-home-button" onClick={() => handleActionClick(handleOpenModal)}>
             Ver enlace 
           </button>
         );
       } else if (estado === '😶‍🌫️') {
         return (
           <>
-            <button className="container-platform-home-button" onClick={handleShowToast}>
+            <button className="container-platform-home-button" onClick={() => handleActionClick(handleShowToast)}>
               Renovar
             </button>
             <button className="container-platform-delete-button" onClick={handleDelete}>
@@ -103,20 +138,20 @@ const ContainerPlatformP = ({ title, grupo, estado, fechaFinal, nombreCliente, o
     } else {
       if (estado === '❌') {
         return (
-          <button className="container-platform-home-button" onClick={handleShowToast}>
+          <button className="container-platform-home-button" onClick={() => handleActionClick(handleShowToast)}>
             Renovar
           </button>
         );
       } else if (estado === '✅' || estado === '⚠️') {
         return (
-          <button className="container-platform-home-button" onClick={onMoreInfo}>
+          <button className="container-platform-home-button" onClick={() => handleActionClick(onMoreInfo)}>
             Más información
           </button>
         );
       } else if (estado === '😶‍🌫️') {
         return (
           <>
-            <button className="container-platform-home-button" onClick={handleShowToast}>
+            <button className="container-platform-home-button" onClick={() => handleActionClick(handleShowToast)}>
               Renovar
             </button>
             <button className="container-platform-delete-button" onClick={handleDelete}>
@@ -134,6 +169,15 @@ const ContainerPlatformP = ({ title, grupo, estado, fechaFinal, nombreCliente, o
       {showDatosSpotify && <DatosSpotify onClose={handleCloseModal} grupo={grupo} title={title} />}
       {/* Modal de Renovar */}
       {showRenovar && <Renovar onClose={handleCloseRenovar} providerId={providerId} providerName={providerName} serviceName={displayTitle} />}
+      {showExpiredModal && (
+        <AvisoVencimiento
+          onClose={() => setShowExpiredModal(false)}
+          onRenew={() => {
+            setShowExpiredModal(false);
+            setShowRenovar(true);
+          }}
+        />
+      )}
       {/* Confirmación de eliminación */}
       {showConfirmDelete && (
         <MensajesSiNo 

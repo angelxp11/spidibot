@@ -1,0 +1,123 @@
+.aviso-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2000;
+  padding: 20px;
+}
+
+.aviso-modal {
+  position: relative;
+  width: min(90vw, 420px);
+  background: var(--color-background-);
+  color: var(--color-text);
+  border-radius: 18px;
+  padding: 28px 22px 20px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+  text-align: center;
+}
+
+.aviso-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  border: none;
+  background: var(--color-button-negation);
+  color: var(--color-text);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.aviso-close:hover {
+  background: var(--color-button-negation-hover, #2dcf7d);
+  transform: scale(1.05);
+}
+
+.aviso-title {
+  margin: 0 0 12px;
+  color: var(--color-button-negation);
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.aviso-text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.aviso-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.aviso-secondary,
+.aviso-web,
+.aviso-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.aviso-secondary {
+  background: var(--color-button-negation);
+  color: var(--color-text);
+}
+
+.aviso-web {
+  background: linear-gradient(135deg, #1e90ff, #2ec4b6);
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(30, 144, 255, 0.35);
+}
+
+.aviso-whatsapp {
+  background: #25d366;
+  color: #ffffff;
+}
+
+.aviso-secondary:hover,
+.aviso-whatsapp:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+.aviso-web:hover {
+  transform: translateY(-1px) scale(1.01);
+  opacity: 0.98;
+  background: linear-gradient(135deg, #0d7ae5, #1ec7ae);
+}
+
+.aviso-secondary:hover {
+  background: var(--color-button-negation-hover, #2dcf7d);
+}
+
+@media (max-width: 480px) {
+  .aviso-modal {
+    padding: 24px 16px 18px;
+  }
+
+  .aviso-title {
+    font-size: 1.5rem;
+  }
+}

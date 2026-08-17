@@ -34,10 +34,24 @@ const FormAparte = ({ service, onClose }) => {
     { code: '+599', flag: emojiFlags.CW.emoji }
   ];
 
+  const isValidUniquePin = (pin, expectedLength) => {
+    if (!/^\d+$/.test(pin)) return false;
+    if (pin.length !== expectedLength) return false;
+    return new Set(pin.split('')).size === expectedLength;
+  };
+
   const handleSubmit = async (e) => { 
     e.preventDefault();
     if (isSubmitting) return;
     setIsSubmitting(true);
+
+    const requiredPinLength = ['NETFLIX TV', 'NETFLIX SIN TV', 'MAX', 'DISNEY+', 'PRIME VIDEO'].includes(service?.name) ? (service?.name === 'PRIME VIDEO' ? 5 : 4) : null;
+
+    if (requiredPinLength && !isValidUniquePin(pinPerfil, requiredPinLength)) {
+      setIsSubmitting(false);
+      toast.error(`El PIN debe tener ${requiredPinLength} dígitos y todos deben ser diferentes.`);
+      return;
+    }
   
     // Convertir nombre, apellido y notas a mayúsculas
     const nombreFormateado = nombre.toUpperCase();
@@ -164,8 +178,29 @@ const handleApellidoChange = (e) => {
   setApellido(value);
 };
 
+const handlePinPerfilChange = (e) => {
+  const maxLength = service?.name === 'PRIME VIDEO' ? 5 : 4;
+  const nextValue = e.target.value.replace(/\D/g, '').slice(0, maxLength);
+  const uniqueDigits = [];
+
+  nextValue.split('').forEach((digit) => {
+    if (!uniqueDigits.includes(digit)) {
+      uniqueDigits.push(digit);
+    }
+  });
+
+  setPinPerfil(uniqueDigits.join('').slice(0, maxLength));
+};
+
   // Efecto que se ejecuta cuando se monta el componente (abriendo el formulario)
   useEffect(() => {
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+
+    if (currentUser?.email) {
+      setEmail(currentUser.email);
+    }
+
     checkIfCliente(); // Realiza la consulta cuando se abre el formulario
   }, []); // Solo se ejecuta una vez cuando se monta el componente
 
@@ -282,7 +317,7 @@ const handleApellidoChange = (e) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              readOnly={usarInfo}
+              readOnly={usarInfo || !!getAuth().currentUser?.email}
               placeholder="Ej. javiermartinez@gmail.com"
             />
           </div>
@@ -333,7 +368,7 @@ const handleApellidoChange = (e) => {
                     type="text"
                     id="pinPerfil"
                     value={pinPerfil}
-                    onChange={(e) => setPinPerfil(e.target.value)}
+                    onChange={handlePinPerfilChange}
                     maxLength={service?.name === 'PRIME VIDEO' ? 5 : 4}
                     pattern={service?.name === 'PRIME VIDEO' ? "\\d{5}" : "\\d{4}"} // Acepta solo números de 5 o 4 dígitos
                     required

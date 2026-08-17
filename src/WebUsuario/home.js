@@ -15,6 +15,7 @@ import 'react-toastify/dist/ReactToastify.css'; // Importa los estilos del toast
 import MensajesSiNo from '../recursos/MensajesSiNo.js'; // Importa tu componente
 import spiderImage from '../recursos/spider.png'; // Import the spider image
 import { FaSignOutAlt } from 'react-icons/fa'; // Import the logout icon
+import AvisoVencimiento from './ads/aviso';
 
 // Export variables for MensajesSiNo
 export const logoutHeader = '¿Estás seguro que quieres cerrar sesión?';
@@ -44,6 +45,7 @@ function Home() {
   const [isInventarioVisible, setInventarioVisible] = useState(false); // Estado para manejar la visibilidad del inventarioomienza como invisible
   const [isServiciosClientesVisible, setServiciosClientesVisible] = useState(true); // Comienza como visible
   const [buttonPosition, setButtonPosition] = useState('centered'); // Estado para manejar la posición del botón
+  const [showExpiredModal, setShowExpiredModal] = useState(false);
   
   useEffect(() => {
     if (!user) {
@@ -223,9 +225,39 @@ function Home() {
     setShowConfirmLogout(false);
   };
 
+  const isServiceExpired = (fechaFinal) => {
+    if (!fechaFinal) return false;
+
+    const fechaFinalDate = new Date(fechaFinal);
+    if (Number.isNaN(fechaFinalDate.getTime())) return false;
+
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    fechaFinalDate.setHours(0, 0, 0, 0);
+
+    return fechaFinalDate <= hoy;
+  };
+
+  const handleCloseExpiredModal = () => {
+    setShowExpiredModal(false);
+  };
 
   // Función para manejar el clic en "Más Información"
   const handleMoreInfo = async (servicioId, grupo, servicioNombre, estado) => {
+    const servicioActual = servicios.find((serv) => {
+      const nombreServicioActual = typeof serv.servicio === 'string' ? serv.servicio : serv.servicio?.displayTitle;
+      return nombreServicioActual === servicioNombre && serv.grupo === grupo;
+    });
+
+    if (servicioActual && isServiceExpired(servicioActual.fechaFinal)) {
+      setModalOpen(false);
+      setModalData(null);
+      setAdviceMessage('');
+      setShowExpiredModal(true);
+      setLoading(false);
+      return;
+    }
+
     // Determina el texto del botón dependiendo del estado del servicio
     let buttonText = '';
     if (estado === '✅' || estado === '⚠️') {
@@ -562,6 +594,10 @@ return (
 
     {/* Muestra el mensaje de asesor si está disponible */}
     {adviceMessage && <p className="advice-message">{adviceMessage}</p>}
+
+    {showExpiredModal && (
+      <AvisoVencimiento onClose={handleCloseExpiredModal} />
+    )}
     
     {/* Mostrar el mensaje de confirmación si está activo */}
     {showConfirmLogout && (
