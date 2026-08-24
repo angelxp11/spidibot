@@ -7,6 +7,7 @@ import Renovar from '../../renovar/Renovar'; // Importa el componente Renovar
 import MensajesSiNo from '../../../recursos/MensajesSiNo.js'; // Importa MensajesSiNo
 import { app } from '../../../firebase'; // Importa la configuración de Firebase
 import AvisoVencimiento from '../../ads/aviso';
+import { isExpiredDate } from '../../../utils/dateUtils';
 
 const firestore = getFirestore(app);
 
@@ -41,28 +42,6 @@ const ContainerPlatformP = ({ title, grupo, estado, fechaFinal, nombreCliente, o
   const [deleteHeaderText, setDeleteHeaderText] = useState(''); // Estado para almacenar el encabezado de eliminación
   const [showExpiredModal, setShowExpiredModal] = useState(false);
 
-  const isExpiredDate = (value) => {
-    if (!value || value === 'Fecha no disponible') return false;
-
-    let date;
-    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-      const [year, month, day] = value.split('-').map(Number);
-      date = new Date(year, month - 1, day);
-    } else if (/^\d{2}\/\d{2}\/\d{4}$/.test(value)) {
-      const [day, month, year] = value.split('/').map(Number);
-      date = new Date(year, month - 1, day);
-    } else {
-      date = new Date(value);
-    }
-
-    if (Number.isNaN(date.getTime())) return false;
-
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
-    date.setHours(0, 0, 0, 0);
-
-    return date <= hoy;
-  };
 
   // Normalizar el título para mostrar "NETFLIX" si corresponde
   const displayTitle = ['NETFLIX', 'NETFLIXME', 'NETFLIXTV'].includes(title) ? 'NETFLIX' : title;

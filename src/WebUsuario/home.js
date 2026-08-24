@@ -16,6 +16,7 @@ import MensajesSiNo from '../recursos/MensajesSiNo.js'; // Importa tu componente
 import spiderImage from '../recursos/spider.png'; // Import the spider image
 import { FaSignOutAlt } from 'react-icons/fa'; // Import the logout icon
 import AvisoVencimiento from './ads/aviso';
+import { isExpiredDate } from '../utils/dateUtils';
 
 // Export variables for MensajesSiNo
 export const logoutHeader = '¿Estás seguro que quieres cerrar sesión?';
@@ -225,18 +226,7 @@ function Home() {
     setShowConfirmLogout(false);
   };
 
-  const isServiceExpired = (fechaFinal) => {
-    if (!fechaFinal) return false;
-
-    const fechaFinalDate = new Date(fechaFinal);
-    if (Number.isNaN(fechaFinalDate.getTime())) return false;
-
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
-    fechaFinalDate.setHours(0, 0, 0, 0);
-
-    return fechaFinalDate <= hoy;
-  };
+  const isServiceExpired = (fechaFinal) => isExpiredDate(fechaFinal);
 
   const handleCloseExpiredModal = () => {
     setShowExpiredModal(false);
